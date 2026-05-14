@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SOULD | Painel Administrativo</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body { background: #121212; color: white; padding: 50px; font-family: sans-serif; }
         .card-admin { background: #1a1a1a; border: 1px solid #ff0000; padding: 25px; border-radius: 0; }
@@ -31,17 +32,21 @@
             <h4 class="mb-3">{% if show_edit %}Editar Show{% else %}Agendar Novo Show{% endif %}</h4>
             
             <form action="{% if show_edit %}{{ url_for('atualizar_show', id=show_edit.id) }}{% else %}{{ url_for('admin') }}{% endif %}" method="POST" class="row g-3">
-                <div class="col-md-3">
-                    <label class="small text-secondary">DATA (DD/MM/AAAA)</label>
-                    <input type="text" name="data" class="form-control" placeholder="Ex: 23/05/2026" value="{{ show_edit.data if show_edit else '' }}" required>
+                <div class="col-md-2">
+                    <label class="small text-secondary">DATA</label>
+                    <input type="text" name="data" class="form-control" placeholder="DD/MM/AAAA" value="{{ show_edit.data if show_edit else '' }}" required>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label class="small text-secondary">NOME DO LOCAL</label>
                     <input type="text" name="local" class="form-control" placeholder="Ex: Hocus Pocus" value="{{ show_edit.local if show_edit else '' }}" required>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <label class="small text-secondary">CIDADE / UF</label>
-                    <input type="text" name="cidade" class="form-control" placeholder="Ex: São José dos Campos / SP" value="{{ show_edit.cidade if show_edit else '' }}" required>
+                    <input type="text" name="cidade" class="form-control" placeholder="SJC / SP" value="{{ show_edit.cidade if show_edit else '' }}" required>
+                </div>
+                <div class="col-md-3">
+                    <label class="small text-secondary">ENDEREÇO (MAPS)</label>
+                    <input type="text" name="endereco" class="form-control" placeholder="Rua, Número, Bairro" value="{{ show_edit.endereco if show_edit else '' }}">
                 </div>
                 <div class="col-md-2 d-flex align-items-end gap-2">
                     <button type="submit" class="btn btn-danger w-100 py-2">
@@ -54,19 +59,15 @@
             </form>
         </div>
 
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h4>Shows na Agenda</h4>
-            <span class="badge bg-secondary">{{ shows|length }} SHOWS MARCADOS</span>
-        </div>
-
         <div class="table-responsive">
             <table class="table table-dark table-hover align-middle">
                 <thead class="table-light text-dark">
                     <tr>
-                        <th style="background: #eee;">Data</th>
-                        <th style="background: #eee;">Local</th>
-                        <th style="background: #eee;">Cidade</th>
-                        <th style="background: #eee;" class="text-center">Ações</th>
+                        <th>Data</th>
+                        <th>Local</th>
+                        <th>Endereço</th>
+                        <th>Cidade</th>
+                        <th class="text-center">Ações</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -74,6 +75,7 @@
                     <tr>
                         <td class="fw-bold">{{ show.data }}</td>
                         <td>{{ show.local }}</td>
+                        <td class="small text-secondary">{{ show.endereco or '---' }}</td>
                         <td class="text-secondary">{{ show.cidade }}</td>
                         <td class="text-center">
                             <a href="{{ url_for('editar_show', id=show.id) }}" class="btn btn-sm btn-edit">Editar</a>
@@ -84,21 +86,10 @@
                             </a>
                         </td>
                     </tr>
-                    {% else %}
-                    <tr>
-                        <td colspan="4" class="text-center py-4 text-secondary">Nenhum show cadastrado.</td>
-                    </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
-
-        <hr class="my-5" style="border-color: #333;">
-        <a href="{{ url_for('index') }}" class="btn btn-outline-light rounded-0">
-            <i class="fas fa-arrow-left me-2"></i>Voltar para o Site
-        </a>
     </div>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
 </body>
 </html>
