@@ -1,43 +1,109 @@
-<section id="agenda" class="container text-center my-5">
-    <h2 class="mb-5" style="color: #fff; letter-spacing: 3px;">PRÓXIMOS SHOWS</h2>
-    <div class="agenda-container-flex d-flex flex-wrap justify-content-center align-items-start gap-4">
-        
-        <div class="agenda-wrapper" style="flex: 1; min-width: 300px; max-width: 600px;">
-            <div class="list-group">
-                {% for show in shows %}
-                <div class="list-group-item bg-dark text-white d-flex justify-content-between align-items-center p-4 border-secondary">
-                    <div class="text-start">
-                        <strong style="font-size: 1.1rem; color: #ff0000;">{{ show.data }}</strong><br>
-                        
-                        {% if show.endereco %}
-                        <a href="https://www.google.com/maps/dir/?api=1&destination={{ show.endereco|urlencode }}" 
-                           target="_blank" 
-                           style="text-decoration: none; color: #fff; font-weight: bold; font-size: 1.2rem;">
-                            <i class="fas fa-directions me-2 text-danger"></i>{{ show.local|upper }}
-                        </a>
-                        <br><small class="text-secondary">Clique para abrir o GPS</small>
-                        {% else %}
-                        <span style="font-weight: bold; font-size: 1.2rem;">{{ show.local|upper }}</span>
-                        {% endif %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BANDA SOULD | Site Oficial</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #000;
+            color: #fff;
+            font-family: 'Roboto', sans-serif;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, .oswald {
+            font-family: 'Oswald', sans-serif;
+            text-transform: uppercase;
+        }
+
+        /* Estilização da Agenda */
+        .agenda-container-flex {
+            margin-top: 30px;
+        }
+
+        .list-group-item {
+            transition: transform 0.2s;
+            margin-bottom: 10px;
+        }
+
+        .list-group-item:hover {
+            transform: scale(1.02);
+            background-color: #1a1a1a !important;
+        }
+
+        .souldinho-img {
+            filter: drop-shadow(0 0 15px rgba(255, 0, 0, 0.5));
+            animation: flutuar 3s ease-in-out infinite;
+        }
+
+        @keyframes flutuar {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .badge {
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+
+    <main class="py-5">
+        <section id="agenda" class="container text-center my-5">
+            <h2 class="mb-5" style="color: #fff; letter-spacing: 3px; font-size: 2.5rem;">PRÓXIMOS SHOWS</h2>
+            
+            <div class="agenda-container-flex d-flex flex-wrap justify-content-center align-items-start gap-5">
+                
+                <div class="agenda-wrapper" style="flex: 1; min-width: 320px; max-width: 700px;">
+                    <div class="list-group">
+                        {% for show in shows %}
+                        <div class="list-group-item bg-dark text-white d-flex justify-content-between align-items-center p-4 border-secondary shadow">
+                            <div class="text-start">
+                                <strong style="font-size: 1.2rem; color: #ff0000;">{{ show.data }}</strong><br>
+                                
+                                {% if show.endereco %}
+                                    <a href="{% if show.endereco.startswith('http') %}{{ show.endereco }}{% else %}https://www.google.com/maps/search/?api=1&query={{ show.endereco|urlencode }}{% endif %}" 
+                                       target="_blank" 
+                                       style="text-decoration: none; color: #fff; font-weight: bold; font-size: 1.3rem;">
+                                        <i class="fas fa-map-marker-alt me-2 text-danger"></i>{{ show.local|upper }}
+                                    </a>
+                                    <br><small class="text-secondary">Clique para abrir o GPS</small>
+                                {% else %}
+                                    <span style="font-weight: bold; font-size: 1.3rem;">{{ show.local|upper }}</span>
+                                {% endif %}
+                            </div>
+                            <span class="badge bg-danger p-2">{{ show.cidade|upper }}</span>
+                        </div>
+                        {% endfor %}
                     </div>
-                    <span class="badge bg-danger p-2">{{ show.cidade|upper }}</span>
+
+                    <div class="mt-4">
+                        <a href="https://wa.me/5512974106100?text=Olá,%20gostaria%20de%20informações%20sobre%20os%20shows%20da%20Sould!" 
+                           target="_blank" 
+                           class="btn btn-success btn-lg rounded-0 w-100 py-3 shadow" 
+                           style="background-color: #25d366; border: none; font-weight: bold; letter-spacing: 1px;">
+                            <i class="fab fa-whatsapp me-2"></i>CONTATO PARA SHOWS (MÁRCIO)
+                        </a>
+                    </div>
                 </div>
-                {% endfor %}
-            </div>
 
-            <div class="mt-4">
-                <a href="https://wa.me/5512974106100?text=Olá,%20gostaria%20de%20informações%20sobre%20os%20shows%20da%20Sould!" 
-                   target="_blank" 
-                   class="btn btn-success btn-lg rounded-0 w-100" 
-                   style="background-color: #25d366; border: none; font-weight: bold;">
-                    <i class="fab fa-whatsapp me-2"></i>CONTATO PARA SHOWS (MÁRCIO)
-                </a>
+                <div class="souldinho-box d-none d-lg-block">
+                    <img src="{{ url_for('static', filename='img/souldinho.png') }}" class="souldinho-img" style="max-width: 300px;">
+                </div>
+                
             </div>
-        </div>
+        </section>
+    </main>
 
-        <div class="souldinho-box">
-            <img src="{{ url_for('static', filename='img/souldinho.png') }}" class="souldinho-img" style="max-width: 250px;">
-        </div>
-        
-    </div>
-</section>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
