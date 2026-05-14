@@ -5,11 +5,8 @@ import sqlite3
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
-
-# CHAVE SECRETA
 app.secret_key = 'sould_secret_key_2026'
 
-# CONFIGURAÇÃO DE LOGIN
 USUARIO_ADMIN = "sould_admin"
 SENHA_HASH = generate_password_hash("sould2026")
 
@@ -24,7 +21,6 @@ def inicializar_db():
     conexao = obter_conexao_db()
     cursor = conexao.cursor()
     
-    # Cria a tabela se não existir
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS shows (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -35,11 +31,10 @@ def inicializar_db():
         )
     ''')
     
-    # ATUALIZAÇÃO AUTOMÁTICA: Adiciona a coluna endereco se ela não existir em bancos antigos
     try:
         cursor.execute('ALTER TABLE shows ADD COLUMN endereco TEXT')
     except sqlite3.OperationalError:
-        pass # A coluna já existe
+        pass 
         
     conexao.commit()
     

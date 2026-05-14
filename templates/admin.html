@@ -45,8 +45,8 @@
                     <input type="text" name="cidade" class="form-control" placeholder="SJC / SP" value="{{ show_edit.cidade if show_edit else '' }}" required>
                 </div>
                 <div class="col-md-3">
-                    <label class="small text-secondary">ENDEREÇO (MAPS)</label>
-                    <input type="text" name="endereco" class="form-control" placeholder="Rua, Número, Bairro" value="{{ show_edit.endereco if show_edit else '' }}">
+                    <label class="small text-secondary">LINK OU ENDEREÇO GOOGLE MAPS</label>
+                    <input type="text" name="endereco" class="form-control" placeholder="Cole o link ou digite o endereço" value="{{ show_edit.endereco if show_edit else '' }}">
                 </div>
                 <div class="col-md-2 d-flex align-items-end gap-2">
                     <button type="submit" class="btn btn-danger w-100 py-2">
@@ -65,7 +65,7 @@
                     <tr>
                         <th>Data</th>
                         <th>Local</th>
-                        <th>Endereço</th>
+                        <th>Endereço/Link</th>
                         <th>Cidade</th>
                         <th class="text-center">Ações</th>
                     </tr>
@@ -75,7 +75,9 @@
                     <tr>
                         <td class="fw-bold">{{ show.data }}</td>
                         <td>{{ show.local }}</td>
-                        <td class="small text-secondary">{{ show.endereco or '---' }}</td>
+                        <td class="small text-secondary" style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                            {{ show.endereco or '---' }}
+                        </td>
                         <td class="text-secondary">{{ show.cidade }}</td>
                         <td class="text-center">
                             <a href="{{ url_for('editar_show', id=show.id) }}" class="btn btn-sm btn-edit">Editar</a>
