@@ -10,67 +10,112 @@
     <style>
         html { scroll-behavior: smooth; }
         body { background-color: #121212; color: white; font-family: 'Arial Black', sans-serif; overflow-x: hidden; }
-        .navbar { border-bottom: 1px solid #222; z-index: 1000; }
+        
+        /* AJUSTE NAVBAR MOBILE */
+        .navbar { border-bottom: 1px solid #222; }
+        .navbar-toggler { border: none; color: #ff0000; font-size: 1.5rem; }
+        .navbar-toggler:focus { shadow: none; outline: none; box-shadow: none; }
         
         @media (max-width: 991px) {
             .navbar-collapse { background-color: #000; padding: 20px; text-align: center; }
             .nav-link { font-size: 1.2rem; margin: 10px 0; border-bottom: 1px solid #111; }
         }
 
-        /* CORREÇÃO DE IMAGENS - HERO (Fundo sempre preenchido) */
-        .hero-section { height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; position: relative; overflow: hidden; }
+        /* HERO SECTION - AJUSTE DE RESOLUÇÃO */
+        .hero-section { 
+            height: 100vh; 
+            display: flex; align-items: center; justify-content: center; text-align: center; 
+            position: relative; overflow: hidden;
+        }
         .hero-slider { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
-        .slide { 
-            position: absolute; 
-            width: 100%; 
-            height: 100%; 
-            background-size: cover; 
-            background-position: center center; 
-            opacity: 0; 
-            animation: sliderAnim 15s infinite; 
+        .slide {
+            position: absolute; width: 100%; height: 100%;
+            background-size: cover; /* RESOLUÇÃO AJUSTADA PARA PREENCHER TELA */
+            background-repeat: no-repeat;
+            background-position: center center;
+            opacity: 0; animation: sliderAnim 15s infinite;
         }
+        .slide:nth-child(1) { background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.7)), url('/static/img/show1.jpg'); animation-delay: 0s; }
+        .slide:nth-child(2) { background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.7)), url('/static/img/show2.jpg'); animation-delay: 5s; }
+        .slide:nth-child(3) { background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.7)), url('/static/img/show3.jpg'); animation-delay: 10s; }
         
-        @media (max-width: 768px) {
-            .slide { background-attachment: scroll; }
-            .hero-content img { width: 80% !important; }
+        @keyframes sliderAnim {
+            0% { opacity: 0; }
+            10% { opacity: 1; }
+            33% { opacity: 1; }
+            43% { opacity: 0; } 
+            100% { opacity: 0; }
         }
-
-        .slide:nth-child(1) { background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.8)), url('/static/img/show1.jpg'); animation-delay: 0s; }
-        .slide:nth-child(2) { background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.8)), url('/static/img/show2.jpg'); animation-delay: 5s; }
-        .slide:nth-child(3) { background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.8)), url('/static/img/show3.jpg'); animation-delay: 10s; }
-        
-        @keyframes sliderAnim { 0% { opacity: 0; } 10% { opacity: 1; } 33% { opacity: 1; } 43% { opacity: 0; } 100% { opacity: 0; } }
-        
         .hero-content { position: relative; z-index: 2; width: 90%; }
-        .hero-content img { width: 100%; max-width: 500px; filter: drop-shadow(0px 0px 20px rgba(255, 0, 0, 0.6)); }
+        .hero-content img { width: 100%; max-width: 500px; height: auto; filter: drop-shadow(0px 0px 15px rgba(255, 0, 0, 0.5)); }
 
-        /* DNA & BIO SECTION */
-        #bio, #dna { background-color: #000; padding: 80px 0; }
-        .bio-text, .dna-text { font-family: sans-serif; color: #ddd; line-height: 1.6; text-align: justify; }
-        .bio-title, .dna-title { color: #ff0000; font-weight: bold; margin-top: 30px; letter-spacing: 2px; }
-        .dna-card { background: #111; border-left: 5px solid #ff0000; padding: 20px; margin-top: 20px; }
-
-        /* AGENDA */
+        /* AGENDA & SOULDINHO */
         #agenda { padding: 80px 0; }
-        .agenda-container-flex { display: flex; align-items: center; justify-content: center; max-width: 1200px; margin: 0 auto; gap: 30px; }
-        .agenda-wrapper { flex: 1; max-height: 500px; overflow-y: auto; max-width: 800px; z-index: 2; }
-        .list-group-item { background-color: #1a1a1a !important; border: 1px solid #333 !important; margin-bottom: 10px; }
-        .maps-link { color: #008cff; text-decoration: none; font-weight: bold; transition: 0.3s; }
-        .maps-link:hover { color: #ff0000; text-decoration: underline; }
+        .agenda-container-flex {
+            display: flex; align-items: center; justify-content: center;
+            max-width: 1200px; margin: 0 auto; gap: 30px;
+        }
+        .agenda-wrapper {
+            flex: 1; max-height: 500px; overflow-y: auto; max-width: 800px; z-index: 2; padding-right: 10px;
+        }
+        .agenda-wrapper::-webkit-scrollbar { width: 6px; }
+        .agenda-wrapper::-webkit-scrollbar-thumb { background: #ff0000; border-radius: 10px; }
 
-        /* INTEGRANTES */
-        .integrante-img-container { overflow: hidden; border: 2px solid #333; background-color: #1a1a1a; height: 250px; width: 100%; }
-        .integrante-card img { width: 100%; height: 100%; object-fit: cover; object-position: center top; filter: grayscale(100%); transition: 0.4s; }
-        .integrante-card:hover img { filter: grayscale(0%); transform: scale(1.05); }
+        .list-group-item { 
+            background-color: #1a1a1a !important; border: 1px solid #333 !important; 
+            margin-bottom: 10px; transition: 0.3s;
+        }
+        .list-group-item:hover { border-color: #ff0000 !important; }
+        .link-maps { color: #ff0000; text-decoration: none; font-weight: bold; }
+        .link-maps:hover { text-decoration: underline; }
 
-        /* FOTÓGRAFO */
-        .foto-sidney { width: 100%; border: 2px solid #333; transition: 0.4s; filter: grayscale(100%); object-fit: cover; height: 350px; }
-        .foto-sidney:hover { border-color: #ff0000; filter: grayscale(0%); }
-        
-        .souldinho-img { width: 280px; filter: drop-shadow(0px 0px 20px rgba(255, 0, 0, 0.5)); animation: float 3s ease-in-out infinite; }
+        .souldinho-box { width: 280px; z-index: 1; }
+        .souldinho-img { width: 100%; filter: drop-shadow(0px 0px 20px rgba(255, 0, 0, 0.5)); animation: float 3s ease-in-out infinite; }
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
 
-        @media (max-width: 991px) { .agenda-container-flex { flex-direction: column; } .souldinho-img { width: 200px; order: -1; } }
+        /* BIO SECTION */
+        #bio { background-color: #000; padding: 80px 0; }
+        .bio-text { font-family: sans-serif; color: #ddd; line-height: 1.6; text-align: justify; }
+        .bio-title { color: #ff0000; font-weight: bold; margin-top: 30px; }
+
+        /* INTEGRANTES */
+        .integrante-img-container { 
+            overflow: hidden; border: 2px solid #333; background-color: #1a1a1a;
+            width: 100%; height: 250px;
+        }
+        .integrante-card img { 
+            width: 100%; height: 100%; object-fit: contain; 
+            filter: grayscale(100%); transition: 0.4s; 
+        }
+        .integrante-card:hover img { filter: grayscale(0%); transform: scale(1.05); }
+
+        /* SEÇÃO FOTÓGRAFO */
+        #fotografo { background-color: #080808; padding: 80px 0; border-top: 1px solid #222; }
+        .foto-sidney { width: 100%; border: 2px solid #333; transition: 0.4s; filter: grayscale(100%); object-fit: cover; height: 300px; }
+        .foto-sidney:hover { border-color: #ff0000; filter: grayscale(0%); transform: scale(1.02); }
+        .btn-sidney { background: #ff0000; color: white; font-weight: bold; border-radius: 0; border: none; padding: 12px 25px; text-decoration: none; display: inline-block; transition: 0.3s; width: 100%; max-width: 350px; }
+        .btn-sidney:hover { background: #fff; color: #ff0000; }
+        .insta-sidney { color: #fff; text-decoration: none; font-size: 1.1rem; transition: 0.3s; font-family: sans-serif; }
+        .insta-sidney:hover { color: #ff0000; }
+
+        /* LOJA */
+        .shop-card { background: #1a1a1a; border: 1px solid #333; padding: 20px; transition: 0.3s; height: 100%; display: flex; flex-direction: column; }
+        .shop-card:hover { border-color: #ff0000; }
+        .shop-img-container { width: 100%; aspect-ratio: 1/1; overflow: hidden; margin-bottom: 15px; background: #121212; }
+        .shop-img { width: 100%; height: 100%; object-fit: contain; }
+        .shop-desc { font-size: 0.85rem; color: #bbb; font-family: sans-serif; margin-bottom: 15px; text-align: left; }
+        .btn-buy { background: #ff0000; color: white; border-radius: 0; width: 100%; font-weight: bold; margin-top: auto; text-decoration: none; text-align: center; display: block; padding: 10px; }
+        .btn-buy:hover { background: #cc0000; color: white; }
+
+        /* DNA SECTION */
+        .dna-section img { width: 100%; max-width: 600px; height: auto; border: 1px solid #333; margin-top: 20px; box-shadow: 0px 0px 20px rgba(255, 0, 0, 0.2); }
+
+        footer { border-top: 2px solid #333; padding: 60px 0; background: #000; }
+
+        @media (max-width: 991px) {
+            .agenda-container-flex { flex-direction: column; }
+            .souldinho-box { width: 200px; order: -1; }
+        }
     </style>
 </head>
 <body>
@@ -78,18 +123,20 @@
     <nav class="navbar navbar-expand-lg navbar-dark sticky-top bg-black">
         <div class="container">
             <a class="navbar-brand fw-bold" href="#" style="color: #ff0000; letter-spacing: 2px;">SOULD</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuSould"><i class="fas fa-bars"></i></button>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuSould" aria-controls="menuSould" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="fas fa-bars"></i>
+            </button>
+
             <div class="collapse navbar-collapse" id="menuSould">
                 <div class="navbar-nav ms-auto">
                     <a class="nav-link px-3" href="#agenda">SHOWS</a>
                     <a class="nav-link px-3" href="#bio">A BANDA</a>
-                    <a class="nav-link px-3" href="#dna">DNA</a>
                     <a class="nav-link px-3" href="#banda">INTEGRANTES</a>
                     <a class="nav-link px-3" href="#fotografo">FOTÓGRAFO</a>
-                    <a class="nav-link px-3" href="/galeria">GALERIA</a>
-                    <a class="nav-link px-3 fw-bold text-warning" href="/loja" style="border: 1px solid #ffc107; border-radius: 5px; margin-left: 10px;">
-                        <i class="fas fa-shopping-cart me-1"></i>LOJA
-                    </a>
+                    <a class="nav-link px-3" href="#loja">LOJA</a>
+                    <a class="nav-link px-3" href="/galeria" target="_blank">GALERIA</a>
+                    <a class="nav-link px-3" href="#dna">DNA</a>
                     <a class="nav-link px-3" href="#contato">CONTATO</a>
                 </div>
             </div>
@@ -97,9 +144,11 @@
     </nav>
 
     <header class="hero-section">
-        <div class="hero-slider"><div class="slide"></div><div class="slide"></div><div class="slide"></div></div>
+        <div class="hero-slider">
+            <div class="slide"></div><div class="slide"></div><div class="slide"></div>
+        </div>
         <div class="hero-content">
-            <img src="{{ url_for('static', filename='img/logo_sould_transparente.png') }}">
+            <img src="{{ url_for('static', filename='img/logo_sould_transparente.png') }}" alt="Logo SOULD">
             <p class="lead mt-3" style="letter-spacing: 5px;">HARDCORE / POP ROCK</p>
         </div>
     </header>
@@ -112,11 +161,9 @@
                     {% for show in shows %}
                     <div class="list-group-item text-white d-flex justify-content-between align-items-center p-4">
                         <div class="text-start">
-                            <strong class="text-danger">{{ show.data }}</strong><br>
+                            <strong style="font-size: 1.1rem;">{{ show.data }}</strong><br>
                             {% if show.link_maps %}
-                                <a href="{{ show.link_maps }}" target="_blank" class="maps-link">
-                                    <i class="fas fa-map-marker-alt me-1"></i>{{ show.local }}
-                                </a>
+                                <a href="{{ show.link_maps }}" target="_blank" class="link-maps">{{ show.local }}</a>
                             {% else %}
                                 <small class="text-secondary">{{ show.local }}</small>
                             {% endif %}
@@ -126,7 +173,9 @@
                     {% endfor %}
                 </div>
             </div>
-            <img src="{{ url_for('static', filename='img/souldinho.png') }}" class="souldinho-img">
+            <div class="souldinho-box">
+                <img src="{{ url_for('static', filename='img/souldinho.png') }}" class="souldinho-img">
+            </div>
         </div>
     </section>
 
@@ -139,7 +188,7 @@
                         <p>A Sould é uma banda de pop-rock nacional e hardcore formada em outubro de 2025, em São José dos Campos/SP. O nome representa a fusão entre 'som' e 'alma', simbolizando a essência do grupo — músicos que se reúnem para tocar, se divertir e transmitir energia verdadeira em cada apresentação. Mais do que uma banda, a Sould é um projeto de conexão entre atitude, emoção e autenticidade.</p>
                         
                         <h4 class="bio-title">ESTILO E INFLUÊNCIAS</h4>
-                        <p>Com influências de bandas como CPM 22, Detonautas, NX Zero e Dead Fish, a Sould mantém viva a essência do rock nacional, unindo melodia, peso e mensagens que refletem a realidade e o sentimento de uma geração. Além das músicas próprias, o grupo se destaca por versões criativas e energéticas de artistas como Imagine Dragons, One Republic, Lady Gaga e Bruno Mars, adaptadas ao estilo da banda.</p>
+                        <p>Com influências de bandas como CPM 22, Detonautas, NX Zero e Dead Fish, a Sould mantém viva a essência do rock nacional, unindo melodia, peso e mensagens que refletem a reality e o sentimento de uma geração. Além das músicas próprias, o grupo se destaca por versões criativas e energéticas de artistas como Imagine Dragons, One Republic, Lady Gaga e Bruno Mars, adaptadas ao estilo da banda.</p>
 
                         <h4 class="bio-title">DESTAQUES E ATUAÇÃO</h4>
                         <p>Apesar de recente, a Sould já marcou presença em eventos e casas renomadas como Gilmour Brewpub, Hocus Pocus, Bar do Columba, Emo Véio, Daruma Rock Bar e ST Pauls PUB. A banda está em processo de composição e gravação do seu primeiro material autoral, mantendo o foco em levar o rock nacional com autenticidade a novos públicos.</p>
@@ -149,35 +198,44 @@
         </div>
     </section>
 
-    <section id="dna">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-8">
-                    <h2 class="text-center mb-5">DNA SOULD</h2>
-                    <div class="dna-card">
-                        <p class="dna-text">
-                            O DNA da SOULD é construído sobre a **autenticidade**. Não subimos ao palco apenas para reproduzir notas, mas para criar uma conexão visceral com o público. Nosso som é um reflexo das ruas de São José dos Campos, misturando a agressividade do Hardcore com a sensibilidade melódica do Pop Rock. Cada ensaio, cada show e cada composição carrega o compromisso de manter o Rock vivo e pulsante.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <section id="banda" class="py-5 container text-center">
         <h2 class="mb-5">OS INTEGRANTES</h2>
         <div class="row justify-content-center g-4">
-            {% for nome, cargo, img in [('BRUNO','VOCAL','vocal.jpg'), ('EVANDRO','GUITARRA','guitarra1.jpg'), ('MARCIO','GUITARRA','guitarra2.jpg'), ('MATHEUS','BAIXO','baixo.jpg'), ('HILDNEY','BATERIA','bateria.jpg')] %}
             <div class="col-6 col-md-4 col-lg-2">
                 <div class="integrante-card">
-                    <div class="integrante-img-container">
-                        <img src="{{ url_for('static', filename='img/' + img) }}" onerror="this.src='https://via.placeholder.com/250x250?text=SOULD'">
-                    </div>
-                    <div class="mt-3 text-danger fw-bold">{{ nome }}</div>
-                    <div class="small text-secondary">{{ cargo }}</div>
+                    <div class="integrante-img-container"><img src="{{ url_for('static', filename='img/vocal.jpg') }}"></div>
+                    <div class="mt-3 text-danger fw-bold">BRUNO</div>
+                    <div class="small text-secondary">VOCAL</div>
                 </div>
             </div>
-            {% endfor %}
+            <div class="col-6 col-md-4 col-lg-2">
+                <div class="integrante-card">
+                    <div class="integrante-img-container"><img src="{{ url_for('static', filename='img/guitarra1.jpg') }}"></div>
+                    <div class="mt-3 text-danger fw-bold">EVANDRO</div>
+                    <div class="small text-secondary">GUITARRA</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-4 col-lg-2">
+                <div class="integrante-card">
+                    <div class="integrante-img-container"><img src="{{ url_for('static', filename='img/guitarra2.jpg') }}"></div>
+                    <div class="mt-3 text-danger fw-bold">MARCIO</div>
+                    <div class="small text-secondary">GUITARRA</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-4 col-lg-2">
+                <div class="integrante-card">
+                    <div class="integrante-img-container"><img src="{{ url_for('static', filename='img/baixo.jpg') }}"></div>
+                    <div class="mt-3 text-danger fw-bold">MATHEUS</div>
+                    <div class="small text-secondary">BAIXO</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-4 col-lg-2">
+                <div class="integrante-card">
+                    <div class="integrante-img-container"><img src="{{ url_for('static', filename='img/bateria.jpg') }}"></div>
+                    <div class="mt-3 text-danger fw-bold">HILDNEY</div>
+                    <div class="small text-secondary">BATERIA</div>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -187,8 +245,12 @@
             <div class="row align-items-center justify-content-center">
                 <div class="col-lg-5 mb-4 mb-lg-0">
                     <div class="row g-2">
-                        <div class="col-6"><img src="{{ url_for('static', filename='img/sidney1.jpg') }}" class="foto-sidney"></div>
-                        <div class="col-6"><img src="{{ url_for('static', filename='img/sidney2.jpg') }}" class="foto-sidney"></div>
+                        <div class="col-6">
+                            <img src="{{ url_for('static', filename='img/sidney1.jpg') }}" class="foto-sidney" alt="Sidney Lopes 1">
+                        </div>
+                        <div class="col-6">
+                            <img src="{{ url_for('static', filename='img/sidney2.jpg') }}" class="foto-sidney" alt="Sidney Lopes 2">
+                        </div>
                     </div>
                 </div>
                 <div class="col-lg-7 ps-lg-5 text-lg-start">
@@ -200,25 +262,92 @@
                         Como Videomaker e Filmmaker de elite, Sidney realiza trabalhos fantásticos, transformando o suor do palco e o peso das guitarras em arte visual imersiva. Com uma técnica refinada, ele imortaliza a atitude Hardcore e a vibração do Pop Rock, garantindo que a alma da banda vá muito além do som.
                     </p>
                     <div class="mt-4">
-                        <a href="https://www.instagram.com/Osidneylopes" target="_blank" class="text-white text-decoration-none d-block mb-3"><i class="fab fa-instagram text-danger"></i> @Osidneylopes</a>
-                        <a href="https://wa.me/5512981606958" target="_blank" class="btn btn-danger btn-lg rounded-0 w-100"><i class="fab fa-whatsapp me-2"></i> CONHEÇA NOSSO FOTÓGRAFO</a>
+                        <div class="mb-3">
+                            <a href="https://www.instagram.com/Osidneylopes" target="_blank" class="insta-sidney">
+                                <i class="fab fa-instagram text-danger"></i> @Osidneylopes
+                            </a>
+                        </div>
+                        <a href="https://wa.me/5512981606958?text=Olá Sidney! Vi seu trabalho no site da Banda SOULD e gostaria de fazer um orçamento." target="_blank" class="btn-sidney">
+                            <i class="fab fa-whatsapp me-2"></i> CONHEÇA NOSSO FOTÓGRAFO
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <footer id="contato" class="py-5">
+    <section id="loja" class="py-5 bg-black text-center">
+        <div class="container">
+            <h2 class="mb-5">LOJA OFICIAL</h2>
+            <div class="row g-4 justify-content-center">
+                <div class="col-md-4">
+                    <div class="shop-card">
+                        <div class="shop-img-container">
+                            <img src="{{ url_for('static', filename='img/camisa.jpg') }}" class="shop-img">
+                        </div>
+                        <h5 class="fw-bold">CAMISETA BANDA SOULD</h5>
+                        <div class="shop-desc">
+                            ➡️ Do P ao GG (Unissex/Babylook) – <strong>R$ 60,00</strong><br>
+                            ➡️ G1 ao G2 – <strong>R$ 65,00</strong><br>
+                            ➡️ G3 ao G4 – <strong>R$ 70,00</strong>
+                        </div>
+                        <a href="https://wa.me/5512982147326?text=Olá! Tenho interesse em comprar a Camiseta Banda SOULD." target="_blank" class="btn-buy">COMPRAR</a>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="shop-card">
+                        <div class="shop-img-container">
+                            <img src="{{ url_for('static', filename='img/bone.jpg') }}" class="shop-img">
+                        </div>
+                        <h5 class="fw-bold">BONÉ SOULD</h5>
+                        <div class="shop-desc">
+                            Boné oficial bordado com regulagem traseira snapback. Material premium de alta durabilidade.
+                        </div>
+                        <p class="text-danger fs-4 fw-bold mb-3">R$ 65,00</p>
+                        <a href="https://wa.me/5512991664151?text=Olá! Tenho interesse em comprar o Boné SOULD." target="_blank" class="btn-buy">COMPRAR</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="dna" class="py-5 dna-section text-center">
+        <h2 class="mb-4">DNA SOULD</h2>
+        <img src="{{ url_for('static', filename='img/dna_sould.jpg') }}" class="img-fluid mx-auto d-block" alt="DNA Banda SOULD">
+    </section>
+
+    <footer id="contato">
         <div class="container text-center">
             <h2 class="mb-4">SOULD</h2>
+            <div class="mb-5">
+                <a href="https://www.instagram.com/bandasould" target="_blank" class="text-white fs-2 mx-3"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="text-white fs-2 mx-3"><i class="fab fa-spotify"></i></a>
+            </div>
             <div class="row justify-content-center g-3">
-                <div class="col-md-5"><a href="https://wa.me/5512982147326" class="btn btn-outline-danger w-100 py-3 rounded-0">SHOWS: (12) 982147326 (BRUNO)</a></div>
-                <div class="col-md-5"><a href="https://wa.me/5512974106100" class="btn btn-outline-danger w-100 py-3 rounded-0">SHOWS: (12) 974106100 (MARCIO)</a></div>
+                <div class="col-md-5">
+                    <a href="https://wa.me/5512982147326" class="btn btn-outline-danger w-100 py-3 rounded-0">SHOWS: (12) 982147326 (BRUNO)</a>
+                </div>
+                <div class="col-md-5">
+                    <a href="https://wa.me/5512974106100" class="btn btn-outline-danger w-100 py-3 rounded-0">SHOWS: (12) 974106100 (MARCIO)</a>
+                </div>
             </div>
             <p class="mt-5 text-secondary small">&copy; 2026 SOULD - SÃO JOSÉ DOS CAMPOS/SP</p>
         </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        document.querySelectorAll('.navbar-nav .nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                const navbarCollapse = document.getElementById('menuSould');
+                const bsCollapse = new bootstrap.Collapse(navbarCollapse, { toggle: false });
+                if (navbarCollapse.classList.contains('show')) {
+                    bsCollapse.hide();
+                }
+            });
+        });
+    </script>
+
 </body>
 </html>
