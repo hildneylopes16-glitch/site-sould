@@ -5,8 +5,11 @@ import sqlite3
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
+
+# CHAVE SECRETA
 app.secret_key = 'sould_secret_key_2026'
 
+# CONFIGURAÇÃO DE LOGIN
 USUARIO_ADMIN = "sould_admin"
 SENHA_HASH = generate_password_hash("sould2026")
 
@@ -18,43 +21,38 @@ def obter_conexao_db():
     return conexao
 
 def inicializar_db():
-    conexao = obter_conexao_db()
-    cursor = conexao.cursor()
-    
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS shows (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            data TEXT NOT NULL,
-            local TEXT NOT NULL,
-            cidade TEXT NOT NULL,
-            endereco TEXT
-        )
-    ''')
-    
     try:
-        cursor.execute('ALTER TABLE shows ADD COLUMN endereco TEXT')
-    except sqlite3.OperationalError:
-        pass 
-        
-    conexao.commit()
-    
-    cursor.execute('SELECT COUNT(*) FROM shows')
-    if cursor.fetchone()[0] == 0:
-        cursor.execute(
-            'INSERT INTO shows (data, local, cidade, endereco) VALUES (?, ?, ?, ?)',
-            ("23/05/2026", "GEOGER'S SEVEN", "SÃO JOSÉ DOS CAMPOS", "Rua General Osório, 123, Centro, São José dos Campos - SP")
-        )
+        conexao = obter_conexao_db()
+        cursor = conexao.cursor()
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS shows (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                data TEXT NOT NULL,
+                local TEXT NOT NULL,
+                cidade TEXT NOT NULL
+            )
+        ''')
         conexao.commit()
-    
-    conexao.close()
+        
+        cursor.execute('SELECT COUNT(*) FROM shows')
+        if cursor.fetchone()[0] == 0:
+            cursor.execute(
+                'INSERT INTO shows (data, local, cidade) VALUES (?, ?, ?)',
+                ("23/05/2026", "GEOGER'S SEVEN", "SÃO JOSÉ DOS CAMPOS")
+            )
+            conexao.commit()
+        conexao.close()
+    except Exception as e:
+        print(f"Erro ao inicializar banco: {e}")
 
 inicializar_db()
 
 def ordenar_shows(lista_rows):
     try:
+        # Tenta ordenar por data DD/MM/AAAA
         return sorted(
             lista_rows, 
-            key=lambda x: datetime.strptime(x['data'], '%d/%m/%Y') if len(x['data']) > 5 else datetime.strptime(x['data'] + '/2026', '%d/%m/%Y')
+            key=lambda x: datetime.strptime(x['data'], '%d/%m/%Y')
         )
     except Exception:
         return lista_rows
@@ -70,6 +68,17 @@ def index():
     shows_ordenados = ordenar_shows(shows_db)
     return render_template('index.html', shows=shows_ordenados)
 
+@app.route('/galeria')
+def galeria():
+    # Define o caminho e garante que a pasta exista para não dar erro de sistema
+    caminho_galeria = os.path.join('static', 'img', 'galeria')
+    if not os.path.exists(caminho_galeria):
+        os.makedirs(caminho_galeria)
+    
+    # Lista apenas arquivos de imagem reais
+    fotos = [f for f in os.listdir(caminho_galeria) if f.lower().endswith(('.jpg', '.png', '.jpeg', '.webp'))]
+    return render_template('galeria.html', fotos=fotos)
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if usuario_esta_logado():
@@ -81,8 +90,7 @@ def login():
             session['logado'] = True
             session['usuario'] = usuario
             return redirect(url_for('admin'))
-        else:
-            flash('Usuário ou senha incorretos!', 'danger')
+        flash('Usuário ou senha incorretos!', 'danger')
     return render_template('login.html')
 
 @app.route('/logout')
@@ -94,58 +102,45 @@ def logout():
 def admin():
     if not usuario_esta_logado():
         return redirect(url_for('login'))
+    
     conexao = obter_conexao_db()
     if request.method == 'POST':
         data = request.form.get('data')
         local = request.form.get('local')
         cidade = request.form.get('cidade')
-        endereco = request.form.get('endereco')
         if data and local and cidade:
-            conexao.execute(
-                'INSERT INTO shows (data, local, cidade, endereco) VALUES (?, ?, ?, ?)',
-                (data, local, cidade, endereco)
-            )
+            conexao.execute('INSERT INTO shows (data, local, cidade) VALUES (?, ?, ?)', (data, local, cidade))
             conexao.commit()
-        conexao.close()
-        return redirect(url_for('admin'))
+            conexao.close()
+            return redirect(url_for('admin'))
+    
     shows_db = conexao.execute('SELECT * FROM shows').fetchall()
     conexao.close()
-    shows_ordenados = ordenar_shows(shows_db)
-    return render_template('admin.html', shows=shows_ordenados, show_edit=None)
+    return render_template('admin.html', shows=ordenar_shows(shows_db), show_edit=None)
 
 @app.route('/editar/<int:id>')
 def editar_show(id):
-    if not usuario_esta_logado():
-        return redirect(url_for('login'))
+    if not usuario_esta_logado(): return redirect(url_for('login'))
     conexao = obter_conexao_db()
     show_para_editar = conexao.execute('SELECT * FROM shows WHERE id = ?', (id,)).fetchone()
     shows_db = conexao.execute('SELECT * FROM shows').fetchall()
     conexao.close()
-    shows_ordenados = ordenar_shows(shows_db)
-    return render_template('admin.html', shows=shows_ordenados, edit_id=id, show_edit=show_para_editar)
+    return render_template('admin.html', shows=ordenar_shows(shows_db), edit_id=id, show_edit=show_para_editar)
 
 @app.route('/atualizar/<int:id>', methods=['POST'])
 def atualizar_show(id):
-    if not usuario_esta_logado():
-        return redirect(url_for('login'))
-    data = request.form.get('data')
-    local = request.form.get('local')
-    cidade = request.form.get('cidade')
-    endereco = request.form.get('endereco')
+    if not usuario_esta_logado(): return redirect(url_for('login'))
+    data, local, cidade = request.form.get('data'), request.form.get('local'), request.form.get('cidade')
     if data and local and cidade:
         conexao = obter_conexao_db()
-        conexao.execute(
-            'UPDATE shows SET data = ?, local = ?, cidade = ?, endereco = ? WHERE id = ?',
-            (data, local, cidade, endereco, id)
-        )
+        conexao.execute('UPDATE shows SET data = ?, local = ?, cidade = ? WHERE id = ?', (data, local, cidade, id))
         conexao.commit()
         conexao.close()
     return redirect(url_for('admin'))
 
 @app.route('/excluir/<int:id>')
 def excluir(id):
-    if not usuario_esta_logado():
-        return redirect(url_for('login'))
+    if not usuario_esta_logado(): return redirect(url_for('login'))
     conexao = obter_conexao_db()
     conexao.execute('DELETE FROM shows WHERE id = ?', (id,))
     conexao.commit()
