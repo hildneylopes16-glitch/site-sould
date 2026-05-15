@@ -5,14 +5,10 @@ import sqlite3
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
-
-# CHAVE SECRETA
 app.secret_key = 'sould_secret_key_2026'
 
-# CONFIGURAÇÃO DE LOGIN
 USUARIO_ADMIN = "sould_admin"
 SENHA_HASH = generate_password_hash("sould2026")
-
 DATABASE = 'sould.db'
 
 def obter_conexao_db():
@@ -24,7 +20,6 @@ def inicializar_db():
     try:
         conexao = obter_conexao_db()
         cursor = conexao.cursor()
-        # ADICIONADO: Coluna link_maps para bater com a lógica do index.html
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS shows (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -51,17 +46,12 @@ inicializar_db()
 
 def ordenar_shows(lista_rows):
     try:
-        return sorted(
-            lista_rows, 
-            key=lambda x: datetime.strptime(x['data'], '%d/%m/%Y')
-        )
+        return sorted(lista_rows, key=lambda x: datetime.strptime(x['data'], '%d/%m/%Y'))
     except Exception:
         return lista_rows
 
 def usuario_esta_logado():
     return 'logado' in session and session['logado'] == True
-
-# --- ROTAS PÚBLICAS ---
 
 @app.route('/')
 def index():
@@ -74,23 +64,13 @@ def index():
 @app.route('/galeria')
 def galeria():
     caminho_galeria = os.path.join('static', 'img', 'galeria')
-    if not os.path.exists(caminho_galeria):
-        os.makedirs(caminho_galeria)
-    
+    if not os.path.exists(caminho_galeria): os.makedirs(caminho_galeria)
     fotos = [f for f in os.listdir(caminho_galeria) if f.lower().endswith(('.jpg', '.png', '.jpeg', '.webp'))]
     return render_template('galeria.html', fotos=fotos)
 
-@app.route('/loja')
-def loja():
-    # Rota adicionada para suprir o botão LOJA do index.html
-    return render_template('loja.html')
-
-# --- SISTEMA DE LOGIN ---
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    if usuario_esta_logado():
-        return redirect(url_for('admin'))
+    if usuario_esta_logado(): return redirect(url_for('admin'))
     if request.method == 'POST':
         usuario = request.form.get('usuario')
         senha = request.form.get('senha')
@@ -106,19 +86,15 @@ def logout():
     session.clear()
     return redirect(url_for('login'))
 
-# --- PAINEL ADMINISTRATIVO ---
-
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
-    if not usuario_esta_logado():
-        return redirect(url_for('login'))
-    
+    if not usuario_esta_logado(): return redirect(url_for('login'))
     conexao = obter_conexao_db()
     if request.method == 'POST':
         data = request.form.get('data')
         local = request.form.get('local')
         cidade = request.form.get('cidade')
-        link_maps = request.form.get('link_maps') # Captura o link do maps
+        link_maps = request.form.get('link_maps') or "" # GARANTE QUE NÃO SEJA NONE
         
         if data and local and cidade:
             conexao.execute(
@@ -148,7 +124,7 @@ def atualizar_show(id):
     data = request.form.get('data')
     local = request.form.get('local')
     cidade = request.form.get('cidade')
-    link_maps = request.form.get('link_maps')
+    link_maps = request.form.get('link_maps') or "" # GARANTE QUE NÃO SEJA NONE
     
     if data and local and cidade:
         conexao = obter_conexao_db()
