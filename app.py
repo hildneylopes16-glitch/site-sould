@@ -24,12 +24,14 @@ def inicializar_db():
     try:
         conexao = obter_conexao_db()
         cursor = conexao.cursor()
+        # ADICIONADO: Coluna link_maps para bater com a lógica do index.html
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS shows (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 data TEXT NOT NULL,
                 local TEXT NOT NULL,
-                cidade TEXT NOT NULL
+                cidade TEXT NOT NULL,
+                link_maps TEXT
             )
         ''')
         conexao.commit()
@@ -37,8 +39,8 @@ def inicializar_db():
         cursor.execute('SELECT COUNT(*) FROM shows')
         if cursor.fetchone()[0] == 0:
             cursor.execute(
-                'INSERT INTO shows (data, local, cidade) VALUES (?, ?, ?)',
-                ("23/05/2026", "GEOGER'S SEVEN", "SÃO JOSÉ DOS CAMPOS")
+                'INSERT INTO shows (data, local, cidade, link_maps) VALUES (?, ?, ?, ?)',
+                ("23/05/2026", "GEORGE'S SEVEN", "SÃO JOSÉ DOS CAMPOS", "https://maps.google.com")
             )
             conexao.commit()
         conexao.close()
@@ -49,7 +51,6 @@ inicializar_db()
 
 def ordenar_shows(lista_rows):
     try:
-        # Tenta ordenar por data DD/MM/AAAA
         return sorted(
             lista_rows, 
             key=lambda x: datetime.strptime(x['data'], '%d/%m/%Y')
@@ -59,6 +60,8 @@ def ordenar_shows(lista_rows):
 
 def usuario_esta_logado():
     return 'logado' in session and session['logado'] == True
+
+# --- ROTAS PÚBLICAS ---
 
 @app.route('/')
 def index():
@@ -70,14 +73,19 @@ def index():
 
 @app.route('/galeria')
 def galeria():
-    # Define o caminho e garante que a pasta exista para não dar erro de sistema
     caminho_galeria = os.path.join('static', 'img', 'galeria')
     if not os.path.exists(caminho_galeria):
         os.makedirs(caminho_galeria)
     
-    # Lista apenas arquivos de imagem reais
     fotos = [f for f in os.listdir(caminho_galeria) if f.lower().endswith(('.jpg', '.png', '.jpeg', '.webp'))]
     return render_template('galeria.html', fotos=fotos)
+
+@app.route('/loja')
+def loja():
+    # Rota adicionada para suprir o botão LOJA do index.html
+    return render_template('loja.html')
+
+# --- SISTEMA DE LOGIN ---
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -98,6 +106,8 @@ def logout():
     session.clear()
     return redirect(url_for('login'))
 
+# --- PAINEL ADMINISTRATIVO ---
+
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
     if not usuario_esta_logado():
@@ -108,8 +118,13 @@ def admin():
         data = request.form.get('data')
         local = request.form.get('local')
         cidade = request.form.get('cidade')
+        link_maps = request.form.get('link_maps') # Captura o link do maps
+        
         if data and local and cidade:
-            conexao.execute('INSERT INTO shows (data, local, cidade) VALUES (?, ?, ?)', (data, local, cidade))
+            conexao.execute(
+                'INSERT INTO shows (data, local, cidade, link_maps) VALUES (?, ?, ?, ?)', 
+                (data, local, cidade, link_maps)
+            )
             conexao.commit()
             conexao.close()
             return redirect(url_for('admin'))
@@ -130,10 +145,17 @@ def editar_show(id):
 @app.route('/atualizar/<int:id>', methods=['POST'])
 def atualizar_show(id):
     if not usuario_esta_logado(): return redirect(url_for('login'))
-    data, local, cidade = request.form.get('data'), request.form.get('local'), request.form.get('cidade')
+    data = request.form.get('data')
+    local = request.form.get('local')
+    cidade = request.form.get('cidade')
+    link_maps = request.form.get('link_maps')
+    
     if data and local and cidade:
         conexao = obter_conexao_db()
-        conexao.execute('UPDATE shows SET data = ?, local = ?, cidade = ? WHERE id = ?', (data, local, cidade, id))
+        conexao.execute(
+            'UPDATE shows SET data = ?, local = ?, cidade = ?, link_maps = ? WHERE id = ?', 
+            (data, local, cidade, link_maps, id)
+        )
         conexao.commit()
         conexao.close()
     return redirect(url_for('admin'))

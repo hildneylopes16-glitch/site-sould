@@ -10,32 +10,47 @@
     <style>
         html { scroll-behavior: smooth; }
         body { background-color: #121212; color: white; font-family: 'Arial Black', sans-serif; overflow-x: hidden; }
-        .navbar { border-bottom: 1px solid #222; }
+        .navbar { border-bottom: 1px solid #222; z-index: 1000; }
         
         @media (max-width: 991px) {
             .navbar-collapse { background-color: #000; padding: 20px; text-align: center; }
             .nav-link { font-size: 1.2rem; margin: 10px 0; border-bottom: 1px solid #111; }
         }
 
-        /* CORREÇÃO DE IMAGENS - HERO */
+        /* CORREÇÃO DE IMAGENS - HERO (Fundo sempre preenchido) */
         .hero-section { height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; position: relative; overflow: hidden; }
         .hero-slider { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
-        .slide { position: absolute; width: 100%; height: 100%; background-size: cover; background-position: center; opacity: 0; animation: sliderAnim 15s infinite; }
+        .slide { 
+            position: absolute; 
+            width: 100%; 
+            height: 100%; 
+            background-size: cover; 
+            background-position: center center; 
+            opacity: 0; 
+            animation: sliderAnim 15s infinite; 
+        }
         
         @media (max-width: 768px) {
-            .slide { background-size: contain; background-repeat: no-repeat; background-color: #000; }
+            .slide { background-attachment: scroll; }
+            .hero-content img { width: 80% !important; }
         }
 
-        .slide:nth-child(1) { background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.7)), url('/static/img/show1.jpg'); animation-delay: 0s; }
-        .slide:nth-child(2) { background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.7)), url('/static/img/show2.jpg'); animation-delay: 5s; }
-        .slide:nth-child(3) { background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.7)), url('/static/img/show3.jpg'); animation-delay: 10s; }
+        .slide:nth-child(1) { background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.8)), url('/static/img/show1.jpg'); animation-delay: 0s; }
+        .slide:nth-child(2) { background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.8)), url('/static/img/show2.jpg'); animation-delay: 5s; }
+        .slide:nth-child(3) { background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.8)), url('/static/img/show3.jpg'); animation-delay: 10s; }
         
         @keyframes sliderAnim { 0% { opacity: 0; } 10% { opacity: 1; } 33% { opacity: 1; } 43% { opacity: 0; } 100% { opacity: 0; } }
         
         .hero-content { position: relative; z-index: 2; width: 90%; }
-        .hero-content img { width: 100%; max-width: 500px; filter: drop-shadow(0px 0px 15px rgba(255, 0, 0, 0.5)); }
+        .hero-content img { width: 100%; max-width: 500px; filter: drop-shadow(0px 0px 20px rgba(255, 0, 0, 0.6)); }
 
-        /* AGENDA & LINKS */
+        /* DNA & BIO SECTION */
+        #bio, #dna { background-color: #000; padding: 80px 0; }
+        .bio-text, .dna-text { font-family: sans-serif; color: #ddd; line-height: 1.6; text-align: justify; }
+        .bio-title, .dna-title { color: #ff0000; font-weight: bold; margin-top: 30px; letter-spacing: 2px; }
+        .dna-card { background: #111; border-left: 5px solid #ff0000; padding: 20px; margin-top: 20px; }
+
+        /* AGENDA */
         #agenda { padding: 80px 0; }
         .agenda-container-flex { display: flex; align-items: center; justify-content: center; max-width: 1200px; margin: 0 auto; gap: 30px; }
         .agenda-wrapper { flex: 1; max-height: 500px; overflow-y: auto; max-width: 800px; z-index: 2; }
@@ -43,18 +58,13 @@
         .maps-link { color: #008cff; text-decoration: none; font-weight: bold; transition: 0.3s; }
         .maps-link:hover { color: #ff0000; text-decoration: underline; }
 
-        /* BIO ESTILIZAÇÃO */
-        #bio { background-color: #000; padding: 80px 0; }
-        .bio-text { font-family: sans-serif; color: #ddd; line-height: 1.6; text-align: justify; }
-        .bio-title { color: #ff0000; font-weight: bold; margin-top: 30px; }
-
-        /* CORREÇÃO DE IMAGENS - INTEGRANTES */
+        /* INTEGRANTES */
         .integrante-img-container { overflow: hidden; border: 2px solid #333; background-color: #1a1a1a; height: 250px; width: 100%; }
         .integrante-card img { width: 100%; height: 100%; object-fit: cover; object-position: center top; filter: grayscale(100%); transition: 0.4s; }
         .integrante-card:hover img { filter: grayscale(0%); transform: scale(1.05); }
 
         /* FOTÓGRAFO */
-        .foto-sidney { width: 100%; border: 2px solid #333; transition: 0.4s; filter: grayscale(100%); object-fit: cover; height: 300px; }
+        .foto-sidney { width: 100%; border: 2px solid #333; transition: 0.4s; filter: grayscale(100%); object-fit: cover; height: 350px; }
         .foto-sidney:hover { border-color: #ff0000; filter: grayscale(0%); }
         
         .souldinho-img { width: 280px; filter: drop-shadow(0px 0px 20px rgba(255, 0, 0, 0.5)); animation: float 3s ease-in-out infinite; }
@@ -73,10 +83,13 @@
                 <div class="navbar-nav ms-auto">
                     <a class="nav-link px-3" href="#agenda">SHOWS</a>
                     <a class="nav-link px-3" href="#bio">A BANDA</a>
+                    <a class="nav-link px-3" href="#dna">DNA</a>
                     <a class="nav-link px-3" href="#banda">INTEGRANTES</a>
                     <a class="nav-link px-3" href="#fotografo">FOTÓGRAFO</a>
                     <a class="nav-link px-3" href="/galeria">GALERIA</a>
-                    <a class="nav-link px-3 fw-bold text-warning" href="/loja"><i class="fas fa-shopping-cart me-1"></i>LOJA</a>
+                    <a class="nav-link px-3 fw-bold text-warning" href="/loja" style="border: 1px solid #ffc107; border-radius: 5px; margin-left: 10px;">
+                        <i class="fas fa-shopping-cart me-1"></i>LOJA
+                    </a>
                     <a class="nav-link px-3" href="#contato">CONTATO</a>
                 </div>
             </div>
@@ -136,6 +149,21 @@
         </div>
     </section>
 
+    <section id="dna">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <h2 class="text-center mb-5">DNA SOULD</h2>
+                    <div class="dna-card">
+                        <p class="dna-text">
+                            O DNA da SOULD é construído sobre a **autenticidade**. Não subimos ao palco apenas para reproduzir notas, mas para criar uma conexão visceral com o público. Nosso som é um reflexo das ruas de São José dos Campos, misturando a agressividade do Hardcore com a sensibilidade melódica do Pop Rock. Cada ensaio, cada show e cada composição carrega o compromisso de manter o Rock vivo e pulsante.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section id="banda" class="py-5 container text-center">
         <h2 class="mb-5">OS INTEGRANTES</h2>
         <div class="row justify-content-center g-4">
@@ -180,7 +208,7 @@
         </div>
     </section>
 
-    <footer id="contato">
+    <footer id="contato" class="py-5">
         <div class="container text-center">
             <h2 class="mb-4">SOULD</h2>
             <div class="row justify-content-center g-3">
