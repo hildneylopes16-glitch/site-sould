@@ -1,33 +1,32 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from datetime import datetime
 import os
-import sqlite3
+import psycopg2
+from psycopg2.extras import RealDictCursor
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 app.secret_key = 'sould_secret_key_2026'
 
-# Configurações de Admin
 USUARIO_ADMIN = "sould_admin"
-# O hash deve ser gerado uma vez. Em produção, você usaria o hash fixo aqui.
 SENHA_HASH = generate_password_hash("sould2026")
-DATABASE = 'sould.db'
+
+# Pega a URL do banco das variáveis de ambiente do Render
+DATABASE_URL = os.environ.get('DATABASE_URL')
 
 def obter_conexao_db():
-    # Caminho absoluto para garantir que o arquivo .db não mude de lugar
-    caminho_db = os.path.join(os.path.abspath(os.path.dirname(__file__)), DATABASE)
-    conexao = sqlite3.connect(caminho_db)
-    conexao.row_factory = sqlite3.Row
+    # Conecta ao Postgres usando a URL do Render
+    conexao = psycopg2.connect(DATABASE_URL, sslmode='require')
     return conexao
 
 def inicializar_db():
     try:
         conexao = obter_conexao_db()
         cursor = conexao.cursor()
-        # Cria a tabela se não existir
+        # Cria a tabela se não existir (Sintaxe Postgres: SERIAL)
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS shows (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                id SERIAL PRIMARY KEY,
                 data TEXT NOT NULL,
                 local TEXT NOT NULL,
                 cidade TEXT NOT NULL,
@@ -36,24 +35,22 @@ def inicializar_db():
         ''')
         conexao.commit()
         
-        # Verifica se já existem shows para não inserir duplicados ou resetar a agenda
         cursor.execute('SELECT COUNT(*) FROM shows')
         if cursor.fetchone()[0] == 0:
             cursor.execute(
-                'INSERT INTO shows (data, local, cidade, link_maps) VALUES (?, ?, ?, ?)',
+                'INSERT INTO shows (data, local, cidade, link_maps) VALUES (%s, %s, %s, %s)',
                 ("23/05/2026", "GEORGE'S SEVEN", "SÃO JOSÉ DOS CAMPOS", "https://maps.google.com")
             )
             conexao.commit()
+        cursor.close()
         conexao.close()
     except Exception as e:
         print(f"Erro ao inicializar banco: {e}")
 
-# Inicializa o banco ao rodar o app
 inicializar_db()
 
 def ordenar_shows(lista_rows):
     try:
-        # Mantém a lógica de ordenação por data que você já criou
         return sorted(lista_rows, key=lambda x: datetime.strptime(x['data'], '%d/%m/%Y'))
     except Exception:
         return lista_rows
@@ -64,7 +61,11 @@ def usuario_esta_logado():
 @app.route('/')
 def index():
     conexao = obter_conexao_db()
-    shows_db = conexao.execute('SELECT * FROM shows').fetchall()
+    # RealDictCursor faz com que os resultados funcionem como dicionários no HTML
+    cursor = conexao.cursor(cursor_factory=RealDictCursor)
+    cursor.execute('SELECT * FROM shows')
+    shows_db = cursor.fetchall()
+    cursor.close()
     conexao.close()
     shows_ordenados = ordenar_shows(shows_db)
     return render_template('index.html', shows=shows_ordenados)
@@ -98,6 +99,8 @@ def logout():
 def admin():
     if not usuario_esta_logado(): return redirect(url_for('login'))
     conexao = obter_conexao_db()
+    cursor = conexao.cursor(cursor_factory=RealDictCursor)
+    
     if request.method == 'POST':
         data = request.form.get('data')
         local = request.form.get('local')
@@ -105,15 +108,18 @@ def admin():
         link_maps = request.form.get('link_maps') or ""
         
         if data and local and cidade:
-            conexao.execute(
-                'INSERT INTO shows (data, local, cidade, link_maps) VALUES (?, ?, ?, ?)', 
+            cursor.execute(
+                'INSERT INTO shows (data, local, cidade, link_maps) VALUES (%s, %s, %s, %s)', 
                 (data, local, cidade, link_maps)
             )
             conexao.commit()
+            cursor.close()
             conexao.close()
             return redirect(url_for('admin'))
     
-    shows_db = conexao.execute('SELECT * FROM shows').fetchall()
+    cursor.execute('SELECT * FROM shows')
+    shows_db = cursor.fetchall()
+    cursor.close()
     conexao.close()
     return render_template('admin.html', shows=ordenar_shows(shows_db), show_edit=None)
 
@@ -121,8 +127,13 @@ def admin():
 def editar_show(id):
     if not usuario_esta_logado(): return redirect(url_for('login'))
     conexao = obter_conexao_db()
-    show_para_editar = conexao.execute('SELECT * FROM shows WHERE id = ?', (id,)).fetchone()
-    shows_db = conexao.execute('SELECT * FROM shows').fetchall()
+    cursor = conexao.cursor(cursor_factory=RealDictCursor)
+    cursor.execute('SELECT * FROM shows WHERE id = %s', (id,))
+    show_para_editar = cursor.fetchone()
+    
+    cursor.execute('SELECT * FROM shows')
+    shows_db = cursor.fetchall()
+    cursor.close()
     conexao.close()
     return render_template('admin.html', shows=ordenar_shows(shows_db), edit_id=id, show_edit=show_para_editar)
 
@@ -136,11 +147,13 @@ def atualizar_show(id):
     
     if data and local and cidade:
         conexao = obter_conexao_db()
-        conexao.execute(
-            'UPDATE shows SET data = ?, local = ?, cidade = ?, link_maps = ? WHERE id = ?', 
+        cursor = conexao.cursor()
+        cursor.execute(
+            'UPDATE shows SET data = %s, local = %s, cidade = %s, link_maps = %s WHERE id = %s', 
             (data, local, cidade, link_maps, id)
         )
         conexao.commit()
+        cursor.close()
         conexao.close()
     return redirect(url_for('admin'))
 
@@ -148,11 +161,12 @@ def atualizar_show(id):
 def excluir(id):
     if not usuario_esta_logado(): return redirect(url_for('login'))
     conexao = obter_conexao_db()
-    conexao.execute('DELETE FROM shows WHERE id = ?', (id,))
+    cursor = conexao.cursor()
+    cursor.execute('DELETE FROM shows WHERE id = %s', (id,))
     conexao.commit()
+    cursor.close()
     conexao.close()
     return redirect(url_for('admin'))
 
 if __name__ == '__main__':
-    # O uso de use_reloader=False pode ajudar em alguns ambientes a não duplicar a execução
     app.run(debug=True)
