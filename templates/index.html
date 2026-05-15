@@ -21,35 +21,25 @@
             .nav-link { font-size: 1.2rem; margin: 10px 0; border-bottom: 1px solid #111; }
         }
 
-        /* HERO SECTION - AJUSTE DEFINITIVO DE RESOLUÇÃO */
+        /* HERO SECTION - AJUSTE DE RESOLUÇÃO */
         .hero-section { 
             height: 100vh; 
             display: flex; align-items: center; justify-content: center; text-align: center; 
             position: relative; overflow: hidden;
-            background-color: #000; /* Fundo preto caso a imagem seja menor */
         }
         .hero-slider { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
         .slide {
             position: absolute; width: 100%; height: 100%;
-            /* AJUSTE: 'contain' garante que a foto apareça inteira sem cortes */
-            background-size: contain; 
+            background-size: cover; 
             background-repeat: no-repeat;
             background-position: center center;
             opacity: 0; animation: sliderAnim 15s infinite;
         }
 
-        /* Ajuste para telas grandes: se a foto ficar com bordas laterais, 'cover' é melhor, 
-           mas vamos centralizar o foco no topo para não cortar as cabeças */
-        @media (min-width: 1200px) {
-            .slide { 
-                background-size: cover; 
-                background-position: center 20%; /* Foca na parte de cima da foto */
-            }
-        }
-
-        .slide:nth-child(1) { background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.6)), url('/static/img/show1.jpg'); animation-delay: 0s; }
-        .slide:nth-child(2) { background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.6)), url('/static/img/show2.jpg'); animation-delay: 5s; }
-        .slide:nth-child(3) { background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.6)), url('/static/img/show3.jpg'); animation-delay: 10s; }
+        /* CORREÇÃO DAS IMAGENS DE FUNDO COM URL_FOR */
+        .slide:nth-child(1) { background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.7)), url("{{ url_for('static', filename='img/show1.jpg') }}"); animation-delay: 0s; }
+        .slide:nth-child(2) { background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.7)), url("{{ url_for('static', filename='img/show2.jpg') }}"); animation-delay: 5s; }
+        .slide:nth-child(3) { background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.7)), url("{{ url_for('static', filename='img/show3.jpg') }}"); animation-delay: 10s; }
         
         @keyframes sliderAnim {
             0% { opacity: 0; }
@@ -190,6 +180,162 @@
             </div>
         </div>
     </section>
+
+    <section id="bio">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 text-center">
+                    <h2 class="mb-5">SOBRE A BANDA</h2>
+                    <div class="bio-text">
+                        <p>A Sould é uma banda de pop-rock nacional e hardcore formada em outubro de 2025, em São José dos Campos/SP. O nome representa a fusão entre 'som' e 'alma', simbolizando a essência do grupo — músicos que se reúnem para tocar, se divertir e transmitir energia verdadeira em cada apresentação. Mais do que uma banda, a Sould é um projeto de conexão entre atitude, emoção e autenticidade.</p>
+                        
+                        <h4 class="bio-title">ESTILO E INFLUÊNCIAS</h4>
+                        <p>Com influências de bandas como CPM 22, Detonautas, NX Zero e Dead Fish, a Sould mantém viva a essência do rock nacional, unindo melodia, peso e mensagens que refletem a reality e o sentimento de uma geração. Além das músicas próprias, o grupo se destaca por versões criativas e energéticas de artistas como Imagine Dragons, One Republic, Lady Gaga e Bruno Mars, adaptadas ao estilo da banda.</p>
+
+                        <h4 class="bio-title">DESTAQUES E ATUAÇÃO</h4>
+                        <p>Apesar de recente, a Sould já marcou presença em eventos e casas renomadas como Gilmour Brewpub, Hocus Pocus, Bar do Columba, Emo Véio, Daruma Rock Bar e ST Pauls PUB. A banda está em processo de composição e gravação do seu primeiro material autoral, mantendo o foco em levar o rock nacional com autenticidade a novos públicos.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="banda" class="py-5 container text-center">
+        <h2 class="mb-5">OS INTEGRANTES</h2>
+        <div class="row justify-content-center g-4">
+            <div class="col-6 col-md-4 col-lg-2">
+                <div class="integrante-card">
+                    <div class="integrante-img-container"><img src="{{ url_for('static', filename='img/vocal.jpg') }}"></div>
+                    <div class="mt-3 text-danger fw-bold">BRUNO</div>
+                    <div class="small text-secondary">VOCAL</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-4 col-lg-2">
+                <div class="integrante-card">
+                    <div class="integrante-img-container"><img src="{{ url_for('static', filename='img/guitarra1.jpg') }}"></div>
+                    <div class="mt-3 text-danger fw-bold">EVANDRO</div>
+                    <div class="small text-secondary">GUITARRA</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-4 col-lg-2">
+                <div class="integrante-card">
+                    <div class="integrante-img-container"><img src="{{ url_for('static', filename='img/guitarra2.jpg') }}"></div>
+                    <div class="mt-3 text-danger fw-bold">MARCIO</div>
+                    <div class="small text-secondary">GUITARRA</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-4 col-lg-2">
+                <div class="integrante-card">
+                    <div class="integrante-img-container"><img src="{{ url_for('static', filename='img/baixo.jpg') }}"></div>
+                    <div class="mt-3 text-danger fw-bold">MATHEUS</div>
+                    <div class="small text-secondary">BAIXO</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-4 col-lg-2">
+                <div class="integrante-card">
+                    <div class="integrante-img-container"><img src="{{ url_for('static', filename='img/bateria.jpg') }}"></div>
+                    <div class="mt-3 text-danger fw-bold">HILDNEY</div>
+                    <div class="small text-secondary">BATERIA</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="fotografo">
+        <div class="container text-center">
+            <h2 class="mb-5">FOTÓGRAFO OFICIAL</h2>
+            <div class="row align-items-center justify-content-center">
+                <div class="col-lg-5 mb-4 mb-lg-0">
+                    <div class="row g-2">
+                        <div class="col-6">
+                            <img src="{{ url_for('static', filename='img/sidney1.jpg') }}" class="foto-sidney" alt="Sidney Lopes 1">
+                        </div>
+                        <div class="col-6">
+                            <img src="{{ url_for('static', filename='img/sidney2.jpg') }}" class="foto-sidney" alt="Sidney Lopes 2">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-7 ps-lg-5 text-lg-start">
+                    <h3 class="text-danger fw-bold mb-3">SIDNEY LOPES</h3>
+                    <p class="lead" style="font-family: sans-serif; color: #ccc;">
+                        Toda grande banda precisa de um olhar que capture a sua essência. <strong>Sidney Lopes</strong> não é apenas o fotógrafo oficial da SOULD; ele é o tradutor da nossa energia em frames. 
+                    </p>
+                    <p style="font-family: sans-serif; color: #aaa; text-align: justify;">
+                        Como Videomaker e Filmmaker de elite, Sidney realiza trabalhos fantásticos, transformando o suor do palco e o peso das guitarras em arte visual imersiva. Com uma técnica refinada, ele imortaliza a atitude Hardcore e a vibração do Pop Rock, garantindo que a alma da banda vá muito além do som.
+                    </p>
+                    <div class="mt-4">
+                        <div class="mb-3">
+                            <a href="https://www.instagram.com/Osidneylopes" target="_blank" class="insta-sidney">
+                                <i class="fab fa-instagram text-danger"></i> @Osidneylopes
+                            </a>
+                        </div>
+                        <a href="https://wa.me/5512981606958?text=Olá Sidney! Vi seu trabalho no site da Banda SOULD e gostaria de fazer um orçamento." target="_blank" class="btn-sidney">
+                            <i class="fab fa-whatsapp me-2"></i> CONHEÇA NOSSO FOTÓGRAFO
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="loja" class="py-5 bg-black text-center">
+        <div class="container">
+            <h2 class="mb-5">LOJA OFICIAL</h2>
+            <div class="row g-4 justify-content-center">
+                <div class="col-md-4">
+                    <div class="shop-card">
+                        <div class="shop-img-container">
+                            <img src="{{ url_for('static', filename='img/camisa.jpg') }}" class="shop-img">
+                        </div>
+                        <h5 class="fw-bold">CAMISETA BANDA SOULD</h5>
+                        <div class="shop-desc">
+                            ➡️ Do P ao GG (Unissex/Babylook) – <strong>R$ 60,00</strong><br>
+                            ➡️ G1 ao G2 – <strong>R$ 65,00</strong><br>
+                            ➡️ G3 ao G4 – <strong>R$ 70,00</strong>
+                        </div>
+                        <a href="https://wa.me/5512982147326?text=Olá! Tenho interesse em comprar a Camiseta Banda SOULD." target="_blank" class="btn-buy">COMPRAR</a>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="shop-card">
+                        <div class="shop-img-container">
+                            <img src="{{ url_for('static', filename='img/bone.jpg') }}" class="shop-img">
+                        </div>
+                        <h5 class="fw-bold">BONÉ SOULD</h5>
+                        <div class="shop-desc">
+                            Boné oficial bordado com regulagem traseira snapback. Material premium de alta durabilidade.
+                        </div>
+                        <p class="text-danger fs-4 fw-bold mb-3">R$ 65,00</p>
+                        <a href="https://wa.me/5512974106100?text=Olá! Tenho interesse em comprar o Boné SOULD." target="_blank" class="btn-buy">COMPRAR</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="dna" class="py-5 dna-section text-center">
+        <h2 class="mb-4">DNA SOULD</h2>
+        <img src="{{ url_for('static', filename='img/dna_sould.jpg') }}" class="img-fluid mx-auto d-block" alt="DNA Banda SOULD">
+    </section>
+
+    <footer id="contato">
+        <div class="container text-center">
+            <h2 class="mb-4">SOULD</h2>
+            <div class="mb-5">
+                <a href="https://www.instagram.com/bandasould" target="_blank" class="text-white fs-2 mx-3"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="text-white fs-2 mx-3"><i class="fab fa-spotify"></i></a>
+            </div>
+            <div class="row justify-content-center g-3">
+                <div class="col-md-5">
+                    <a href="https://wa.me/5512982147326" class="btn btn-outline-danger w-100 py-3 rounded-0">SHOWS: (12) 982147326 (BRUNO)</a>
+                </div>
+                <div class="col-md-5">
+                    <a href="https://wa.me/5512974106100" class="btn btn-outline-danger w-100 py-3 rounded-0">SHOWS: (12) 974106100 (MARCIO)</a>
+                </div>
+            </div>
+            <p class="mt-5 text-secondary small">&copy; 2026 SOULD - SÃO JOSÉ DOS CAMPOS/SP</p>
+        </div>
+    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
