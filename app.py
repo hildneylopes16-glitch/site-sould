@@ -15,8 +15,8 @@ SENHA_HASH = generate_password_hash("sould2026")
 DATABASE_URL = os.environ.get('DATABASE_URL')
 
 def obter_conexao_db():
-    # Conecta ao Postgres usando a URL do Render
-    conexao = psycopg2.connect(DATABASE_URL, sslmode='require')
+    # AJUSTE: Conecta usando a string de conexão completa para evitar erros de socket local
+    conexao = psycopg2.connect(DATABASE_URL)
     return conexao
 
 def inicializar_db():
@@ -47,6 +47,7 @@ def inicializar_db():
     except Exception as e:
         print(f"Erro ao inicializar banco: {e}")
 
+# Inicializa o banco ao rodar o app
 inicializar_db()
 
 def ordenar_shows(lista_rows):
