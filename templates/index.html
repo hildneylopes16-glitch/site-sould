@@ -3,107 +3,322 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BANDA SOULD | Site Oficial</title>
-
+    <title>SOULD | Hardcore & Pop Rock</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
-
+    
     <style>
-        body {
-            background-color: #000;
-            color: #fff;
-            font-family: 'Roboto', sans-serif;
-            overflow-x: hidden;
+        html { scroll-behavior: smooth; }
+        body { background-color: #121212; color: white; font-family: 'Arial Black', sans-serif; overflow-x: hidden; }
+        
+        /* AJUSTE NAVBAR MOBILE */
+        .navbar { border-bottom: 1px solid #222; }
+        .navbar-toggler { border: none; color: #ff0000; font-size: 1.5rem; }
+        .navbar-toggler:focus { shadow: none; outline: none; box-shadow: none; }
+        
+        @media (max-width: 991px) {
+            .navbar-collapse { background-color: #000; padding: 20px; text-align: center; }
+            .nav-link { font-size: 1.2rem; margin: 10px 0; border-bottom: 1px solid #111; }
         }
 
-        h1, h2, h3, .oswald {
-            font-family: 'Oswald', sans-serif;
-            text-transform: uppercase;
+        /* HERO SECTION */
+        .hero-section { 
+            height: 100vh; 
+            display: flex; align-items: center; justify-content: center; text-align: center; 
+            position: relative; overflow: hidden;
         }
+        .hero-slider { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
+        .slide {
+            position: absolute; width: 100%; height: 100%;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center center;
+            opacity: 0; animation: sliderAnim 15s infinite;
+        }
+        .slide:nth-child(1) { background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.7)), url('/static/img/show1.jpg'); animation-delay: 0s; }
+        .slide:nth-child(2) { background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.7)), url('/static/img/show2.jpg'); animation-delay: 5s; }
+        .slide:nth-child(3) { background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.7)), url('/static/img/show3.jpg'); animation-delay: 10s; }
+        
+        @keyframes sliderAnim {
+            0% { opacity: 0; }
+            10% { opacity: 1; }
+            33% { opacity: 1; }
+            43% { opacity: 0; } 
+            100% { opacity: 0; }
+        }
+        .hero-content { position: relative; z-index: 2; width: 90%; }
+        .hero-content img { width: 100%; max-width: 500px; height: auto; filter: drop-shadow(0px 0px 15px rgba(255, 0, 0, 0.5)); }
 
-        /* Estilização da Agenda */
+        /* AGENDA & SOULDINHO */
+        #agenda { padding: 80px 0; }
         .agenda-container-flex {
-            margin-top: 30px;
+            display: flex; align-items: center; justify-content: center;
+            max-width: 1200px; margin: 0 auto; gap: 30px;
         }
-
-        .list-group-item {
-            transition: transform 0.2s;
-            margin-bottom: 10px;
+        .agenda-wrapper {
+            flex: 1; max-height: 500px; overflow-y: auto; max-width: 800px; z-index: 2; padding-right: 10px;
         }
+        .agenda-wrapper::-webkit-scrollbar { width: 6px; }
+        .agenda-wrapper::-webkit-scrollbar-thumb { background: #ff0000; border-radius: 10px; }
 
-        .list-group-item:hover {
-            transform: scale(1.02);
-            background-color: #1a1a1a !important;
+        .list-group-item { 
+            background-color: #1a1a1a !important; border: 1px solid #333 !important; 
+            margin-bottom: 10px; transition: 0.3s;
         }
+        .list-group-item:hover { border-color: #ff0000 !important; }
 
-        .souldinho-img {
-            filter: drop-shadow(0 0 15px rgba(255, 0, 0, 0.5));
-            animation: flutuar 3s ease-in-out infinite;
+        .souldinho-box { width: 280px; z-index: 1; }
+        .souldinho-img { width: 100%; filter: drop-shadow(0px 0px 20px rgba(255, 0, 0, 0.5)); animation: float 3s ease-in-out infinite; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+
+        /* BIO SECTION */
+        #bio { background-color: #000; padding: 80px 0; }
+        .bio-text { font-family: sans-serif; color: #ddd; line-height: 1.6; text-align: justify; }
+        .bio-title { color: #ff0000; font-weight: bold; margin-top: 30px; }
+
+        /* INTEGRANTES */
+        .integrante-img-container { 
+            overflow: hidden; border: 2px solid #333; background-color: #1a1a1a;
+            width: 100%; height: 250px;
         }
-
-        @keyframes flutuar {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-15px); }
+        .integrante-card img { 
+            width: 100%; height: 100%; object-fit: contain; 
+            filter: grayscale(100%); transition: 0.4s; 
         }
+        .integrante-card:hover img { filter: grayscale(0%); transform: scale(1.05); }
 
-        .badge {
-            font-size: 0.9rem;
-            letter-spacing: 1px;
+        /* SEÇÃO FOTÓGRAFO */
+        #fotografo { background-color: #080808; padding: 80px 0; border-top: 1px solid #222; }
+        .foto-sidney { width: 100%; border: 2px solid #333; transition: 0.4s; filter: grayscale(100%); object-fit: cover; height: 300px; }
+        .foto-sidney:hover { border-color: #ff0000; filter: grayscale(0%); transform: scale(1.02); }
+        .btn-sidney { background: #ff0000; color: white; font-weight: bold; border-radius: 0; border: none; padding: 12px 25px; text-decoration: none; display: inline-block; transition: 0.3s; width: 100%; max-width: 350px; }
+        .btn-sidney:hover { background: #fff; color: #ff0000; }
+        .insta-sidney { color: #fff; text-decoration: none; font-size: 1.1rem; transition: 0.3s; font-family: sans-serif; }
+        .insta-sidney:hover { color: #ff0000; }
+
+        /* LOJA */
+        .shop-card { background: #1a1a1a; border: 1px solid #333; padding: 20px; transition: 0.3s; height: 100%; display: flex; flex-direction: column; }
+        .shop-card:hover { border-color: #ff0000; }
+        .shop-img-container { width: 100%; aspect-ratio: 1/1; overflow: hidden; margin-bottom: 15px; background: #121212; }
+        .shop-img { width: 100%; height: 100%; object-fit: contain; }
+        .shop-desc { font-size: 0.85rem; color: #bbb; font-family: sans-serif; margin-bottom: 15px; text-align: left; }
+        .btn-buy { background: #ff0000; color: white; border-radius: 0; width: 100%; font-weight: bold; margin-top: auto; text-decoration: none; text-align: center; display: block; padding: 10px; }
+        .btn-buy:hover { background: #cc0000; color: white; }
+
+        /* DNA */
+        .dna-section img { width: 100%; max-width: 500px; height: auto; }
+
+        footer { border-top: 2px solid #333; padding: 60px 0; background: #000; }
+
+        @media (max-width: 991px) {
+            .agenda-container-flex { flex-direction: column; }
+            .souldinho-box { width: 200px; order: -1; }
         }
     </style>
 </head>
 <body>
 
-    <main class="py-5">
-        <section id="agenda" class="container text-center my-5">
-            <h2 class="mb-5" style="color: #fff; letter-spacing: 3px; font-size: 2.5rem;">PRÓXIMOS SHOWS</h2>
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top bg-black">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#" style="color: #ff0000; letter-spacing: 2px;">SOULD</a>
             
-            <div class="agenda-container-flex d-flex flex-wrap justify-content-center align-items-start gap-5">
-                
-                <div class="agenda-wrapper" style="flex: 1; min-width: 320px; max-width: 700px;">
-                    <div class="list-group">
-                        {% for show in shows %}
-                        <div class="list-group-item bg-dark text-white d-flex justify-content-between align-items-center p-4 border-secondary shadow">
-                            <div class="text-start">
-                                <strong style="font-size: 1.2rem; color: #ff0000;">{{ show.data }}</strong><br>
-                                
-                                {% if show.endereco %}
-                                    <a href="{% if show.endereco.startswith('http') %}{{ show.endereco }}{% else %}https://www.google.com/maps/search/?api=1&query={{ show.endereco|urlencode }}{% endif %}" 
-                                       target="_blank" 
-                                       style="text-decoration: none; color: #fff; font-weight: bold; font-size: 1.3rem;">
-                                        <i class="fas fa-map-marker-alt me-2 text-danger"></i>{{ show.local|upper }}
-                                    </a>
-                                    <br><small class="text-secondary">Clique para abrir o GPS</small>
-                                {% else %}
-                                    <span style="font-weight: bold; font-size: 1.3rem;">{{ show.local|upper }}</span>
-                                {% endif %}
-                            </div>
-                            <span class="badge bg-danger p-2">{{ show.cidade|upper }}</span>
-                        </div>
-                        {% endfor %}
-                    </div>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuSould" aria-controls="menuSould" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="fas fa-bars"></i>
+            </button>
 
-                    <div class="mt-4">
-                        <a href="https://wa.me/5512974106100?text=Olá,%20gostaria%20de%20informações%20sobre%20os%20shows%20da%20Sould!" 
-                           target="_blank" 
-                           class="btn btn-success btn-lg rounded-0 w-100 py-3 shadow" 
-                           style="background-color: #25d366; border: none; font-weight: bold; letter-spacing: 1px;">
-                            <i class="fab fa-whatsapp me-2"></i>CONTATO PARA SHOWS (MÁRCIO)
-                        </a>
-                    </div>
+            <div class="collapse navbar-collapse" id="menuSould">
+                <div class="navbar-nav ms-auto">
+                    <a class="nav-link px-3" href="#agenda">SHOWS</a>
+                    <a class="nav-link px-3" href="#bio">A BANDA</a>
+                    <a class="nav-link px-3" href="#banda">INTEGRANTES</a>
+                    <a class="nav-link px-3" href="#fotografo">FOTÓGRAFO</a>
+                    <a class="nav-link px-3" href="#loja">LOJA</a>
+                    <a class="nav-link px-3" href="/galeria" target="_blank">GALERIA</a>
+                    <a class="nav-link px-3" href="#dna">DNA</a>
+                    <a class="nav-link px-3" href="#contato">CONTATO</a>
                 </div>
-
-                <div class="souldinho-box d-none d-lg-block">
-                    <img src="{{ url_for('static', filename='img/souldinho.png') }}" class="souldinho-img" style="max-width: 300px;">
-                </div>
-                
             </div>
-        </section>
-    </main>
+        </div>
+    </nav>
+
+    <header class="hero-section">
+        <div class="hero-slider">
+            <div class="slide"></div><div class="slide"></div><div class="slide"></div>
+        </div>
+        <div class="hero-content">
+            <img src="{{ url_for('static', filename='img/logo_sould_transparente.png') }}" alt="Logo SOULD">
+            <p class="lead mt-3" style="letter-spacing: 5px;">HARDCORE / POP ROCK</p>
+        </div>
+    </header>
+
+    <section id="agenda" class="container text-center">
+        <h2 class="mb-5">PRÓXIMOS SHOWS</h2>
+        <div class="agenda-container-flex">
+            <div class="agenda-wrapper">
+                <div class="list-group">
+                    {% for show in shows %}
+                    <div class="list-group-item text-white d-flex justify-content-between align-items-center p-4">
+                        <div class="text-start">
+                            <strong style="font-size: 1.1rem; color: #ff0000;">{{ show.data }}</strong><br>
+                            
+                            {% if show.endereco %}
+                                <a href="{% if show.endereco.startswith('http') %}{{ show.endereco }}{% else %}https://www.google.com/maps/search/?api=1&query={{ show.endereco|urlencode }}{% endif %}" 
+                                   target="_blank" 
+                                   style="text-decoration: none; color: #fff; font-weight: bold; font-size: 1.2rem;">
+                                    <i class="fas fa-directions me-2 text-danger"></i>{{ show.local|upper }}
+                                </a>
+                                <br><small class="text-secondary">Clique para abrir o GPS</small>
+                            {% else %}
+                                <span style="font-weight: bold; font-size: 1.2rem;">{{ show.local|upper }}</span>
+                            {% endif %}
+                        </div>
+                        <span class="badge bg-danger p-2">{{ show.cidade|upper }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="souldinho-box">
+                <img src="{{ url_for('static', filename='img/souldinho.png') }}" class="souldinho-img">
+            </div>
+        </div>
+    </section>
+
+    <section id="bio">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 text-center">
+                    <h2 class="mb-5">SOBRE A BANDA</h2>
+                    <div class="bio-text">
+                        <p>A Sould é uma banda de pop-rock nacional e hardcore formada em outubro de 2025, em São José dos Campos/SP. O nome representa a fusão entre 'som' e 'alma', simbolizando a essência do grupo...</p>
+                        <h4 class="bio-title">ESTILO E INFLUÊNCIAS</h4>
+                        <p>Com influências de bandas como CPM 22, Detonautas, NX Zero e Dead Fish...</p>
+                        <h4 class="bio-title">DESTAQUES E ATUAÇÃO</h4>
+                        <p>Apesar de recente, a Sould já marcou presença em eventos e casas renomadas...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="banda" class="py-5 container text-center">
+        <h2 class="mb-5">OS INTEGRANTES</h2>
+        <div class="row justify-content-center g-4">
+            <div class="col-6 col-md-4 col-lg-2">
+                <div class="integrante-card">
+                    <div class="integrante-img-container"><img src="{{ url_for('static', filename='img/vocal.jpg') }}"></div>
+                    <div class="mt-3 text-danger fw-bold">BRUNO</div>
+                    <div class="small text-secondary">VOCAL</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-4 col-lg-2">
+                <div class="integrante-card">
+                    <div class="integrante-img-container"><img src="{{ url_for('static', filename='img/guitarra1.jpg') }}"></div>
+                    <div class="mt-3 text-danger fw-bold">EVANDRO</div>
+                    <div class="small text-secondary">GUITARRA</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-4 col-lg-2">
+                <div class="integrante-card">
+                    <div class="integrante-img-container"><img src="{{ url_for('static', filename='img/guitarra2.jpg') }}"></div>
+                    <div class="mt-3 text-danger fw-bold">MARCIO</div>
+                    <div class="small text-secondary">GUITARRA</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-4 col-lg-2">
+                <div class="integrante-card">
+                    <div class="integrante-img-container"><img src="{{ url_for('static', filename='img/baixo.jpg') }}"></div>
+                    <div class="mt-3 text-danger fw-bold">MATHEUS</div>
+                    <div class="small text-secondary">BAIXO</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-4 col-lg-2">
+                <div class="integrante-card">
+                    <div class="integrante-img-container"><img src="{{ url_for('static', filename='img/bateria.jpg') }}"></div>
+                    <div class="mt-3 text-danger fw-bold">HILDNEY</div>
+                    <div class="small text-secondary">BATERIA</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="fotografo">
+        <div class="container text-center">
+            <h2 class="mb-5">FOTÓGRAFO OFICIAL</h2>
+            <div class="row align-items-center justify-content-center">
+                <div class="col-lg-5 mb-4 mb-lg-0">
+                    <div class="row g-2">
+                        <div class="col-6"><img src="{{ url_for('static', filename='img/sidney1.jpg') }}" class="foto-sidney"></div>
+                        <div class="col-6"><img src="{{ url_for('static', filename='img/sidney2.jpg') }}" class="foto-sidney"></div>
+                    </div>
+                </div>
+                <div class="col-lg-7 ps-lg-5 text-lg-start">
+                    <h3 class="text-danger fw-bold mb-3">SIDNEY LOPES</h3>
+                    <p class="lead" style="font-family: sans-serif; color: #ccc;">Sidney Lopes não é apenas o fotógrafo oficial da SOULD; ele é o tradutor da nossa energia.</p>
+                    <div class="mt-4">
+                        <a href="https://www.instagram.com/Osidneylopes" target="_blank" class="insta-sidney"><i class="fab fa-instagram text-danger"></i> @Osidneylopes</a><br><br>
+                        <a href="https://wa.me/5512981606958" target="_blank" class="btn-sidney"><i class="fab fa-whatsapp me-2"></i> CONHEÇA NOSSO FOTÓGRAFO</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="loja" class="py-5 bg-black text-center">
+        <div class="container">
+            <h2 class="mb-5">LOJA OFICIAL</h2>
+            <div class="row g-4 justify-content-center">
+                <div class="col-md-4">
+                    <div class="shop-card">
+                        <div class="shop-img-container"><img src="{{ url_for('static', filename='img/camisa.jpg') }}" class="shop-img"></div>
+                        <h5 class="fw-bold">CAMISETA BANDA SOULD</h5>
+                        <a href="https://wa.me/5512982147326" target="_blank" class="btn-buy">COMPRAR</a>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="shop-card">
+                        <div class="shop-img-container"><img src="{{ url_for('static', filename='img/bone.jpg') }}" class="shop-img"></div>
+                        <h5 class="fw-bold">BONÉ SOULD</h5>
+                        <a href="https://wa.me/5512991664151" target="_blank" class="btn-buy">COMPRAR</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="dna" class="py-5 dna-section text-center">
+        <h2 class="mb-4">DNA SOULD</h2>
+        <img src="{{ url_for('static', filename='img/dna_sould.jpg') }}" class="mx-auto d-block">
+    </section>
+
+    <footer id="contato">
+        <div class="container text-center">
+            <h2 class="mb-4">SOULD</h2>
+            <div class="mb-5">
+                <a href="https://www.instagram.com/bandasould" target="_blank" class="text-white fs-2 mx-3"><i class="fab fa-instagram"></i></a>
+            </div>
+            <div class="row justify-content-center g-3">
+                <div class="col-md-5">
+                    <a href="https://wa.me/5512982147326" class="btn btn-outline-danger w-100 py-3 rounded-0">SHOWS: (12) 982147326 (BRUNO)</a>
+                </div>
+                <div class="col-md-5">
+                    <a href="https://wa.me/5512974106100" class="btn btn-outline-danger w-100 py-3 rounded-0">SHOWS: (12) 974106100 (MARCIO)</a>
+                </div>
+            </div>
+            <p class="mt-5 text-secondary small">&copy; 2026 SOULD - SÃO JOSÉ DOS CAMPOS/SP</p>
+        </div>
+    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.querySelectorAll('.navbar-nav .nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                const navbarCollapse = document.getElementById('menuSould');
+                if (navbarCollapse.classList.contains('show')) {
+                    const bsCollapse = new bootstrap.Collapse(navbarCollapse, { toggle: false });
+                    bsCollapse.hide();
+                }
+            });
+        });
+    </script>
 </body>
 </html>
