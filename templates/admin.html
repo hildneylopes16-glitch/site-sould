@@ -17,6 +17,9 @@
         .btn-edit { color: #ffc107; border-color: #ffc107; border-radius: 0; margin-right: 5px; }
         .btn-edit:hover { background: #ffc107; color: #000; }
         h1, h4 { letter-spacing: 2px; text-transform: uppercase; }
+        /* Estilo para o link na tabela ficar visível */
+        .link-admin { color: #ff0000; text-decoration: none; }
+        .link-admin:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
@@ -46,7 +49,7 @@
                 </div>
                 <div class="col-md-3">
                     <label class="small text-secondary">LINK OU ENDEREÇO GOOGLE MAPS</label>
-                    <input type="text" name="endereco" class="form-control" placeholder="Cole o link ou digite o endereço" value="{{ show_edit.endereco if show_edit else '' }}">
+                    <input type="text" name="link_maps" class="form-control" placeholder="Cole o link ou digite o endereço" value="{{ show_edit.link_maps if show_edit else '' }}">
                 </div>
                 <div class="col-md-2 d-flex align-items-end gap-2">
                     <button type="submit" class="btn btn-danger w-100 py-2">
@@ -75,8 +78,14 @@
                     <tr>
                         <td class="fw-bold">{{ show.data }}</td>
                         <td>{{ show.local }}</td>
-                        <td class="small text-secondary" style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                            {{ show.endereco or '---' }}
+                        <td class="small" style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                            {% if show.link_maps %}
+                                <a href="{{ show.link_maps }}" target="_blank" class="link-admin">
+                                    <i class="fas fa-external-link-alt me-1"></i> Ver Link
+                                </a>
+                            {% else %}
+                                <span class="text-secondary">---</span>
+                            {% endif %}
                         </td>
                         <td class="text-secondary">{{ show.cidade }}</td>
                         <td class="text-center">
