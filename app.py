@@ -7,12 +7,16 @@ from werkzeug.security import generate_password_hash, check_password_hash
 app = Flask(__name__)
 app.secret_key = 'sould_secret_key_2026'
 
+# Configurações de Admin
 USUARIO_ADMIN = "sould_admin"
+# O hash deve ser gerado uma vez. Em produção, você usaria o hash fixo aqui.
 SENHA_HASH = generate_password_hash("sould2026")
 DATABASE = 'sould.db'
 
 def obter_conexao_db():
-    conexao = sqlite3.connect(DATABASE)
+    # Caminho absoluto para garantir que o arquivo .db não mude de lugar
+    caminho_db = os.path.join(os.path.abspath(os.path.dirname(__file__)), DATABASE)
+    conexao = sqlite3.connect(caminho_db)
     conexao.row_factory = sqlite3.Row
     return conexao
 
@@ -20,6 +24,7 @@ def inicializar_db():
     try:
         conexao = obter_conexao_db()
         cursor = conexao.cursor()
+        # Cria a tabela se não existir
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS shows (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -31,6 +36,7 @@ def inicializar_db():
         ''')
         conexao.commit()
         
+        # Verifica se já existem shows para não inserir duplicados ou resetar a agenda
         cursor.execute('SELECT COUNT(*) FROM shows')
         if cursor.fetchone()[0] == 0:
             cursor.execute(
@@ -42,10 +48,12 @@ def inicializar_db():
     except Exception as e:
         print(f"Erro ao inicializar banco: {e}")
 
+# Inicializa o banco ao rodar o app
 inicializar_db()
 
 def ordenar_shows(lista_rows):
     try:
+        # Mantém a lógica de ordenação por data que você já criou
         return sorted(lista_rows, key=lambda x: datetime.strptime(x['data'], '%d/%m/%Y'))
     except Exception:
         return lista_rows
@@ -94,7 +102,7 @@ def admin():
         data = request.form.get('data')
         local = request.form.get('local')
         cidade = request.form.get('cidade')
-        link_maps = request.form.get('link_maps') or "" # GARANTE QUE NÃO SEJA NONE
+        link_maps = request.form.get('link_maps') or ""
         
         if data and local and cidade:
             conexao.execute(
@@ -124,7 +132,7 @@ def atualizar_show(id):
     data = request.form.get('data')
     local = request.form.get('local')
     cidade = request.form.get('cidade')
-    link_maps = request.form.get('link_maps') or "" # GARANTE QUE NÃO SEJA NONE
+    link_maps = request.form.get('link_maps') or ""
     
     if data and local and cidade:
         conexao = obter_conexao_db()
@@ -146,4 +154,5 @@ def excluir(id):
     return redirect(url_for('admin'))
 
 if __name__ == '__main__':
+    # O uso de use_reloader=False pode ajudar em alguns ambientes a não duplicar a execução
     app.run(debug=True)
