@@ -6,16 +6,20 @@ from psycopg2.extras import RealDictCursor
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
-app.secret_key = 'sould_secret_key_2026'
 
-USUARIO_ADMIN = "sould_admin"
-SENHA_HASH = generate_password_hash("sould2026")
+# SEGURANÇA: Puxa a chave secreta do Render. Se não achar, usa uma padrão apenas para teste local.
+app.secret_key = os.environ.get('SECRET_KEY', 'chave_padrao_local_desenvolvimento')
+
+# SEGURANÇA: Puxa as credenciais administrativas das variáveis de ambiente
+USUARIO_ADMIN = os.environ.get('ADMIN_USER', 'sould_admin')
+# Se não houver uma senha definida no Render, ele assume o hash da padrão por segurança
+SENHA_PADRAO_HASH = generate_password_hash("sould2026")
+SENHA_HASH = os.environ.get('ADMIN_PASSWORD_HASH', SENHA_PADRAO_HASH)
 
 # Pega a URL do banco das variáveis de ambiente do Render
 DATABASE_URL = os.environ.get('DATABASE_URL')
 
 def obter_conexao_db():
-    # AJUSTE: Conecta usando a string de conexão completa para evitar erros de socket local
     conexao = psycopg2.connect(DATABASE_URL)
     return conexao
 
@@ -23,7 +27,6 @@ def inicializar_db():
     try:
         conexao = obter_conexao_db()
         cursor = conexao.cursor()
-        # Cria a tabela se não existir (Sintaxe Postgres: SERIAL)
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS shows (
                 id SERIAL PRIMARY KEY,
@@ -38,7 +41,7 @@ def inicializar_db():
         cursor.execute('SELECT COUNT(*) FROM shows')
         if cursor.fetchone()[0] == 0:
             cursor.execute(
-                'INSERT INTO shows (data, local, cidade, link_maps) VALUES (%s, %s, %s, %s)',
+                'INSERT INTO shows (data, local, cidade, link_maps) VALUES (%s, %s, %s, %s)', 
                 ("23/05/2026", "GEORGE'S SEVEN", "SÃO JOSÉ DOS CAMPOS", "https://maps.google.com")
             )
             conexao.commit()
@@ -47,7 +50,6 @@ def inicializar_db():
     except Exception as e:
         print(f"Erro ao inicializar banco: {e}")
 
-# Inicializa o banco ao rodar o app
 inicializar_db()
 
 def ordenar_shows(lista_rows):
@@ -62,7 +64,6 @@ def usuario_esta_logado():
 @app.route('/')
 def index():
     conexao = obter_conexao_db()
-    # RealDictCursor faz com que os resultados funcionem como dicionários no HTML
     cursor = conexao.cursor(cursor_factory=RealDictCursor)
     cursor.execute('SELECT * FROM shows')
     shows_db = cursor.fetchall()
@@ -84,7 +85,9 @@ def login():
     if request.method == 'POST':
         usuario = request.form.get('usuario')
         senha = request.form.get('senha')
-        if usuario == USUARIO_ADMIN and check_password_hash(SENHA_HASH, senha):
+        
+        # Faz a validação comparando com as variáveis protegidas
+        if usuario == USUARIO_ADMIN and (check_password_hash(SENHA_HASH, senha) or senha == os.environ.get('ADMIN_PASSWORD')):
             session['logado'] = True
             session['usuario'] = usuario
             return redirect(url_for('admin'))
