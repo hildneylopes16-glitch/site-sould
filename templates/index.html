@@ -44,14 +44,26 @@
         .hero-slider { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
         .slide {
             position: absolute; width: 100%; height: 100%;
-            background-size: cover; /* RESOLUÇÃO AJUSTADA PARA PREENCHER TELA */
             background-repeat: no-repeat;
             background-position: center center;
             opacity: 0; animation: sliderAnim 15s infinite;
         }
-        .slide:nth-child(1) { background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.7)), url('/static/img/show1.jpg'); animation-delay: 0s; }
-        .slide:nth-child(2) { background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.7)), url('/static/img/show2.jpg'); animation-delay: 5s; }
-        .slide:nth-child(3) { background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.7)), url('/static/img/show3.jpg'); animation-delay: 10s; }
+        
+        /* PRIMEIRA FOTO (Ajustada para diminuir e conter na tela do PC e Mobile sem cortar) */
+        .slide:nth-child(1) { 
+            background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.7)), url('/static/img/show1.jpg'); 
+            background-size: contain; 
+            animation-delay: 0s; 
+        }
+        .slide:nth-child(2) { background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.7)), url('/static/img/show2.jpg'); background-size: cover; animation-delay: 5s; }
+        .slide:nth-child(3) { background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.7)), url('/static/img/show3.jpg'); background-size: cover; animation-delay: 10s; }
+        
+        /* Ajuste específico para mobile na primeira foto para garantir boa visualização */
+        @media (max-width: 768px) {
+            .slide:nth-child(1) {
+                background-size: 100% auto; /* Força o preenchimento correto nas laterais de telas menores */
+            }
+        }
         
         @keyframes sliderAnim {
             0% { opacity: 0; }
