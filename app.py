@@ -75,22 +75,27 @@ def usuario_esta_logado():
 @app.route('/')
 def index():
     conexao = obter_conexao_db()
+    hoje_str = date.today().isoformat()
     
-    # CONTAGEM INTERNA DE ACESSOS (Silenciosa/Invisível)
-    try:
-        cursor_acesso = conexao.cursor()
-        hoje = date.today()
-        cursor_acesso.execute("""
-            INSERT INTO acessos (data, quantidade) 
-            VALUES (%s, 1) 
-            ON CONFLICT (data) 
-            DO UPDATE SET quantidade = acessos.quantidade + 1
-        """, (hoje,))
-        conexao.commit()
-        cursor_acesso.close()
-    except Exception as e:
-        print(f"Erro ao computar acesso: {e}")
-        
+    # CONTAGEM INTELIGENTE DE ACESSOS (Proteção contra F5/Duplicados usando Session)
+    if 'ultimo_acesso' not in session or session['ultimo_acesso'] != hoje_str:
+        try:
+            cursor_acesso = conexao.cursor()
+            hoje = date.today()
+            cursor_acesso.execute("""
+                INSERT INTO acessos (data, quantidade) 
+                VALUES (%s, 1) 
+                ON CONFLICT (data) 
+                DO UPDATE SET quantidade = acessos.quantidade + 1
+            """, (hoje,))
+            conexao.commit()
+            cursor_acesso.close()
+            
+            # Marca na sessão do navegador que este visitante já computou o clique de hoje
+            session['ultimo_acesso'] = hoje_str
+        except Exception as e:
+            print(f"Erro ao computar acesso: {e}")
+            
     cursor = conexao.cursor(cursor_factory=RealDictCursor)
     cursor.execute('SELECT * FROM shows')
     shows_db = cursor.fetchall()
