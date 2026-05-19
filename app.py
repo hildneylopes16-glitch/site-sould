@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
-from datetime import datetime
+from datetime import datetime, date
 import os
 import psycopg2
 from psycopg2.extras import RealDictCursor
@@ -27,6 +27,8 @@ def inicializar_db():
     try:
         conexao = obter_conexao_db()
         cursor = conexao.cursor()
+        
+        # Cria a tabela de shows se não existir
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS shows (
                 id SERIAL PRIMARY KEY,
@@ -34,6 +36,15 @@ def inicializar_db():
                 local TEXT NOT NULL,
                 cidade TEXT NOT NULL,
                 link_maps TEXT
+            )
+        ''')
+        
+        # NOVA: Cria a tabela de acessos diários se não existir
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS acessos (
+                id SERIAL PRIMARY KEY,
+                data DATE UNIQUE NOT NULL,
+                quantidade INT NOT NULL DEFAULT 0
             )
         ''')
         conexao.commit()
@@ -64,6 +75,22 @@ def usuario_esta_logado():
 @app.route('/')
 def index():
     conexao = obter_conexao_db()
+    
+    # CONTAGEM INTERNA DE ACESSOS (Silenciosa/Invisível)
+    try:
+        cursor_acesso = conexao.cursor()
+        hoje = date.today()
+        cursor_acesso.execute("""
+            INSERT INTO acessos (data, quantidade) 
+            VALUES (%s, 1) 
+            ON CONFLICT (data) 
+            DO UPDATE SET quantidade = acessos.quantidade + 1
+        """, (hoje,))
+        conexao.commit()
+        cursor_acesso.close()
+    except Exception as e:
+        print(f"Erro ao computar acesso: {e}")
+        
     cursor = conexao.cursor(cursor_factory=RealDictCursor)
     cursor.execute('SELECT * FROM shows')
     shows_db = cursor.fetchall()
@@ -86,7 +113,6 @@ def login():
         usuario = request.form.get('usuario')
         senha = request.form.get('senha')
         
-        # Faz a validação comparando com as variáveis protegidas
         if usuario == USUARIO_ADMIN and (check_password_hash(SENHA_HASH, senha) or senha == os.environ.get('ADMIN_PASSWORD')):
             session['logado'] = True
             session['usuario'] = usuario
@@ -121,11 +147,18 @@ def admin():
             conexao.close()
             return redirect(url_for('admin'))
     
+    # 1. Recupera a lista de shows
     cursor.execute('SELECT * FROM shows')
     shows_db = cursor.fetchall()
+    
+    # 2. Recupera a soma total de acessos para o painel de métricas
+    cursor.execute('SELECT SUM(quantidade) as total FROM acessos')
+    resultado_acessos = cursor.fetchone()
+    total_acessos = resultado_acessos['total'] if resultado_acessos and resultado_acessos['total'] else 0
+    
     cursor.close()
     conexao.close()
-    return render_template('admin.html', shows=ordenar_shows(shows_db), show_edit=None)
+    return render_template('admin.html', shows=ordenar_shows(shows_db), show_edit=None, total_acessos=total_acessos)
 
 @app.route('/editar/<int:id>')
 def editar_show(id):
@@ -135,11 +168,17 @@ def editar_show(id):
     cursor.execute('SELECT * FROM shows WHERE id = %s', (id,))
     show_para_editar = cursor.fetchone()
     
+    # Recupera os shows e os acessos para manter o painel preenchido durante a edição
     cursor.execute('SELECT * FROM shows')
     shows_db = cursor.fetchall()
+    
+    cursor.execute('SELECT SUM(quantidade) as total FROM acessos')
+    resultado_acessos = cursor.fetchone()
+    total_acessos = resultado_acessos['total'] if resultado_acessos and resultado_acessos['total'] else 0
+    
     cursor.close()
     conexao.close()
-    return render_template('admin.html', shows=ordenar_shows(shows_db), edit_id=id, show_edit=show_para_editar)
+    return render_template('admin.html', shows=ordenar_shows(shows_db), edit_id=id, show_edit=show_para_editar, total_acessos=total_acessos)
 
 @app.route('/atualizar/<int:id>', methods=['POST'])
 def atualizar_show(id):

@@ -17,9 +17,10 @@
         .btn-edit { color: #ffc107; border-color: #ffc107; border-radius: 0; margin-right: 5px; }
         .btn-edit:hover { background: #ffc107; color: #000; }
         h1, h4 { letter-spacing: 2px; text-transform: uppercase; }
-        /* Estilo para o link na tabela ficar visível */
         .link-admin { color: #ff0000; text-decoration: none; }
         .link-admin:hover { text-decoration: underline; }
+        /* Estilo customizado para o indicador privado de acessos */
+        .card-metricas { background: #161616; border: 1px dashed #333; border-radius: 0; }
     </style>
 </head>
 <body>
@@ -29,6 +30,21 @@
             <a href="{{ url_for('logout') }}" class="btn btn-outline-danger rounded-0 px-3">
                 <i class="fas fa-sign-out-alt me-2"></i>SAIR
             </a>
+        </div>
+        
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card card-metricas shadow-sm">
+                    <div class="card-body py-3">
+                        <h6 class="text-secondary uppercase mb-2" style="font-size: 11px; letter-spacing: 1px;">
+                            <i class="fas fa-chart-bar text-danger me-1"></i> Desempenho Interno
+                        </h6>
+                        <h3 class="m-0 text-white fw-bold">
+                            {{ total_acessos }} <span class="text-secondary font-monospace" style="font-size: 13px; font-weight: normal;">acessos totais</span>
+                        </h3>
+                    </div>
+                </div>
+            </div>
         </div>
         
         <div class="card-admin mb-5 shadow-lg">
@@ -57,7 +73,7 @@
                     </button>
                     {% if show_edit %}
                         <a href="{{ url_for('admin') }}" class="btn btn-outline-secondary rounded-0">X</a>
-                    {% endif %}
+                    </endif %}
                 </div>
             </form>
         </div>
