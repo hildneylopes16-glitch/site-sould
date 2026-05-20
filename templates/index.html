@@ -94,7 +94,7 @@
         
         /* ATUALIZAÇÃO DO LINK MAPS: Aparência de botão/link ultra intuitivo */
         .link-maps { 
-            color: #ff0000;  
+            color: #ff0000; 
             text-decoration: none; 
             font-weight: bold; 
             display: inline-block;
@@ -109,7 +109,7 @@
         .link-maps:hover { 
             color: #ffffff; 
             text-decoration: underline;
-            transform: translateX(3px);
+            transform: translateX(3px); /* Dá um leve empurrãozinho para o lado ao passar o mouse */
         }
 
         .souldinho-box { width: 280px; z-index: 1; }
@@ -155,8 +155,25 @@
 
         /* SEÇÃO PARCEIROS */
         #parceiros { background-color: #0b0b0b; border-top: 1px solid #222; padding: 60px 0; }
-        .img-parceiro { max-width: 250px; width: 100%; height: auto; border: 1px solid #333; transition: 0.3s ease-in-out; }
-        .img-parceiro:hover { border-color: #ff0000; transform: scale(1.03); }
+        
+        /* Nova classe específica para o efeito cinza->colorido no logo do parceiro */
+        .img-parceiro-efeito {
+            max-width: 250px;
+            width: 100%;
+            height: auto;
+            border: 1px dashed #333;
+            /* Começa em grayscale (tons de cinza) */
+            filter: grayscale(100%);
+            /* Transição suave de 0.4 segundos */
+            transition: filter 0.4s ease-in-out, border-color 0.4s ease-in-out, transform 0.4s ease-in-out;
+        }
+        
+        /* Ao passar o mouse, remove o filtro grayscale (fica colorido) */
+        .img-parceiro-efeito:hover {
+            filter: grayscale(0%);
+            border-color: #ff0000;
+            transform: scale(1.03);
+        }
 
         footer { border-top: 2px solid #333; padding: 60px 0; background: #000; }
 
@@ -244,7 +261,7 @@
                         <p>Com influências de bandas como CPM 22, Detonautas, NX Zero e Dead Fish, a Sould mantém viva a essência do rock nacional, unindo melodia, peso e mensagens que refletem a reality e o sentimento de uma generation. Além das músicas próprias, o group se destaca por versões criativas e energéticas de artistas como Imagine Dragons, One Republic, Lady Gaga e Bruno Mars, adaptadas ao estilo da banda.</p>
 
                         <h4 class="bio-title">DESTAQUES E ATUAÇÃO</h4>
-                        <p>Apesar de recente, a Sould já marca presença em eventos e casas renomadas como Gilmour Brewpub, Hocus Pocus, Bar do Columba, Emo Véio, Daruma Rock Bar e ST Pauls PUB. A banda está em processo de composição e gravação do seu primeiro material autoral, mantendo o foco em levar o rock nacional com autenticidade a novos públicos.</p>
+                        <p>Apesar de recente, a Sould já marca presença em eventos e casas renomadas como Gilmour Brewpub, Hocus Pocus, Bar do Columba, Emo Véio, Daruma Rock Bar e ST Pauls PUB. A banda está em processo de composição e gravação do seu primeiro material autoral, mantendo o focus em levar o rock nacional com autenticidade a novos públicos.</p>
                     </div>
                 </div>
             </div>
@@ -374,7 +391,7 @@
             <h2 class="mb-4">NOSSO PARCEIRO</h2>
             <h5 class="text-secondary uppercase mb-4" style="letter-spacing: 2px;">BECO 79 SE7E N9VE</h5>
             <div class="d-flex justify-content-center">
-                <img src="{{ url_for('static', filename='img/beco79.png') }}" class="img-fluid img-parceiro shadow-lg" alt="Parceiro Beco 79">
+                <img src="{{ url_for('static', filename='img/beco79.png') }}" class="img-parceiro-efeito shadow-lg" alt="Parceiro Beco 79">
             </div>
         </div>
     </section>
