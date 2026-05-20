@@ -161,9 +161,13 @@ def admin():
     resultado_acessos = cursor.fetchone()
     total_acessos = resultado_acessos['total'] if resultado_acessos and resultado_acessos['total'] else 0
     
+    # 3. NOVO: Recupera o histórico diário de acessos por data (Mais recente primeiro)
+    cursor.execute('SELECT data, quantidade FROM acessos ORDER BY data DESC')
+    historico_acessos = cursor.fetchall()
+    
     cursor.close()
     conexao.close()
-    return render_template('admin.html', shows=ordenar_shows(shows_db), show_edit=None, total_acessos=total_acessos)
+    return render_template('admin.html', shows=ordenar_shows(shows_db), show_edit=None, total_acessos=total_acessos, historico_acessos=historico_acessos)
 
 @app.route('/editar/<int:id>')
 def editar_show(id):
@@ -181,9 +185,13 @@ def editar_show(id):
     resultado_acessos = cursor.fetchone()
     total_acessos = resultado_acessos['total'] if resultado_acessos and resultado_acessos['total'] else 0
     
+    # NOVO: Recupera o histórico diário também durante a edição para o painel não sumir
+    cursor.execute('SELECT data, quantidade FROM acessos ORDER BY data DESC')
+    historico_acessos = cursor.fetchall()
+    
     cursor.close()
     conexao.close()
-    return render_template('admin.html', shows=ordenar_shows(shows_db), edit_id=id, show_edit=show_para_editar, total_acessos=total_acessos)
+    return render_template('admin.html', shows=ordenar_shows(shows_db), edit_id=id, show_edit=show_para_editar, total_acessos=total_acessos, historico_acessos=historico_acessos)
 
 @app.route('/atualizar/<int:id>', methods=['POST'])
 def atualizar_show(id):
