@@ -182,14 +182,17 @@ def admin():
     try:
         with obter_conexao_db() as conexao:
             with conexao.cursor(cursor_factory=RealDictCursor) as cursor:
+                # 1. Recupera a lista de shows
                 cursor.execute('SELECT * FROM shows')
                 shows_db = cursor.fetchall()
                 
+                # 2. Recupera a soma total de acessos
                 cursor.execute('SELECT SUM(quantidade) as total FROM acessos')
                 resultado_acessos = cursor.fetchone()
                 total_acessos = resultado_acessos['total'] if resultado_acessos and resultado_acessos['total'] else 0
                 
-                cursor.execute('SELECT data, quantity FROM acessos ORDER BY data DESC')
+                # 3. Recupera o histórico diário (CORRIGIDO: quantity para quantidade)
+                cursor.execute('SELECT data, quantidade FROM acessos ORDER BY data DESC')
                 historico_acessos = cursor.fetchall()
     except Exception as e:
         print(f"Erro ao carregar dados do painel admin: {e}")
