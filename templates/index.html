@@ -183,6 +183,22 @@
 </head>
 <body>
 
+    {% if ultimo_post %}
+    <div class="instagram-live-banner" style="background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); color: white; text-align: center; padding: 10px 15px; font-weight: bold; font-family: 'Arial Black', sans-serif; font-size: 0.9rem; letter-spacing: 0.5px; box-shadow: 0px 4px 15px rgba(0,0,0,0.4); position: relative; z-index: 9999;">
+        <a href="{{ ultimo_post.link_post }}" target="_blank" style="color: white; text-decoration: none; display: inline-block; transition: transform 0.2s ease;">
+            🔥 NOVO POST NO INSTAGRAM: 
+            <span style="font-weight: normal; font-style: italic; opacity: 0.95; font-family: sans-serif; margin: 0 5px;">
+                {% if ultimo_post.legenda %}
+                    {{ ultimo_post.legenda[:60] }}{% if ultimo_post.legenda|length > 60 %}...{% endif %}
+                {% else %}
+                    Confira a nossa última publicação!
+                {% endif %}
+            </span> 
+            ⚡ <span style="text-decoration: underline; text-underline-offset: 3px;">CLIQUE AQUI PARA VER</span>
+        </a>
+    </div>
+    {% endif %}
+
     <nav class="navbar navbar-expand-lg navbar-dark sticky-top bg-black">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="#">
@@ -256,7 +272,7 @@
                         <p>A Sould é uma banda de pop-rock nacional e hardcore formada em outubro de 2025, em São José dos Campos/SP. O nome representa a fusão entre 'som' e 'alma', simbolizando a essência do group — músicos que se reúnem para tocar, se divertir e transmitir energia verdadeira em cada apresentação. Mais do que uma banda, a Sould é um projeto de conexão entre atitude, emoção e autenticidade.</p>
                         
                         <h4 class="bio-title">ESTILO E INFLUÊNCIAS</h4>
-                        <p>Com influências de bandas como CPM 22, Detonautas, NX Zero e Dead Fish, a Sould mantém viva a essência do rock nacional, unindo melodia, peso e mensagens que refletem a reality e o sentimento de uma generation. Além das músicas próprias, o group se destaca por versões criativas e energéticas de artistas como Imagine Dragons, One Republic, Lady Gaga e Bruno Mars, adaptadas ao estilo da banda.</p>
+                        <p>Com influências de bandas como CPM 22, Detonautas, NX Zero e Dead Fish, a Sould mantém viva a essence do rock nacional, unindo melodia, peso e mensagens que refletem a reality e o sentimento de uma generation. Além das músicas próprias, o group se destaca por versões criativas e energéticas de artistas como Imagine Dragons, One Republic, Lady Gaga e Bruno Mars, adaptadas ao estilo da banda.</p>
 
                         <h4 class="bio-title">DESTAQUES E ATUAÇÃO</h4>
                         <p>Apesar de recente, a Sould já marca presença em eventos e casas renomadas como Gilmour Brewpub, Hocus Pocus, Bar do Columba, Emo Véio, Daruma Rock Bar e ST Pauls PUB. A banda está em processo de composição e gravação do seu primeiro material autoral, mantendo o focus em levar o rock nacional com autenticidade a novos públicos.</p>

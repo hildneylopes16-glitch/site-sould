@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash
+from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 from datetime import datetime, date
 import os
 import psycopg2
@@ -18,6 +18,9 @@ SENHA_HASH = os.environ.get('ADMIN_PASSWORD_HASH', SENHA_PADRAO_HASH)
 
 # Pega a URL do banco das variáveis de ambiente do Render
 DATABASE_URL = os.environ.get('DATABASE_URL')
+
+# Token de segurança simples para evitar que pessoas mal-intencionadas enviem falsos posts para o seu webhook
+WEBHOOK_SECRET = os.environ.get('WEBHOOK_SECRET', 'sould_secret_token_2026')
 
 def obter_conexao_db():
     return psycopg2.connect(DATABASE_URL)
@@ -45,6 +48,18 @@ def inicializar_db():
                         quantidade INT NOT NULL DEFAULT 0
                     )
                 ''')
+
+                # NOVA TABELA: Armazena o último post enviado via Webhook (IFTTT / Make)
+                cursor.execute('''
+                    CREATE TABLE IF NOT EXISTS instagram_posts (
+                        id SERIAL PRIMARY KEY,
+                        link_post TEXT NOT NULL,
+                        legenda TEXT,
+                        url_imagem TEXT,
+                        criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                    )
+                ''')
+                
                 conexao.commit()
                 
                 cursor.execute('SELECT COUNT(*) FROM shows')
@@ -101,7 +116,17 @@ def index():
         print(f"Erro ao buscar shows da index: {e}")
         shows_ordenados = []
 
-    return render_template('index.html', shows=shows_ordenados)
+    # BUSCA O ÚLTIMO POST DO INSTAGRAM PARA O BANNER
+    ultimo_post = None
+    try:
+        with obter_conexao_db() as conexao:
+            with conexao.cursor(cursor_factory=RealDictCursor) as cursor:
+                cursor.execute('SELECT * FROM instagram_posts ORDER BY criado_em DESC LIMIT 1')
+                ultimo_post = cursor.fetchone()
+    except Exception as e:
+        print(f"Erro ao buscar último post do Instagram: {e}")
+
+    return render_template('index.html', shows=shows_ordenados, ultimo_post=ultimo_post)
 
 @app.route('/links')
 def links():
@@ -125,6 +150,35 @@ def links():
             print(f"Erro ao computar acesso vindo pelos links: {e}")
             
     return render_template('links.html')
+
+# NOVA ROTA: WEBHOOK PARA RECEBER POSTS DO INSTAGRAM (IFTTT / MAKE)
+@app.route('/api/instagram/webhook', methods=['POST'])
+def instagram_webhook():
+    # Validação simples por Token na URL para segurança (?token=sould_secret_token_2026)
+    token_recebido = request.args.get('token')
+    if token_recebido != WEBHOOK_SECRET:
+        return jsonify({"erro": "Não autorizado"}), 401
+
+    dados = request.get_json()
+    if not dados or 'link_post' not in dados:
+        return jsonify({"erro": "Dados incompletos. 'link_post' é obrigatório."}), 400
+
+    link_post = dados.get('link_post')
+    legenda = dados.get('legenda', '')
+    url_imagem = dados.get('url_imagem', '')
+
+    try:
+        with obter_conexao_db() as conexao:
+            with conexao.cursor() as cursor:
+                cursor.execute('''
+                    INSERT INTO instagram_posts (link_post, legenda, url_imagem) 
+                    VALUES (%s, %s, %s)
+                ''', (link_post, legenda, url_imagem))
+                conexao.commit()
+        return jsonify({"status": "sucesso", "mensagem": "Post registrado com sucesso!"}), 201
+    except Exception as e:
+        print(f"Erro ao salvar post do Instagram via Webhook: {e}")
+        return jsonify({"erro": "Erro interno no servidor ao salvar dados"}), 500
 
 @app.route('/galeria')
 def galeria():
@@ -166,7 +220,7 @@ def admin():
         cidade = request.form.get('cidade')
         link_maps = request.form.get('link_maps') or ""
         
-        if data and local and cidade:
+        if data and local and city:
             try:
                 with obter_conexao_db() as conexao:
                     with conexao.cursor() as cursor:
@@ -191,7 +245,7 @@ def admin():
                 resultado_acessos = cursor.fetchone()
                 total_acessos = resultado_acessos['total'] if resultado_acessos and resultado_acessos['total'] else 0
                 
-                # 3. Recupera o histórico diário (CORRIGIDO: quantity para quantidade)
+                # 3. Recupera o histórico diário (CORRIGIDO DEFINITIVAMENTE: quantity -> quantidade)
                 cursor.execute('SELECT data, quantidade FROM acessos ORDER BY data DESC')
                 historico_acessos = cursor.fetchall()
     except Exception as e:
