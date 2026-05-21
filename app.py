@@ -103,6 +103,29 @@ def index():
 
     return render_template('index.html', shows=shows_ordenados)
 
+@app.route('/links')
+def links():
+    hoje_str = date.today().isoformat()
+    
+    # Também computa acesso vindo pela árvore de links da bio
+    if 'ultimo_acesso' not in session or session['ultimo_acesso'] != hoje_str:
+        try:
+            with obter_conexao_db() as conexao:
+                with conexao.cursor() as cursor_acesso:
+                    hoje = date.today()
+                    cursor_acesso.execute("""
+                        INSERT INTO acessos (data, quantidade) 
+                        VALUES (%s, 1) 
+                        ON CONFLICT (data) 
+                        DO UPDATE SET quantidade = acessos.quantidade + 1
+                    """, (hoje,))
+                    conexao.commit()
+            session['ultimo_acesso'] = hoje_str
+        except Exception as e:
+            print(f"Erro ao computar acesso vindo pelos links: {e}")
+            
+    return render_template('links.html')
+
 @app.route('/galeria')
 def galeria():
     caminho_galeria = os.path.join('static', 'img', 'galeria')
@@ -137,7 +160,6 @@ def admin():
     if not usuario_esta_logado(): 
         return redirect(url_for('login'))
     
-    # Processa o formulário de envio (POST) de forma isolada
     if request.method == 'POST':
         data = request.form.get('data')
         local = request.form.get('local')
@@ -157,21 +179,17 @@ def admin():
                 print(f"Erro ao inserir show: {e}")
             return redirect(url_for('admin'))
     
-    # Processa a renderização do painel administrativo (GET)
     try:
         with obter_conexao_db() as conexao:
             with conexao.cursor(cursor_factory=RealDictCursor) as cursor:
-                # 1. Recupera a lista de shows
                 cursor.execute('SELECT * FROM shows')
                 shows_db = cursor.fetchall()
                 
-                # 2. Recupera a soma total de acessos
                 cursor.execute('SELECT SUM(quantidade) as total FROM acessos')
                 resultado_acessos = cursor.fetchone()
                 total_acessos = resultado_acessos['total'] if resultado_acessos and resultado_acessos['total'] else 0
                 
-                # 3. Recupera o histórico diário
-                cursor.execute('SELECT data, quantidade FROM acessos ORDER BY data DESC')
+                cursor.execute('SELECT data, quantity FROM acessos ORDER BY data DESC')
                 historico_acessos = cursor.fetchall()
     except Exception as e:
         print(f"Erro ao carregar dados do painel admin: {e}")
