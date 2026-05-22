@@ -20,24 +20,30 @@ class Show(db.Model):
     cidade = db.Column(db.String(50), nullable=False)
     link_maps = db.Column(db.String(255), nullable=True)
 
-# NOVO: Modelo para Controle Interno de Acessos por Data
+# Modelo para Controle Interno de Acessos
 class Acesso(db.Model):
     __tablename__ = 'acessos'
     id = db.Column(db.Integer, primary_key=True)
     data = db.Column(db.Date, unique=True, nullable=False, default=datetime.utcnow)
     quantidade = db.Column(db.Integer, nullable=False, default=1)
 
-# Inicializa o Banco de Dados e cria as tabelas se não existirem
+# NOVO: Modelo para os Links do estilo Linktree
+class LinkTree(db.Model):
+    __tablename__ = 'linktree'
+    id = db.Column(db.Integer, primary_key=True)
+    titulo = db.Column(db.String(100), nullable=False)  # Ex: "Instagram Oficial"
+    url = db.Column(db.String(255), nullable=False)     # Ex: "https://instagram.com/..."
+
+# Inicializa o Banco de Dados e garante a criação das tabelas
 with app.app_context():
     db.create_all()
 
-# Rota Principal (Site) - Registra o acesso automaticamente
+# Rota Principal (Site)
 @app.route('/')
 def index():
-    # Registrar ou incrementar o acesso do dia atual (Formato Ano-Mês-Dia)
+    # Computar acesso do dia
     hoje = datetime.utcnow().date()
     registro_acesso = Acesso.query.filter_by(data=hoje).first()
-    
     if registro_acesso:
         registro_acesso.quantidade += 1
     else:
@@ -48,42 +54,56 @@ def index():
         db.session.commit()
     except Exception as e:
         db.session.rollback()
-        print(f"Erro ao computar acesso: {e}")
 
     shows_query = Show.query.order_by(Show.id).all()
-    return render_template('index.html', shows=shows_query)
+    # Se quiser listar os links na index no futuro, passamos a query aqui:
+    links_query = LinkTree.query.order_by(LinkTree.id).all()
+    return render_template('index.html', shows=shows_query, links=links_query)
 
-# Rota do Painel Administrativo (Exibe Métricas, Lista e Adiciona Shows)
+# Rota do Painel Administrativo
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
     if request.method == 'POST':
-        data = request.form.get('data')
-        local = request.form.get('local')
-        cidade = request.form.get('cidade')
-        link_maps = request.form.get('link_maps')
+        # Verifica se o formulário enviado é o de Show ou de Linktree
+        form_type = request.form.get('form_type')
         
-        if data and local and cidade:
-            novo_show = Show(data=data, local=local, cidade=cidade, link_maps=link_maps)
-            db.session.add(novo_show)
-            db.session.commit()
+        if form_type == 'show':
+            data = request.form.get('data')
+            local = request.form.get('local')
+            cidade = request.form.get('cidade')
+            link_maps = request.form.get('link_maps')
+            if data and local and city:
+                novo_show = Show(data=data, local=local, cidade=cidade, link_maps=link_maps)
+                db.session.add(novo_show)
+                db.session.commit()
+                
+        elif form_type == 'linktree':
+            titulo = request.form.get('titulo')
+            url = request.form.get('url')
+            if titulo and url:
+                novo_link = LinkTree(titulo=titulo, url=url)
+                db.session.add(novo_link)
+                db.session.commit()
+                
         return redirect(url_for('admin'))
 
-    # Coleta de Métricas para o Painel
+    # Coleta de dados para renderizar o painel
     todos_acessos = Acesso.query.all()
     total_acessos = sum(a.quantidade for a in todos_acessos)
-    
-    # Histórico ordenado pelas datas mais recentes
     historico_acessos = Acesso.query.order_by(Acesso.data.desc()).all()
+    
     shows_query = Show.query.order_by(Show.id).all()
+    links_query = LinkTree.query.order_by(LinkTree.id).all()
     
     return render_template(
         'admin.html', 
         shows=shows_query, 
+        links=links_query,
         total_acessos=total_acessos, 
         historico_acessos=historico_acessos
     )
 
-# Rota para Excluir Show pelo Painel
+# Rota para Excluir Show
 @app.route('/admin/excluir/<int:id>')
 def excluir_show_painel(id):
     show = Show.query.get_or_404(id)
@@ -91,15 +111,17 @@ def excluir_show_painel(id):
     db.session.commit()
     return redirect(url_for('admin'))
 
-# Rota de Logout Temporária
+# NOVO: Rota para Excluir Link do Linktree
+@app.route('/admin/excluir-link/<int:id>')
+def excluir_link_painel(id):
+    link = LinkTree.query.get_or_404(id)
+    db.session.delete(link)
+    db.session.commit()
+    return redirect(url_for('admin'))
+
 @app.route('/logout')
 def logout():
     return redirect(url_for('index'))
-
-# Rota de Galeria
-@app.route('/galeria')
-def galeria():
-    return "<h1>Galeria de Fotos da SOULD - Em breve</h1>"
 
 if __name__ == '__main__':
     app.run(debug=True)
