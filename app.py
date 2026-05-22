@@ -79,10 +79,13 @@ def linktree_publico():
         print(f"Erro ao ler tabelas de links: {e}")
     return render_template('links.html', links=links_query)
 
-# Rota Nova: Galeria de Fotos (Necessária para a amarração dos links)
+# Rota Nova: Galeria de Fotos
 @app.route('/galeria')
 def galeria():
-    return "<html><body style='background:#121212;color:white;text-align:center;padding-top:100px;font-family:sans-serif;'><h1>GALERIA SOULD</h1><p>Fotos em alta resolução sendo processadas. Em breve!</p><a href='/' style='color:red;'>Voltar ao site</a></body></html>"
+    try:
+        return render_template('galeria.html')
+    except Exception:
+        return "<html><body style='background:#121212;color:white;text-align:center;padding-top:100px;font-family:sans-serif;'><h1>GALERIA SOULD</h1><p>Fotos em alta resolução sendo processadas. Em breve!</p><a href='/' style='color:red;'>Voltar ao site</a></body></html>"
 
 # Rota 3: Painel Administrativo
 @app.route('/admin', methods=['GET', 'POST'])
@@ -97,7 +100,7 @@ def admin():
                 cidade = request.form.get('cidade')
                 link_maps = request.form.get('link_maps')
                 if data and local and cidade:
-                    novo_show = Show(data=data, local=local, cidade=cidade, link_maps=link_maps)
+                    novo_show = Show(data=data, local=local, city=cidade, link_maps=link_maps)
                     db.session.add(novo_show)
                     db.session.commit()
                     
@@ -146,6 +149,7 @@ def excluir_show_painel(id):
         db.session.commit()
     except Exception as e:
         db.session.rollback()
+        print(f"Erro ao excluir show: {e}")
     return redirect(url_for('admin'))
 
 # Rota 5: Excluir Link 
@@ -157,6 +161,7 @@ def excluir_link_panel(id):
         db.session.commit()
     except Exception as e:
         db.session.rollback()
+        print(f"Erro ao excluir link: {e}")
     return redirect(url_for('admin'))
 
 @app.route('/logout')
