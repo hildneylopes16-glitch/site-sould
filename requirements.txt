@@ -16,5 +16,5 @@ Werkzeug==3.1.8
 psycopg2-binary
 Werkzeug==3.1.8
 packaging==26.2
-psycopg2-binary==2.9.9
+psycopg2-binary==2.9.10
 Flask-SQLAlchemy==3.1.1
