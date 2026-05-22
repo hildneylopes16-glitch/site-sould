@@ -51,7 +51,8 @@ def index():
         if registro_acesso:
             registro_acesso.quantidade += 1
         else:
-            novo_acesso = Acesso(data=hoje, quantity=1)
+            # CORRIGIDO: de quantity=1 para quantidade=1
+            novo_acesso = Acesso(data=hoje, quantidade=1)
             db.session.add(novo_acesso)
         db.session.commit()
     except Exception as e:
@@ -143,9 +144,9 @@ def excluir_show_painel(id):
         db.session.rollback()
     return redirect(url_for('admin'))
 
-# Rota 5: Excluir Link
+# Rota 5: Excluir Link (Ajustado o nome da rota para bater com o HTML)
 @app.route('/admin/excluir-link/<int:id>')
-def excluir_link_painel(id):
+def excluir_link_panel(id):
     try:
         link = LinkTree.query.get_or_404(id)
         db.session.delete(link)
