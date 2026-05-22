@@ -6,135 +6,89 @@
     <title>SOULD | Links Oficiais</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <style>
         body {
-            background-color: #0b0b0b;
+            background: #0d0d0d;
             color: white;
-            font-family: 'Arial Black', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 30px 15px;
+            padding: 20px;
         }
-        .links-container {
+        .linktree-container {
             width: 100%;
-            max-width: 480px;
-            text-align: center;
+            max-width: 450px;
+            text-center: center;
         }
-        .band-logo {
-            max-width: 160px;
-            height: auto;
+        .profile-img {
+            width: 95px;
+            height: 95px;
+            border-radius: 50%;
+            border: 2px solid #ff0000;
+            object-fit: cover;
             margin-bottom: 15px;
-            filter: drop-shadow(0px 0px 10px rgba(255, 0, 0, 0.6));
         }
-        .band-sub {
-            font-size: 0.85rem;
-            letter-spacing: 4px;
-            color: #aaa;
-            margin-bottom: 40px;
+        .band-title {
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: 2px;
             text-transform: uppercase;
+            color: #fff;
+            margin-bottom: 5px;
         }
-        
-        /* ESTILIZAÇÃO DOS BOTÕES ESTILO LINKTREE HARDCORE */
+        .band-subtitle {
+            font-size: 13px;
+            color: #888;
+            margin-bottom: 30px;
+        }
         .btn-linktree {
-            background-color: #121212;
+            background: #161616;
             color: white;
-            border: 2px solid #222;
-            border-radius: 0px;
-            padding: 16px 20px;
-            font-size: 1rem;
-            font-weight: bold;
+            border: 1px solid #333;
+            border-radius: 0;
+            padding: 16px;
+            margin-bottom: 16px;
+            font-weight: 600;
             letter-spacing: 1px;
             text-transform: uppercase;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 16px;
-            transition: all 0.3s ease-in-out;
+            transition: all 0.3s ease;
+            display: block;
             text-decoration: none;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
         }
-        .btn-linktree i {
-            font-size: 1.3rem;
-            width: 30px;
-            text-align: center;
-        }
-        .btn-linktree .btn-icon-right {
-            font-size: 0.85rem;
-            opacity: 0.3;
-            transition: 0.3s;
-        }
-        
-        /* HOVERS */
         .btn-linktree:hover {
-            background-color: #ff0000;
-            color: white;
+            background: #ff0000;
+            color: black;
             border-color: #ff0000;
-            transform: translateY(-3px);
-            box-shadow: 0px 0px 15px rgba(255, 0, 0, 0.5);
-        }
-        .btn-linktree:hover .btn-icon-right {
-            opacity: 1;
-            transform: translateX(3px);
-        }
-
-        .btn-instagram:hover { 
-            background-color: #E1306C; 
-            border-color: #E1306C; 
-            box-shadow: 0px 0px 15px rgba(225, 48, 108, 0.5); 
-        }
-
-        .footer-credits {
-            margin-top: 40px;
-            font-size: 0.75rem;
-            color: #555;
-            letter-spacing: 1px;
+            font-weight: bold;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 0, 0, 0.3);
         }
     </style>
 </head>
 <body>
 
-    <div class="links-container">
-        <img src="{{ url_for('static', filename='img/logo_sould_transparente.png') }}" alt="SOULD" class="band-logo">
-        <div class="band-sub">Hardcore & Pop Rock</div>
+    <div class="linktree-container text-center">
+        <img src="{{ url_for('static', filename='img/logo.png') }}" onerror="this.src='https://placehold.co/100x100/161616/ff0000?text=SOULD'" class="profile-img" alt="SOULD">
+        
+        <h1 class="band-title">SOULD</h1>
+        <p class="band-subtitle">Acompanhe nossos lançamentos e redes oficiais</p>
 
-        <a href="https://wa.me/5512982147326?text=Olá! Gostaria de obter mais informações sobre orçamento de shows da Banda SOULD." target="_blank" class="btn-linktree">
-            <i class="fab fa-whatsapp text-success"></i>
-            <span>Contratar Show</span>
-            <i class="fas fa-chevron-right btn-icon-right"></i>
-        </a>
-
-        <a href="{{ url_for('index') }}#agenda" class="btn-linktree">
-            <i class="fas fa-calendar-alt text-danger"></i>
-            <span>Próximos Shows</span>
-            <i class="fas fa-chevron-right btn-icon-right"></i>
-        </a>
-
-        <a href="{{ url_for('index') }}#loja" class="btn-linktree">
-            <i class="fas fa-shopping-cart text-warning"></i>
-            <span>Camisetas e Bonés</span>
-            <i class="fas fa-chevron-right btn-icon-right"></i>
-        </a>
-
-        <a href="{{ url_for('galeria') }}" target="_blank" class="btn-linktree">
-            <i class="fas fa-images text-info"></i>
-            <span>Galeria de Fotos</span>
-            <i class="fas fa-chevron-right btn-icon-right"></i>
-        </a>
-
-        <a href="https://www.instagram.com/bandasould" target="_blank" class="btn-linktree btn-instagram">
-            <i class="fab fa-instagram"></i>
-            <span>Instagram Oficial</span>
-            <i class="fas fa-chevron-right btn-icon-right"></i>
-        </a>
-
-        <div class="footer-credits">
-            © 2026 SOULD • SÃO JOSÉ DOS CAMPOS/SP
+        <div class="mt-4">
+            {% for link in links %}
+                <a href="{{ link.url }}" target="_blank" class="btn-linktree">
+                    {{ link.titulo }}
+                </a>
+            {% else %}
+                <p class="text-secondary small italic py-4">Nenhum link disponível no momento.</p>
+            {% endfor %}
+            
+            <a href="{{ url_for('index') }}" class="btn btn-sm btn-outline-secondary rounded-0 mt-4 w-100 py-2 small">
+                <i class="fas fa-globe me-2"></i>Acessar Site Oficial
+            </a>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

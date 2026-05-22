@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify
+from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import os
@@ -11,7 +11,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
-# Modelo para a Agenda de Shows
+# Modelo 1: Agenda de Shows
 class Show(db.Model):
     __tablename__ = 'shows'
     id = db.Column(db.Integer, primary_key=True)
@@ -20,91 +20,109 @@ class Show(db.Model):
     cidade = db.Column(db.String(50), nullable=False)
     link_maps = db.Column(db.String(255), nullable=True)
 
-# Modelo para Controle Interno de Acessos
+# Modelo 2: Controle Interno de Acessos
 class Acesso(db.Model):
     __tablename__ = 'acessos'
     id = db.Column(db.Integer, primary_key=True)
     data = db.Column(db.Date, unique=True, nullable=False, default=datetime.utcnow)
     quantidade = db.Column(db.Integer, nullable=False, default=1)
 
-# Modelo para os Links do estilo Linktree
+# Modelo 3: Links do Linktree
 class LinkTree(db.Model):
     __tablename__ = 'linktree'
     id = db.Column(db.Integer, primary_key=True)
-    titulo = db.Column(db.String(100), nullable=False)  # Ex: "Instagram Oficial"
-    url = db.Column(db.String(255), nullable=False)     # Ex: "https://instagram.com/..."
+    titulo = db.Column(db.String(100), nullable=False)
+    url = db.Column(db.String(255), nullable=False)
 
-# Inicializa o Banco de Dados e garante a criação das tabelas
+# Inicialização segura do banco de dados
 with app.app_context():
-    db.create_all()
+    try:
+        db.create_all()
+    except Exception as e:
+        print(f"Aviso na criação de tabelas: {e}")
 
-# Rota Principal (Site)
+# Rota 1: Página Principal do Site (Sould)
 @app.route('/')
 def index():
-    # Computar acesso do dia
-    hoje = datetime.utcnow().date()
-    registro_acesso = Acesso.query.filter_by(data=hoje).first()
-    if registro_acesso:
-        registro_acesso.quantidade += 1
-    else:
-        novo_acesso = Acesso(data=hoje, quantidade=1)
-        db.session.add(novo_acesso)
-    
+    # Bloco do contador de acessos imune a falhas
     try:
+        hoje = datetime.utcnow().date()
+        registro_acesso = Acesso.query.filter_by(data=hoje).first()
+        if registro_acesso:
+            registro_acesso.quantidade += 1
+        else:
+            novo_acesso = Acesso(data=hoje, quantity=1)
+            db.session.add(novo_acesso)
         db.session.commit()
     except Exception as e:
         db.session.rollback()
+        print(f"Erro ao registrar acesso: {e}")
 
-    shows_query = Show.query.order_by(Show.id).all()
-    links_query = LinkTree.query.order_by(LinkTree.id).all()
+    # Carrega dados das tabelas de forma segura
+    shows_query = []
+    links_query = []
+    try:
+        shows_query = Show.query.order_by(Show.id).all()
+        links_query = LinkTree.query.order_by(LinkTree.id).all()
+    except Exception as e:
+        print(f"Erro ao ler tabelas na index: {e}")
+
     return render_template('index.html', shows=shows_query, links=links_query)
 
-
-# =======================================================
-# NOVA ROTA: Página estilo Linktree pública para os fãs
-# =======================================================
+# Rota 2: Linktree Público (bandasould.com.br/links)
 @app.route('/links')
 def linktree_publico():
-    # Busca todos os links rápidos cadastrados no banco de dados
-    links_query = LinkTree.query.order_by(LinkTree.id).all()
-    # Renderiza o template visual dos botões (Certifique-se de ter o links.html ou use este nome)
+    links_query = []
+    try:
+        links_query = LinkTree.query.order_by(LinkTree.id).all()
+    except Exception as e:
+        print(f"Erro ao ler tabelas de links: {e}")
     return render_template('links.html', links=links_query)
 
-
-# Rota do Painel Administrativo
+# Rota 3: Painel Administrativo
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
     if request.method == 'POST':
         form_type = request.form.get('form_type')
         
-        if form_type == 'show':
-            data = request.form.get('data')
-            local = request.form.get('local')
-            cidade = request.form.get('cidade')
-            link_maps = request.form.get('link_maps')
-            # Correção feita aqui: alterado de 'city' para 'cidade'
-            if data and local and cidade:
-                novo_show = Show(data=data, local=local, cidade=cidade, link_maps=link_maps)
-                db.session.add(novo_show)
-                db.session.commit()
-                
-        elif form_type == 'linktree':
-            titulo = request.form.get('titulo')
-            url = request.form.get('url')
-            if titulo and url:
-                novo_link = LinkTree(titulo=titulo, url=url)
-                db.session.add(novo_link)
-                db.session.commit()
+        try:
+            if form_type == 'show':
+                data = request.form.get('data')
+                local = request.form.get('local')
+                cidade = request.form.get('cidade')
+                link_maps = request.form.get('link_maps')
+                if data and local and cidade:
+                    novo_show = Show(data=data, local=local, cidade=cidade, link_maps=link_maps)
+                    db.session.add(novo_show)
+                    db.session.commit()
+                    
+            elif form_type == 'linktree':
+                titulo = request.form.get('titulo')
+                url = request.form.get('url')
+                if titulo and url:
+                    novo_link = LinkTree(titulo=titulo, url=url)
+                    db.session.add(novo_link)
+                    db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            print(f"Erro ao salvar dados pelo painel: {e}")
                 
         return redirect(url_for('admin'))
 
-    # Coleta de dados para renderizar o painel
-    todos_acessos = Acesso.query.all()
-    total_acessos = sum(a.quantidade for a in todos_acessos)
-    historico_acessos = Acesso.query.order_by(Acesso.data.desc()).all()
-    
-    shows_query = Show.query.order_by(Show.id).all()
-    links_query = LinkTree.query.order_by(LinkTree.id).all()
+    # Coleta de métricas e listas para renderizar a página
+    total_acessos = 0
+    historico_acessos = []
+    shows_query = []
+    links_query = []
+
+    try:
+        todos_acessos = Acesso.query.all()
+        total_acessos = sum(a.quantidade for a in todos_acessos)
+        historico_acessos = Acesso.query.order_by(Acesso.data.desc()).all()
+        shows_query = Show.query.order_by(Show.id).all()
+        links_query = LinkTree.query.order_by(LinkTree.id).all()
+    except Exception as e:
+        print(f"Erro ao coletar dados para o admin: {e}")
     
     return render_template(
         'admin.html', 
@@ -114,20 +132,26 @@ def admin():
         historico_acessos=historico_acessos
     )
 
-# Rota para Excluir Show
+# Rota 4: Excluir Show
 @app.route('/admin/excluir/<int:id>')
 def excluir_show_painel(id):
-    show = Show.query.get_or_404(id)
-    db.session.delete(show)
-    db.session.commit()
+    try:
+        show = Show.query.get_or_404(id)
+        db.session.delete(show)
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
     return redirect(url_for('admin'))
 
-# Rota para Excluir Link do Linktree
+# Rota 5: Excluir Link
 @app.route('/admin/excluir-link/<int:id>')
 def excluir_link_painel(id):
-    link = LinkTree.query.get_or_404(id)
-    db.session.delete(link)
-    db.session.commit()
+    try:
+        link = LinkTree.query.get_or_404(id)
+        db.session.delete(link)
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
     return redirect(url_for('admin'))
 
 @app.route('/logout')
