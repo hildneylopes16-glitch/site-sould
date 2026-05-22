@@ -44,21 +44,19 @@ with app.app_context():
 # Rota 1: Página Principal do Site (Sould)
 @app.route('/')
 def index():
-    # Bloco do contador de acessos imune a falhas
     try:
         hoje = datetime.utcnow().date()
         registro_acesso = Acesso.query.filter_by(data=hoje).first()
         if registro_acesso:
             registro_acesso.quantidade += 1
         else:
-            novo_acesso = Acesso(data=hoje, quantidade=1)
+            novo_acesso = Acesso(data=hoje, quantity=1)
             db.session.add(novo_acesso)
         db.session.commit()
     except Exception as e:
         db.session.rollback()
         print(f"Erro ao registrar acesso: {e}")
 
-    # Carrega dados das tabelas de forma segura
     shows_query = []
     links_query = []
     try:
@@ -79,13 +77,24 @@ def linktree_publico():
         print(f"Erro ao ler tabelas de links: {e}")
     return render_template('links.html', links=links_query)
 
-# Rota Nova: Galeria de Fotos
+# Rota Nova: Galeria de Fotos (Mapeando a pasta automaticamente)
 @app.route('/galeria')
 def galeria():
     try:
-        return render_template('galeria.html')
-    except Exception:
-        return "<html><body style='background:#121212;color:white;text-align:center;padding-top:100px;font-family:sans-serif;'><h1>GALERIA SOULD</h1><p>Fotos em alta resolução sendo processadas. Em breve!</p><a href='/' style='color:red;'>Voltar ao site</a></body></html>"
+        # Caminho para a pasta de fotos da galeria
+        pasta_galeria = os.path.join(app.static_folder, 'img', 'galeria')
+        fotos = []
+        
+        if os.path.exists(pasta_galeria):
+            # Lista apenas arquivos de imagem válidos da pasta
+            fotos = [f for f in os.listdir(pasta_galeria) if f.lower().endswith(('.png', '.jpg', '.jpeg', '.webp', '.gif'))]
+            fotos.sort() # Organiza em ordem alfabética
+        
+        return render_template('galeria.html', fotos=fotos)
+    except Exception as e:
+        # Exibe o erro real no log do servidor para você saber o que quebrou
+        print(f"Erro crítico na rota galeria: {e}")
+        return f"<html><body style='background:#121212;color:white;text-align:center;padding-top:100px;font-family:sans-serif;'><h1>GALERIA SOULD</h1><p>Erro interno ao carregar a página: {e}</p><a href='/' style='color:red;'>Voltar ao site</a></body></html>"
 
 # Rota 3: Painel Administrativo
 @app.route('/admin', methods=['GET', 'POST'])
@@ -100,7 +109,8 @@ def admin():
                 cidade = request.form.get('cidade')
                 link_maps = request.form.get('link_maps')
                 if data and local and cidade:
-                    novo_show = Show(data=data, local=local, city=cidade, link_maps=link_maps)
+                    # CORRIGIDO: de 'city=cidade' para 'cidade=cidade'
+                    novo_show = Show(data=data, local=local, cidade=cidade, link_maps=link_maps)
                     db.session.add(novo_show)
                     db.session.commit()
                     
@@ -117,7 +127,6 @@ def admin():
                 
         return redirect(url_for('admin'))
 
-    # Coleta de métricas e listas para renderizar a página
     total_acessos = 0
     historico_acessos = []
     shows_query = []
