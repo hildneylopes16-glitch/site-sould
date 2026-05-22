@@ -1,324 +1,78 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
-from datetime import datetime, date
+from flask import Flask, render_template, request, jsonify
+from flask_sqlalchemy import SQLAlchemy
 import os
-import psycopg2
-from psycopg2.extras import RealDictCursor
-from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 
-# SEGURANÇA: Puxa a chave secreta do Render. Se não achar, usa uma padrão apenas para teste local.
-app.secret_key = os.environ.get('SECRET_KEY', 'chave_padrao_local_desenvolvimento')
+# Configuração do Banco de Dados PostgreSQL (Render)
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'postgresql://usuario:senha@localhost/sould_db')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# SEGURANÇA: Puxa as credenciais administrativas das variáveis de ambiente
-USUARIO_ADMIN = os.environ.get('ADMIN_USER', 'sould_admin')
-# Se não houver uma senha definida no Render, ele assume o hash da padrão por segurança
-SENHA_PADRAO_HASH = generate_password_hash("sould2026")
-SENHA_HASH = os.environ.get('ADMIN_PASSWORD_HASH', SENHA_PADRAO_HASH)
+db = SQLAlchemy(app)
 
-# Pega a URL do banco das variáveis de ambiente do Render
-DATABASE_URL = os.environ.get('DATABASE_URL')
+# Modelo para a Agenda de Shows
+class Show(db.Model):
+    __tablename__ = 'shows'
+    id = db.Column(db.Integer, primary_key=True)
+    data = db.Column(db.String(50), nullable=False)
+    local = db.Column(db.String(100), nullable=False)
+    cidade = db.Column(db.String(50), nullable=False)
+    link_maps = db.Column(db.String(255), nullable=True)
 
-# Token de segurança simples para evitar que pessoas mal-intencionadas enviem falsos posts para o seu webhook
-WEBHOOK_SECRET = os.environ.get('WEBHOOK_SECRET', 'sould_secret_token_2026')
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "data": self.data,
+            "local": self.local,
+            "cidade": self.cidade,
+            "link_maps": self.link_maps
+        }
 
-def obter_conexao_db():
-    return psycopg2.connect(DATABASE_URL)
+# Inicializa o Banco de Dados
+with app.app_context():
+    db.create_all()
 
-def inicializar_db():
-    try:
-        with obter_conexao_db() as conexao:
-            with conexao.cursor() as cursor:
-                # Cria a tabela de shows se não existir
-                cursor.execute('''
-                    CREATE TABLE IF NOT EXISTS shows (
-                        id SERIAL PRIMARY KEY,
-                        data TEXT NOT NULL,
-                        local TEXT NOT NULL,
-                        cidade TEXT NOT NULL,
-                        link_maps TEXT
-                    )
-                ''')
-                
-                # Cria a tabela de acessos diários se não existir
-                cursor.execute('''
-                    CREATE TABLE IF NOT EXISTS acessos (
-                        id SERIAL PRIMARY KEY,
-                        data DATE UNIQUE NOT NULL,
-                        quantidade INT NOT NULL DEFAULT 0
-                    )
-                ''')
-
-                # NOVA TABELA: Armazena o último post enviado via Webhook (IFTTT / Make)
-                cursor.execute('''
-                    CREATE TABLE IF NOT EXISTS instagram_posts (
-                        id SERIAL PRIMARY KEY,
-                        link_post TEXT NOT NULL,
-                        legenda TEXT,
-                        url_imagem TEXT,
-                        criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-                    )
-                ''')
-                
-                conexao.commit()
-                
-                cursor.execute('SELECT COUNT(*) FROM shows')
-                if cursor.fetchone()[0] == 0:
-                    cursor.execute(
-                        'INSERT INTO shows (data, local, cidade, link_maps) VALUES (%s, %s, %s, %s)', 
-                        ("23/05/2026", "GEORGE'S SEVEN", "SÃO JOSÉ DOS CAMPOS", "https://maps.google.com")
-                    )
-                    conexao.commit()
-    except Exception as e:
-        print(f"Erro crítico ao inicializar banco de dados: {e}")
-
-# Executa a inicialização de tabelas de forma segura
-inicializar_db()
-
-def ordenar_shows(lista_rows):
-    try:
-        return sorted(lista_rows, key=lambda x: datetime.strptime(x['data'], '%d/%m/%Y'))
-    except Exception:
-        return lista_rows
-
-def usuario_esta_logado():
-    return 'logado' in session and session['logado'] is True
-
+# Rota Principal (Site)
 @app.route('/')
 def index():
-    hoje_str = date.today().isoformat()
-    
-    # CONTAGEM DE ACESSOS (Proteção contra F5/Duplicados usando Session)
-    if 'ultimo_acesso' not in session or session['ultimo_acesso'] != hoje_str:
-        try:
-            with obter_conexao_db() as conexao:
-                with conexao.cursor() as cursor_acesso:
-                    hoje = date.today()
-                    cursor_acesso.execute("""
-                        INSERT INTO acessos (data, quantidade) 
-                        VALUES (%s, 1) 
-                        ON CONFLICT (data) 
-                        DO UPDATE SET quantidade = acessos.quantidade + 1
-                    """, (hoje,))
-                    conexao.commit()
-            session['ultimo_acesso'] = hoje_str
-        except Exception as e:
-            print(f"Erro ao computar acesso diário: {e}")
-            
-    # Busca os shows para renderizar na página inicial
-    try:
-        with obter_conexao_db() as conexao:
-            with conexao.cursor(cursor_factory=RealDictCursor) as cursor:
-                cursor.execute('SELECT * FROM shows')
-                shows_db = cursor.fetchall()
-        shows_ordenados = ordenar_shows(shows_db)
-    except Exception as e:
-        print(f"Erro ao buscar shows da index: {e}")
-        shows_ordenados = []
+    # Busca todos os shows ordenados por id (ou data)
+    shows_query = Show.query.order_index(Show.id).all() if hasattr(Show, 'id') else Show.query.all()
+    return render_template('index.html', shows=shows_query)
 
-    # BUSCA O ÚLTIMO POST DO INSTAGRAM PARA O BANNER
-    ultimo_post = None
-    try:
-        with obter_conexao_db() as conexao:
-            with conexao.cursor(cursor_factory=RealDictCursor) as cursor:
-                cursor.execute('SELECT * FROM instagram_posts ORDER BY criado_em DESC LIMIT 1')
-                ultimo_post = cursor.fetchone()
-    except Exception as e:
-        print(f"Erro ao buscar último post do Instagram: {e}")
-
-    return render_template('index.html', shows=shows_ordenados, ultimo_post=ultimo_post)
-
-@app.route('/links')
-def links():
-    hoje_str = date.today().isoformat()
-    
-    # Também computa acesso vindo pela árvore de links da bio
-    if 'ultimo_acesso' not in session or session['ultimo_acesso'] != hoje_str:
-        try:
-            with obter_conexao_db() as conexao:
-                with conexao.cursor() as cursor_acesso:
-                    hoje = date.today()
-                    cursor_acesso.execute("""
-                        INSERT INTO acessos (data, quantidade) 
-                        VALUES (%s, 1) 
-                        ON CONFLICT (data) 
-                        DO UPDATE SET quantidade = acessos.quantidade + 1
-                    """, (hoje,))
-                    conexao.commit()
-            session['ultimo_acesso'] = hoje_str
-        except Exception as e:
-            print(f"Erro ao computar acesso vindo pelos links: {e}")
-            
-    return render_template('links.html')
-
-# NOVA ROTA: WEBHOOK PARA RECEBER POSTS DO INSTAGRAM (IFTTT / MAKE)
-@app.route('/api/instagram/webhook', methods=['POST'])
-def instagram_webhook():
-    # Validação simples por Token na URL para segurança (?token=sould_secret_token_2026)
-    token_recebido = request.args.get('token')
-    if token_recebido != WEBHOOK_SECRET:
-        return jsonify({"erro": "Não autorizado"}), 401
-
-    dados = request.get_json()
-    if not dados or 'link_post' not in dados:
-        return jsonify({"erro": "Dados incompletos. 'link_post' é obrigatório."}), 400
-
-    link_post = dados.get('link_post')
-    legenda = dados.get('legenda', '')
-    url_imagem = dados.get('url_imagem', '')
-
-    try:
-        with obter_conexao_db() as conexao:
-            with conexao.cursor() as cursor:
-                cursor.execute('''
-                    INSERT INTO instagram_posts (link_post, legenda, url_imagem) 
-                    VALUES (%s, %s, %s)
-                ''', (link_post, legenda, url_imagem))
-                conexao.commit()
-        return jsonify({"status": "sucesso", "mensagem": "Post registrado com sucesso!"}), 201
-    except Exception as e:
-        print(f"Erro ao salvar post do Instagram via Webhook: {e}")
-        return jsonify({"erro": "Erro interno no servidor ao salvar dados"}), 500
-
+# Rota de Galeria (Se houver)
 @app.route('/galeria')
 def galeria():
-    caminho_galeria = os.path.join('static', 'img', 'galeria')
-    if not os.path.exists(caminho_galeria): 
-        os.makedirs(caminho_galeria)
-    fotos = [f for f in os.listdir(caminho_galeria) if f.lower().endswith(('.jpg', '.png', '.jpeg', '.webp'))]
-    return render_template('galeria.html', fotos=fotos)
+    return "<h1>Galeria de Fotos da SOULD - Em breve</h1>"
 
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    if usuario_esta_logado(): 
-        return redirect(url_for('admin'))
-        
-    if request.method == 'POST':
-        usuario = request.form.get('usuario')
-        senha = request.form.get('senha')
-        
-        if usuario == USUARIO_ADMIN and (check_password_hash(SENHA_HASH, senha) or senha == os.environ.get('ADMIN_PASSWORD')):
-            session['logado'] = True
-            session['usuario'] = usuario
-            return redirect(url_for('admin'))
-        flash('Usuário ou senha incorretos!', 'danger')
-    return render_template('login.html')
+# --- API ENDPOINTS PARA GERENCIAR A AGENDA ---
 
-@app.route('/logout')
-def logout():
-    session.clear()
-    return redirect(url_for('login'))
+@app.route('/api/shows', methods=['GET'])
+def get_shows():
+    shows = Show.query.all()
+    return jsonify([show.to_dict() for show in shows])
 
-@app.route('/admin', methods=['GET', 'POST'])
-def admin():
-    if not usuario_esta_logado(): 
-        return redirect(url_for('login'))
+@app.route('/api/shows', methods=['POST'])
+def add_show():
+    data = request.json
+    if not data or not all(k in data for k in ('data', 'local', 'cidade')):
+        return jsonify({"error": "Dados incompletos"}), 400
     
-    if request.method == 'POST':
-        data = request.form.get('data')
-        local = request.form.get('local')
-        cidade = request.form.get('cidade')
-        link_maps = request.form.get('link_maps') or ""
-        
-        if data and local and city:
-            try:
-                with obter_conexao_db() as conexao:
-                    with conexao.cursor() as cursor:
-                        cursor.execute(
-                            'INSERT INTO shows (data, local, cidade, link_maps) VALUES (%s, %s, %s, %s)', 
-                            (data, local, cidade, link_maps)
-                        )
-                        conexao.commit()
-            except Exception as e:
-                print(f"Erro ao inserir show: {e}")
-            return redirect(url_for('admin'))
-    
-    try:
-        with obter_conexao_db() as conexao:
-            with conexao.cursor(cursor_factory=RealDictCursor) as cursor:
-                # 1. Recupera a lista de shows
-                cursor.execute('SELECT * FROM shows')
-                shows_db = cursor.fetchall()
-                
-                # 2. Recupera a soma total de acessos
-                cursor.execute('SELECT SUM(quantidade) as total FROM acessos')
-                resultado_acessos = cursor.fetchone()
-                total_acessos = resultado_acessos['total'] if resultado_acessos and resultado_acessos['total'] else 0
-                
-                # 3. Recupera o histórico diário (CORRIGIDO DEFINITIVAMENTE: quantity -> quantidade)
-                cursor.execute('SELECT data, quantidade FROM acessos ORDER BY data DESC')
-                historico_acessos = cursor.fetchall()
-    except Exception as e:
-        print(f"Erro ao carregar dados do painel admin: {e}")
-        shows_db, total_acessos, historico_acessos = [], 0, []
+    novo_show = Show(
+        data=data['data'],
+        local=data['local'],
+        cidade=data['cidade'],
+        link_maps=data.get('link_maps')
+    )
+    db.session.add(novo_show)
+    db.session.commit()
+    return jsonify({"success": True, "show": novo_show.to_dict()}), 201
 
-    return render_template('admin.html', shows=ordenar_shows(shows_db), show_edit=None, total_acessos=total_acessos, historico_acessos=historico_acessos)
-
-@app.route('/editar/<int:id>')
-def editar_show(id):
-    if not usuario_esta_logado(): 
-        return redirect(url_for('login'))
-        
-    try:
-        with obter_conexao_db() as conexao:
-            with conexao.cursor(cursor_factory=RealDictCursor) as cursor:
-                cursor.execute('SELECT * FROM shows WHERE id = %s', (id,))
-                show_para_editar = cursor.fetchone()
-                
-                cursor.execute('SELECT * FROM shows')
-                shows_db = cursor.fetchall()
-                
-                cursor.execute('SELECT SUM(quantidade) as total FROM acessos')
-                resultado_acessos = cursor.fetchone()
-                total_acessos = resultado_acessos['total'] if resultado_acessos and resultado_acessos['total'] else 0
-                
-                cursor.execute('SELECT data, quantidade FROM acessos ORDER BY data DESC')
-                historico_acessos = cursor.fetchall()
-    except Exception as e:
-        print(f"Erro ao carregar dados de edição: {e}")
-        show_para_editar, shows_db, total_acessos, historico_acessos = None, [], 0, []
-
-    return render_template('admin.html', shows=ordenar_shows(shows_db), edit_id=id, show_edit=show_para_editar, total_acessos=total_acessos, historico_acessos=historico_acessos)
-
-@app.route('/atualizar/<int:id>', methods=['POST'])
-def atualizar_show(id):
-    if not usuario_esta_logado(): 
-        return redirect(url_for('login'))
-        
-    data = request.form.get('data')
-    local = request.form.get('local')
-    cidade = request.form.get('cidade')
-    link_maps = request.form.get('link_maps') or ""
-    
-    if data and local and cidade:
-        try:
-            with obter_conexao_db() as conexao:
-                with conexao.cursor() as cursor:
-                    cursor.execute(
-                        'UPDATE shows SET data = %s, local = %s, cidade = %s, link_maps = %s WHERE id = %s', 
-                        (data, local, cidade, link_maps, id)
-                    )
-                    conexao.commit()
-        except Exception as e:
-            print(f"Erro ao atualizar show: {e}")
-            
-    return redirect(url_for('admin'))
-
-@app.route('/excluir/<int:id>')
-def excluir(id):
-    if not usuario_esta_logado(): 
-        return redirect(url_for('login'))
-        
-    try:
-        with obter_conexao_db() as conexao:
-            with conexao.cursor() as cursor:
-                cursor.execute('DELETE FROM shows WHERE id = %s', (id,))
-                conexao.commit()
-        flash('Show excluído com sucesso!', 'success')
-    except Exception as e:
-        print(f"Erro ao excluir show: {e}")
-        
-    return redirect(url_for('admin'))
+@app.route('/api/shows/<int:id>', methods=['DELETE'])
+def delete_show(id):
+    show = Show.query.get_or_404(id)
+    db.session.delete(show)
+    db.session.commit()
+    return jsonify({"success": True, "message": "Show removido com sucesso"})
 
 if __name__ == '__main__':
     app.run(debug=True)
