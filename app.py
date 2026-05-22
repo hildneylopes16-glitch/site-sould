@@ -35,9 +35,15 @@ with app.app_context():
 # Rota Principal (Site)
 @app.route('/')
 def index():
-    # Busca todos os shows ordenados por id (ou data)
-    shows_query = Show.query.order_index(Show.id).all() if hasattr(Show, 'id') else Show.query.all()
+    # CORRIGIDO: Mudado de order_index para order_by
+    shows_query = Show.query.order_by(Show.id).all() if hasattr(Show, 'id') else Show.query.all()
     return render_template('index.html', shows=shows_query)
+
+# Rota do Painel Administrativo
+@app.route('/admin')
+def admin():
+    # Renderiza a página de gerenciamento dos shows
+    return render_template('admin.html')
 
 # Rota de Galeria (Se houver)
 @app.route('/galeria')
