@@ -51,7 +51,6 @@ def index():
         if registro_acesso:
             registro_acesso.quantidade += 1
         else:
-            # CORRIGIDO: de quantity=1 para quantidade=1
             novo_acesso = Acesso(data=hoje, quantidade=1)
             db.session.add(novo_acesso)
         db.session.commit()
@@ -79,6 +78,11 @@ def linktree_publico():
     except Exception as e:
         print(f"Erro ao ler tabelas de links: {e}")
     return render_template('links.html', links=links_query)
+
+# Rota Nova: Galeria de Fotos (Necessária para a amarração dos links)
+@app.route('/galeria')
+def galeria():
+    return "<html><body style='background:#121212;color:white;text-align:center;padding-top:100px;font-family:sans-serif;'><h1>GALERIA SOULD</h1><p>Fotos em alta resolução sendo processadas. Em breve!</p><a href='/' style='color:red;'>Voltar ao site</a></body></html>"
 
 # Rota 3: Painel Administrativo
 @app.route('/admin', methods=['GET', 'POST'])
@@ -144,7 +148,7 @@ def excluir_show_painel(id):
         db.session.rollback()
     return redirect(url_for('admin'))
 
-# Rota 5: Excluir Link (Ajustado o nome da rota para bater com o HTML)
+# Rota 5: Excluir Link 
 @app.route('/admin/excluir-link/<int:id>')
 def excluir_link_panel(id):
     try:
