@@ -27,7 +27,7 @@ class Acesso(db.Model):
     data = db.Column(db.Date, unique=True, nullable=False, default=datetime.utcnow)
     quantidade = db.Column(db.Integer, nullable=False, default=1)
 
-# NOVO: Modelo para os Links do estilo Linktree
+# Modelo para os Links do estilo Linktree
 class LinkTree(db.Model):
     __tablename__ = 'linktree'
     id = db.Column(db.Integer, primary_key=True)
@@ -56,15 +56,25 @@ def index():
         db.session.rollback()
 
     shows_query = Show.query.order_by(Show.id).all()
-    # Se quiser listar os links na index no futuro, passamos a query aqui:
     links_query = LinkTree.query.order_by(LinkTree.id).all()
     return render_template('index.html', shows=shows_query, links=links_query)
+
+
+# =======================================================
+# NOVA ROTA: Página estilo Linktree pública para os fãs
+# =======================================================
+@app.route('/links')
+def linktree_publico():
+    # Busca todos os links rápidos cadastrados no banco de dados
+    links_query = LinkTree.query.order_by(LinkTree.id).all()
+    # Renderiza o template visual dos botões (Certifique-se de ter o links.html ou use este nome)
+    return render_template('links.html', links=links_query)
+
 
 # Rota do Painel Administrativo
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
     if request.method == 'POST':
-        # Verifica se o formulário enviado é o de Show ou de Linktree
         form_type = request.form.get('form_type')
         
         if form_type == 'show':
@@ -72,7 +82,8 @@ def admin():
             local = request.form.get('local')
             cidade = request.form.get('cidade')
             link_maps = request.form.get('link_maps')
-            if data and local and city:
+            # Correção feita aqui: alterado de 'city' para 'cidade'
+            if data and local and cidade:
                 novo_show = Show(data=data, local=local, cidade=cidade, link_maps=link_maps)
                 db.session.add(novo_show)
                 db.session.commit()
@@ -111,7 +122,7 @@ def excluir_show_painel(id):
     db.session.commit()
     return redirect(url_for('admin'))
 
-# NOVO: Rota para Excluir Link do Linktree
+# Rota para Excluir Link do Linktree
 @app.route('/admin/excluir-link/<int:id>')
 def excluir_link_painel(id):
     link = LinkTree.query.get_or_404(id)
