@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, redirect, url_for, jsonify
 from flask_sqlalchemy import SQLAlchemy
 import os
 
@@ -35,51 +35,57 @@ with app.app_context():
 # Rota Principal (Site)
 @app.route('/')
 def index():
-    # Busca todos os shows ordenados por id
     shows_query = Show.query.order_by(Show.id).all()
     return render_template('index.html', shows=shows_query)
 
-# Rota do Painel Administrativo
-@app.route('/admin')
+# Rota do Painel Administrativo (Listar e Adicionar Novo)
+@app.route('/admin', methods=['GET', 'POST'])
 def admin():
-    # Busca os shows para listar no painel caso o admin.html precise deles via Jinja2
+    if request.method == 'POST':
+        data = request.form.get('data')
+        local = request.form.get('local')
+        cidade = request.form.get('cidade')
+        link_maps = request.form.get('link_maps')
+        
+        if data and local and cidade:
+            novo_show = Show(data=data, local=local, cidade=cidade, link_maps=link_maps)
+            db.session.add(novo_show)
+            db.session.commit()
+        return redirect(url_for('admin'))
+
     shows_query = Show.query.order_by(Show.id).all()
     return render_template('admin.html', shows=shows_query)
 
-# Rota de Galeria (Se houver)
+# Rota para Excluir Show pelo Painel
+@app.route('/admin/excluir/<int:id>')
+def excluir_show_painel(id):
+    show = Show.query.get_or_404(id)
+    db.session.delete(show)
+    db.session.commit()
+    return redirect(url_for('admin'))
+
+# Rota de Logout Temporária (para não quebrar o botão do HTML)
+@app.route('/logout')
+def logout():
+    return redirect(url_for('index'))
+
+# Rota de Galeria
 @app.route('/galeria')
 def galeria():
     return "<h1>Galeria de Fotos da SOULD - Em breve</h1>"
 
-# --- API ENDPOINTS PARA GERENCIAR A AGENDA ---
-
+# --- API ENDPOINTS (Para integrações futuras se necessário) ---
 @app.route('/api/shows', methods=['GET'])
 def get_shows():
     shows = Show.query.all()
     return jsonify([show.to_dict() for show in shows])
-
-@app.route('/api/shows', methods=['POST'])
-def add_show():
-    data = request.json
-    if not data or not all(k in data for k in ('data', 'local', 'cidade')):
-        return jsonify({"error": "Dados incompletos"}), 400
-    
-    novo_show = Show(
-        data=data['data'],
-        local=data['local'],
-        cidade=data['cidade'],
-        link_maps=data.get('link_maps')
-    )
-    db.session.add(novo_show)
-    db.session.commit()
-    return jsonify({"success": True, "show": novo_show.to_dict()}), 201
 
 @app.route('/api/shows/<int:id>', methods=['DELETE'])
 def delete_show(id):
     show = Show.query.get_or_404(id)
     db.session.delete(show)
     db.session.commit()
-    return jsonify({"success": True, "message": "Show removido com sucesso"})
+    return jsonify({"success": True, "message": "Show removido"})
 
 if __name__ == '__main__':
     app.run(debug=True)

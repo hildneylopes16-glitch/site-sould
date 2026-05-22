@@ -14,19 +14,9 @@
         .table { border-color: #333; }
         .btn-danger { background-color: #ff0000; border: none; border-radius: 0; font-weight: bold; }
         .btn-danger:hover { background-color: #cc0000; }
-        .btn-edit { color: #ffc107; border-color: #ffc107; border-radius: 0; margin-right: 5px; }
-        .btn-edit:hover { background: #ffc107; color: #000; }
         h1, h4 { letter-spacing: 2px; text-transform: uppercase; }
         .link-admin { color: #ff0000; text-decoration: none; }
         .link-admin:hover { text-decoration: underline; }
-        /* Estilo customizado para o indicador privado de acessos */
-        .card-metricas { background: #161616; border: 1px dashed #333; border-radius: 0; height: 100%; }
-        .scroll-historico { max-height: 110px; overflow-y: auto; }
-        /* Customização sutil da barra de rolagem do histórico */
-        .scroll-historico::-webkit-scrollbar { width: 5px; }
-        .scroll-historico::-webkit-scrollbar-track { background: #161616; }
-        .scroll-historico::-webkit-scrollbar-thumb { background: #333; }
-        .scroll-historico::-webkit-scrollbar-thumb:hover { background: #ff0000; }
     </style>
 </head>
 <body>
@@ -38,74 +28,28 @@
             </a>
         </div>
         
-        <div class="row mb-4 g-3">
-            <div class="col-md-4">
-                <div class="card card-metricas shadow-sm">
-                    <div class="card-body py-3 d-flex flex-column justify-content-center">
-                        <h6 class="text-secondary uppercase mb-2" style="font-size: 11px; letter-spacing: 1px;">
-                            <i class="fas fa-chart-bar text-danger me-1"></i> Desempenho Interno
-                        </h6>
-                        <h3 class="m-0 text-white fw-bold">
-                            {{ total_acessos }} <span class="text-secondary font-monospace" style="font-size: 13px; font-weight: normal;">acessos totais</span>
-                        </h3>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-md-5">
-                <div class="card card-metricas shadow-sm">
-                    <div class="card-body py-2">
-                        <h6 class="text-secondary uppercase mb-2" style="font-size: 11px; letter-spacing: 1px;">
-                            <i class="fas fa-calendar-alt text-danger me-1"></i> Balanço de Acessos por Data
-                        </h6>
-                        <div class="scroll-historico">
-                            <table class="table table-dark table-sm m-0 table-borderless small">
-                                <tbody>
-                                    {% for registro in historico_acessos %}
-                                    <tr>
-                                        <td class="text-secondary font-monospace">{{ registro.data.strftime('%d/%m/%Y') }}</td>
-                                        <td class="text-end fw-bold text-danger">{{ registro.quantidade }} acessos</td>
-                                    </tr>
-                                    {% else %}
-                                    <tr>
-                                        <td colspan="2" class="text-secondary italic small text-center py-2">Nenhum acesso registrado ainda.</td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
         <div class="card-admin mb-5 shadow-lg">
-            <h4 class="mb-3">{% if show_edit %}Editar Show{% else %}Agendar Novo Show{% endif %}</h4>
+            <h4 class="mb-3">Agendar Novo Show</h4>
             
-            <form action="{% if show_edit %}{{ url_for('atualizar_show', id=show_edit.id) }}{% else %}{{ url_for('admin') }}{% endif %}" method="POST" class="row g-3">
+            <form action="{{ url_for('admin') }}" method="POST" class="row g-3">
                 <div class="col-md-2">
                     <label class="small text-secondary">DATA</label>
-                    <input type="text" name="data" class="form-control" placeholder="DD/MM/AAAA" value="{{ show_edit.data if show_edit else '' }}" required>
+                    <input type="text" name="data" class="form-control" placeholder="DD/MM/AAAA" required>
                 </div>
                 <div class="col-md-3">
                     <label class="small text-secondary">NOME DO LOCAL</label>
-                    <input type="text" name="local" class="form-control" placeholder="Ex: Hocus Pocus" value="{{ show_edit.local if show_edit else '' }}" required>
+                    <input type="text" name="local" class="form-control" placeholder="Ex: Hocus Pocus" required>
                 </div>
                 <div class="col-md-2">
                     <label class="small text-secondary">CIDADE / UF</label>
-                    <input type="text" name="cidade" class="form-control" placeholder="SJC / SP" value="{{ show_edit.cidade if show_edit else '' }}" required>
+                    <input type="text" name="cidade" class="form-control" placeholder="SJC / SP" required>
                 </div>
                 <div class="col-md-3">
-                    <label class="small text-secondary">LINK OU ENDEREÇO GOOGLE MAPS</label>
-                    <input type="text" name="link_maps" class="form-control" placeholder="Cole o link ou digite o endereço" value="{{ show_edit.link_maps if show_edit else '' }}">
+                    <label class="small text-secondary">LINK GOOGLE MAPS</label>
+                    <input type="text" name="link_maps" class="form-control" placeholder="Cole o link do local">
                 </div>
-                <div class="col-md-2 d-flex align-items-end gap-2">
-                    <button type="submit" class="btn btn-danger w-100 py-2">
-                        {% if show_edit %}SALVAR{% else %}ADICIONAR{% endif %}
-                    </button>
-                    {% if show_edit %}
-                        <a href="{{ url_for('admin') }}" class="btn btn-outline-secondary rounded-0">X</a>
-                    {% endif %}
+                <div class="col-md-2 d-flex align-items-end">
+                    <button type="submit" class="btn btn-danger w-100 py-2">ADICIONAR</button>
                 </div>
             </form>
         </div>
@@ -137,13 +81,16 @@
                         </td>
                         <td class="text-secondary">{{ show.cidade }}</td>
                         <td class="text-center">
-                            <a href="{{ url_for('editar_show', id=show.id) }}" class="btn btn-sm btn-edit">Editar</a>
-                            <a href="{{ url_for('excluir', id=show.id) }}" 
+                            <a href="{{ url_for('excluir_show_painel', id=show.id) }}" 
                                class="btn btn-sm btn-outline-warning rounded-0"
                                onclick="return confirm('Tem certeza que deseja remover este show?')">
                                Excluir
                             </a>
                         </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5" class="text-center text-secondary py-3">Nenhum show agendado no momento.</td>
                     </tr>
                     {% endfor %}
                 </tbody>
