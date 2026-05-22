@@ -18,7 +18,6 @@
         .link-admin { color: #ff0000; text-decoration: none; }
         .link-admin:hover { text-decoration: underline; }
         
-        /* Estilos do Indicador de Acessos */
         .card-metricas { background: #161616; border: 1px dashed #333; border-radius: 0; height: 100%; }
         .scroll-historico { max-height: 110px; overflow-y: auto; }
         .scroll-historico::-webkit-scrollbar { width: 5px; }
@@ -30,13 +29,13 @@
 <body>
     <div class="container">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="text-danger m-0">ADMINISTRAÇÃO DE SHOWS</h1>
+            <h1 class="text-danger m-0">ADMINISTRAÇÃO SOULD</h1>
             <a href="{{ url_for('logout') }}" class="btn btn-outline-danger rounded-0 px-3">
                 <i class="fas fa-sign-out-alt me-2"></i>SAIR
             </a>
         </div>
         
-        <div class="row mb-4 g-3">
+        <div class="row mb-5 g-3">
             <div class="col-md-4">
                 <div class="card card-metricas shadow-sm">
                     <div class="card-body py-3 d-flex flex-column justify-content-center">
@@ -77,10 +76,10 @@
             </div>
         </div>
         
-        <div class="card-admin mb-5 shadow-lg">
-            <h4 class="mb-3">Agendar Novo Show</h4>
-            
+        <div class="card-admin mb-4 shadow-lg">
+            <h4 class="mb-3 text-danger">Agendar Novo Show</h4>
             <form action="{{ url_for('admin') }}" method="POST" class="row g-3">
+                <input type="hidden" name="form_type" value="show">
                 <div class="col-md-2">
                     <label class="small text-secondary">DATA</label>
                     <input type="text" name="data" class="form-control" placeholder="DD/MM/AAAA" required>
@@ -103,7 +102,7 @@
             </form>
         </div>
 
-        <div class="table-responsive">
+        <div class="table-responsive mb-5">
             <table class="table table-dark table-hover align-middle">
                 <thead class="table-light text-dark">
                     <tr>
@@ -132,19 +131,67 @@
                         <td class="text-center">
                             <a href="{{ url_for('excluir_show_painel', id=show.id) }}" 
                                class="btn btn-sm btn-outline-warning rounded-0"
-                               onclick="return confirm('Tem certeza que deseja remover este show?')">
-                               Excluir
-                            </a>
+                               onclick="return confirm('Deseja remover este show?')">Excluir</a>
                         </td>
                     </tr>
                     {% else %}
                     <tr>
-                        <td colspan="5" class="text-center text-secondary py-3">Nenhum show agendado no momento.</td>
+                        <td colspan="5" class="text-center text-secondary py-2">Nenhum show cadastrado.</td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
+
+        <hr class="border-secondary my-5">
+
+        <div class="card-admin mb-4 shadow-lg" style="border-color: #00f3ff;">
+            <h4 class="mb-3" style="color: #00f3ff;">Gerenciador do LinkTree (Links Rápidos)</h4>
+            <form action="{{ url_for('admin') }}" method="POST" class="row g-3">
+                <input type="hidden" name="form_type" value="linktree">
+                <div class="col-md-4">
+                    <label class="small text-secondary">TÍTULO DO BOTÃO</label>
+                    <input type="text" name="titulo" class="form-control" placeholder="Ex: Nosso Spotify Oficial" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="small text-secondary">URL DO LINK (DESTINO)</label>
+                    <input type="url" name="url" class="form-control" placeholder="Ex: https://open.spotify.com/..." required>
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <button type="submit" class="btn w-100 py-2" style="background-color: #00f3ff; color: black; font-weight: bold; border: none; border-radius: 0;">CRIAR LINK</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-dark table-hover align-middle">
+                <thead class="table-light text-dark">
+                    <tr>
+                        <th>Título do Botão</th>
+                        <th>URL de Destino</th>
+                        <th class="text-center">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for link in links %}
+                    <tr>
+                        <td class="fw-bold text-info">{{ link.titulo }}</td>
+                        <td class="small text-secondary">{{ link.url }}</td>
+                        <td class="text-center">
+                            <a href="{{ url_for('excluir_link_painel', id=link.id) }}" 
+                               class="btn btn-sm btn-outline-danger rounded-0"
+                               onclick="return confirm('Deseja remover este link do Linktree?')">Remover</a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="3" class="text-center text-secondary py-2">Nenhum link criado ainda.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
     </div>
 </body>
 </html>
