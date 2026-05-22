@@ -35,15 +35,16 @@ with app.app_context():
 # Rota Principal (Site)
 @app.route('/')
 def index():
-    # CORRIGIDO: Mudado de order_index para order_by
-    shows_query = Show.query.order_by(Show.id).all() if hasattr(Show, 'id') else Show.query.all()
+    # Busca todos os shows ordenados por id
+    shows_query = Show.query.order_by(Show.id).all()
     return render_template('index.html', shows=shows_query)
 
 # Rota do Painel Administrativo
 @app.route('/admin')
 def admin():
-    # Renderiza a página de gerenciamento dos shows
-    return render_template('admin.html')
+    # Busca os shows para listar no painel caso o admin.html precise deles via Jinja2
+    shows_query = Show.query.order_by(Show.id).all()
+    return render_template('admin.html', shows=shows_query)
 
 # Rota de Galeria (Se houver)
 @app.route('/galeria')
