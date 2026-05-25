@@ -1,9 +1,12 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import os
 
 app = Flask(__name__)
+
+# CHAVE SECRETA: Necessária para ativar o controle de acessos reais por sessão
+app.secret_key = os.environ.get('SECRET_KEY', 'chave_secreta_para_sould_banda_2026')
 
 # Configuração do Banco de Dados PostgreSQL (Render)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'postgresql://usuario:senha@localhost/sould_db')
@@ -34,7 +37,14 @@ class LinkTree(db.Model):
     titulo = db.Column(db.String(100), nullable=False)
     url = db.Column(db.String(255), nullable=False)
 
-# Inicialização segura do banco de dados
+# Função auxiliar para ordenar as datas padrão DD/MM/AAAA corretamente
+def ordenar_shows(lista_shows):
+    try:
+        return sorted(lista_shows, key=lambda x: datetime.strptime(x.data, '%d/%m/%Y'))
+    except Exception:
+        # Caso alguma data esteja fora do padrão, não quebra o site
+        return sorted(lista_shows, key=lambda x: x.id)
+
 with app.app_context():
     try:
         db.create_all()
@@ -44,15 +54,21 @@ with app.app_context():
 # Rota 1: Página Principal do Site (Sould)
 @app.route('/')
 def index():
+    # Bloco do contador de acessos imune a falhas e robôs falsos
     try:
-        hoje = datetime.utcnow().date()
-        registro_acesso = Acesso.query.filter_by(data=hoje).first()
-        if registro_acesso:
-            registro_acesso.quantidade += 1
-        else:
-            novo_acesso = Acesso(data=hoje, quantity=1)
-            db.session.add(novo_acesso)
-        db.session.commit()
+        hoje_str = datetime.utcnow().strftime('%Y-%m-%d')
+        # Verifica se esta sessão já acessou o site hoje
+        if session.get('ultimo_acesso') != hoje_str:
+            hoje = datetime.utcnow().date()
+            registro_acesso = Acesso.query.filter_by(data=hoje).first()
+            if registro_acesso:
+                registro_acesso.quantidade += 1
+            else:
+                novo_acesso = Acesso(data=hoje, quantidade=1)
+                db.session.add(novo_acesso)
+            db.session.commit()
+            # Grava na sessão que o usuário real já contou hoje
+            session['ultimo_acesso'] = hoje_str
     except Exception as e:
         db.session.rollback()
         print(f"Erro ao registrar acesso: {e}")
@@ -60,14 +76,14 @@ def index():
     shows_query = []
     links_query = []
     try:
-        shows_query = Show.query.order_by(Show.id).all()
+        shows_query = ordenar_shows(Show.query.all())
         links_query = LinkTree.query.order_by(LinkTree.id).all()
     except Exception as e:
         print(f"Erro ao ler tabelas na index: {e}")
 
     return render_template('index.html', shows=shows_query, links=links_query)
 
-# Rota 2: Linktree Público (bandasould.com.br/links)
+# Rota 2: Linktree Público
 @app.route('/links')
 def linktree_publico():
     links_query = []
@@ -77,31 +93,25 @@ def linktree_publico():
         print(f"Erro ao ler tabelas de links: {e}")
     return render_template('links.html', links=links_query)
 
-# Rota Nova: Galeria de Fotos (Mapeando a pasta automaticamente)
+# Rota Nova: Galeria de Fotos
 @app.route('/galeria')
 def galeria():
     try:
-        # Caminho para a pasta de fotos da galeria
         pasta_galeria = os.path.join(app.static_folder, 'img', 'galeria')
         fotos = []
-        
         if os.path.exists(pasta_galeria):
-            # Lista apenas arquivos de imagem válidos da pasta
             fotos = [f for f in os.listdir(pasta_galeria) if f.lower().endswith(('.png', '.jpg', '.jpeg', '.webp', '.gif'))]
-            fotos.sort() # Organiza em ordem alfabética
-        
+            fotos.sort()
         return render_template('galeria.html', fotos=fotos)
     except Exception as e:
-        # Exibe o erro real no log do servidor para você saber o que quebrou
         print(f"Erro crítico na rota galeria: {e}")
-        return f"<html><body style='background:#121212;color:white;text-align:center;padding-top:100px;font-family:sans-serif;'><h1>GALERIA SOULD</h1><p>Erro interno ao carregar a página: {e}</p><a href='/' style='color:red;'>Voltar ao site</a></body></html>"
+        return "<html><body style='background:#121212;color:white;text-align:center;padding-top:100px;'><h1>GALERIA SOULD</h1><p>Erro ao processar mídias.</p></body></html>"
 
 # Rota 3: Painel Administrativo
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
     if request.method == 'POST':
         form_type = request.form.get('form_type')
-        
         try:
             if form_type == 'show':
                 data = request.form.get('data')
@@ -109,11 +119,9 @@ def admin():
                 cidade = request.form.get('cidade')
                 link_maps = request.form.get('link_maps')
                 if data and local and cidade:
-                    # CORRIGIDO: de 'city=cidade' para 'cidade=cidade'
                     novo_show = Show(data=data, local=local, cidade=cidade, link_maps=link_maps)
                     db.session.add(novo_show)
                     db.session.commit()
-                    
             elif form_type == 'linktree':
                 titulo = request.form.get('titulo')
                 url = request.form.get('url')
@@ -124,19 +132,17 @@ def admin():
         except Exception as e:
             db.session.rollback()
             print(f"Erro ao salvar dados pelo painel: {e}")
-                
         return redirect(url_for('admin'))
 
     total_acessos = 0
     historico_acessos = []
     shows_query = []
     links_query = []
-
     try:
         todos_acessos = Acesso.query.all()
         total_acessos = sum(a.quantidade for a in todos_acessos)
         historico_acessos = Acesso.query.order_by(Acesso.data.desc()).all()
-        shows_query = Show.query.order_by(Show.id).all()
+        shows_query = ordenar_shows(Show.query.all())
         links_query = LinkTree.query.order_by(LinkTree.id).all()
     except Exception as e:
         print(f"Erro ao coletar dados para o admin: {e}")
@@ -148,6 +154,23 @@ def admin():
         total_acessos=total_acessos, 
         historico_acessos=historico_acessos
     )
+
+# Rota de Edição de Show (Recuperada)
+@app.route('/admin/editar/<int:id>', methods=['GET', 'POST'])
+def editar_show(id):
+    show = Show.query.get_or_404(id)
+    if request.method == 'POST':
+        try:
+            show.data = request.form.get('data')
+            show.local = request.form.get('local')
+            show.cidade = request.form.get('cidade')
+            show.link_maps = request.form.get('link_maps')
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            print(f"Erro ao editar show: {e}")
+        return redirect(url_for('admin'))
+    return render_template('editar.html', show=show)
 
 # Rota 4: Excluir Show
 @app.route('/admin/excluir/<int:id>')

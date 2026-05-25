@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Show - Sould</title>
+    <style>
+        body { background: #121212; color: white; font-family: sans-serif; padding: 50px; }
+        .box { max-width: 500px; margin: 0 auto; border: 1px solid red; padding: 20px; border-radius: 5px; }
+        input { width: 100%; padding: 10px; margin: 10px 0; background: #222; border: 1px solid #444; color: white; box-sizing: border-box; }
+        button { background: red; color: white; padding: 10px 20px; border: none; cursor: pointer; font-weight: bold; width: 100%; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h2>Editar Show</h2>
+        <form method="POST">
+            <label>Data:</label>
+            <input type="text" name="data" value="{{ show.data }}" required>
+            <label>Local:</label>
+            <input type="text" name="local" value="{{ show.local }}" required>
+            <label>Cidade / UF:</label>
+            <input type="text" name="cidade" value="{{ show.cidade }}" required>
+            <label>Link Google Maps:</label>
+            <input type="text" name="link_maps" value="{{ show.link_maps }}">
+            <button type="submit">SALVAR ALTERAÇÕES</button>
+        </form>
+        <p style="text-align: center;"><a href="/admin" style="color: gray;">Cancelar</a></p>
+    </div>
+</body>
+</html>
