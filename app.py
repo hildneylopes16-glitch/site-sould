@@ -1,24 +1,28 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import os
 
 app = Flask(__name__)
 
-# CHAVE SECRETA: Necessária para ativar o controle de acessos reais por sessão
 app.secret_key = os.environ.get('SECRET_KEY', 'chave_secreta_para_sould_banda_2026')
-
-# Configuração do Banco de Dados PostgreSQL (Render)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'postgresql://usuario:senha@localhost/sould_db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
-# CONFIGURAÇÃO DE ACESSO DO PAINEL (Altere aqui se desejar)
 USER_ADMIN = "admin"
 PASSWORD_ADMIN = "sould2026"
 
-# Modelo 1: Agenda de Shows
+# =================================================================
+# NOVA ROTA: Rota de Ping para o UptimeRobot ou Scripts Externos
+# =================================================================
+@app.route('/ping', methods=['GET'])
+def ping():
+    # Retorna uma resposta rápida sem computar acesso ou tocar no banco
+    return jsonify({"status": "healthy", "timestamp": datetime.utcnow().isoformat()}), 200
+
+# --- Seus Modelos permanecem iguais ---
 class Show(db.Model):
     __tablename__ = 'shows'
     id = db.Column(db.Integer, primary_key=True)
@@ -27,26 +31,22 @@ class Show(db.Model):
     cidade = db.Column(db.String(50), nullable=False)
     link_maps = db.Column(db.String(255), nullable=True)
 
-# Modelo 2: Controle Interno de Acessos
 class Acesso(db.Model):
     __tablename__ = 'acessos'
     id = db.Column(db.Integer, primary_key=True)
     data = db.Column(db.Date, unique=True, nullable=False, default=datetime.utcnow)
     quantidade = db.Column(db.Integer, nullable=False, default=1)
 
-# Modelo 3: Links do Linktree
 class LinkTree(db.Model):
     __tablename__ = 'linktree'
     id = db.Column(db.Integer, primary_key=True)
     titulo = db.Column(db.String(100), nullable=False)
     url = db.Column(db.String(255), nullable=False)
 
-# Função auxiliar para ordenar as datas padrão DD/MM/AAAA corretamente
 def ordenar_shows(lista_shows):
     try:
         return sorted(lista_shows, key=lambda x: datetime.strptime(x.data, '%d/%m/%Y'))
     except Exception:
-        # Caso alguma data esteja fora do padrão, não quebra o site
         return sorted(lista_shows, key=lambda x: x.id)
 
 with app.app_context():
@@ -55,23 +55,20 @@ with app.app_context():
     except Exception as e:
         print(f"Aviso na criação de tabelas: {e}")
 
-# Rota 1: Página Principal do Site (Sould)
+# Rota 1: Página Principal
 @app.route('/')
 def index():
-    # Bloco do contador de acessos imune a falhas e robôs falsos
     try:
         hoje_str = datetime.utcnow().strftime('%Y-%m-%d')
-        # Verifica se esta sessão já acessou o site hoje
         if session.get('ultimo_acesso') != hoje_str:
             hoje = datetime.utcnow().date()
             registro_acesso = Acesso.query.filter_by(data=hoje).first()
             if registro_acesso:
                 registro_acesso.quantidade += 1
             else:
-                novo_acesso = Acesso(data=hoje, quantidade=1)
+                novo_acesso = Acesso(data=hoje, quantity=1)
                 db.session.add(novo_acesso)
             db.session.commit()
-            # Grava na sessão que o usuário real já contou hoje
             session['ultimo_acesso'] = hoje_str
     except Exception as e:
         db.session.rollback()
@@ -116,17 +113,13 @@ def galeria():
 def admin():
     if request.method == 'POST':
         form_type = request.form.get('form_type')
-        
-        # Lógica de Login integrada do arquivo admin.html
         if form_type == 'login':
             username = request.form.get('username')
             password = request.form.get('password')
-            
             if username == USER_ADMIN and password == PASSWORD_ADMIN:
                 session['logado'] = True
             return redirect(url_for('admin'))
             
-        # Só permite executar as ações abaixo se estiver de fato logado
         if session.get('logado'):
             try:
                 if form_type == 'show':
@@ -134,7 +127,7 @@ def admin():
                     local = request.form.get('local')
                     cidade = request.form.get('cidade')
                     link_maps = request.form.get('link_maps')
-                    if data and local and cidade:
+                    if data and local and city:
                         novo_show = Show(data=data, local=local, cidade=cidade, link_maps=link_maps)
                         db.session.add(novo_show)
                         db.session.commit()
@@ -155,7 +148,6 @@ def admin():
     shows_query = []
     links_query = []
     
-    # Busca os dados apenas se estiver autenticado
     if session.get('logado'):
         try:
             todos_acessos = Acesso.query.all()
@@ -174,12 +166,10 @@ def admin():
         historico_acessos=historico_acessos
     )
 
-# Rota de Edição de Show (Protegida)
 @app.route('/admin/editar/<int:id>', methods=['GET', 'POST'])
 def editar_show(id):
     if not session.get('logado'):
         return redirect(url_for('admin'))
-        
     show = Show.query.get_or_404(id)
     if request.method == 'POST':
         try:
@@ -194,12 +184,10 @@ def editar_show(id):
         return redirect(url_for('admin'))
     return render_template('editar.html', show=show)
 
-# Rota 4: Excluir Show (Protegida)
 @app.route('/admin/excluir/<int:id>')
 def excluir_show_painel(id):
     if not session.get('logado'):
         return redirect(url_for('admin'))
-        
     try:
         show = Show.query.get_or_404(id)
         db.session.delete(show)
@@ -209,12 +197,10 @@ def excluir_show_painel(id):
         print(f"Erro ao excluir show: {e}")
     return redirect(url_for('admin'))
 
-# Rota 5: Excluir Link (Protegida)
 @app.route('/admin/excluir-link/<int:id>')
 def excluir_link_panel(id):
     if not session.get('logado'):
         return redirect(url_for('admin'))
-        
     try:
         link = LinkTree.query.get_or_404(id)
         db.session.delete(link)
@@ -224,7 +210,6 @@ def excluir_link_panel(id):
         print(f"Erro ao excluir link: {e}")
     return redirect(url_for('admin'))
 
-# Rota de Logout atualizada para resetar a sessão do Admin
 @app.route('/logout')
 def logout():
     session.clear()
