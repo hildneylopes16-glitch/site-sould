@@ -24,10 +24,15 @@
         .scroll-historico::-webkit-scrollbar-track { background: #161616; }
         .scroll-historico::-webkit-scrollbar-thumb { background: #333; }
         .scroll-historico::-webkit-scrollbar-thumb:hover { background: #ff0000; }
+        
+        /* Estilo da tela de login centralizada */
+        .login-container { max-width: 400px; margin: 80px auto 0 auto; }
     </style>
 </head>
 <body>
     <div class="container">
+
+        {% if session.get('logado') %}
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1 class="text-danger m-0">ADMINISTRAÇÃO SOULD</h1>
             <a href="{{ url_for('logout') }}" class="btn btn-outline-danger rounded-0 px-3">
@@ -163,7 +168,7 @@
                 </div>
                 <div class="col-md-6">
                     <label class="small text-secondary">URL DO LINK (DESTINO)</label>
-                    <input type="url" name="url" class="form-control" placeholder="Ex: http://spotify.com/..." required>
+                    <input type="url" name="url" class="form-control" placeholder="Ex: http://spotify.com..." required>
                 </div>
                 <div class="col-md-2 d-flex align-items-end">
                     <button type="submit" class="btn w-100 py-2" style="background-color: #00f3ff; color: black; font-weight: bold; border: none; border-radius: 0;">CRIAR LINK</button>
@@ -199,6 +204,36 @@
                 </tbody>
             </table>
         </div>
+
+        {% else %}
+        <div class="login-container">
+            <div class="card-admin shadow-lg text-center">
+                <h3 class="text-danger mb-4 fw-bold">SOULD ADMIN</h3>
+                <p class="text-secondary small">Insira as credenciais para acessar o painel</p>
+                
+                <form action="{{ url_for('admin') }}" method="POST" class="text-start">
+                    <input type="hidden" name="form_type" value="login">
+                    
+                    <div class="mb-3">
+                        <label class="small text-secondary fw-bold mb-1">USUÁRIO</label>
+                        <input type="text" name="username" class="form-control" placeholder="Seu usuário" required>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="small text-secondary fw-bold mb-1">SENHA</label>
+                        <input type="password" name="password" class="form-control" placeholder="Sua senha" required>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-danger w-100 py-2 mb-2">ENTRAR NO PAINEL</button>
+                </form>
+                <div class="mt-3">
+                    <a href="{{ url_for('index') }}" class="text-secondary small text-decoration-none">
+                        <i class="fas fa-arrow-left me-1"></i>Voltar para o site
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
 
     </div>
 </body>

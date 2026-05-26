@@ -14,6 +14,10 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
+# CONFIGURAÇÃO DE ACESSO DO PAINEL (Altere aqui se desejar)
+USER_ADMIN = "admin"
+PASSWORD_ADMIN = "sould2026"
+
 # Modelo 1: Agenda de Shows
 class Show(db.Model):
     __tablename__ = 'shows'
@@ -112,40 +116,55 @@ def galeria():
 def admin():
     if request.method == 'POST':
         form_type = request.form.get('form_type')
-        try:
-            if form_type == 'show':
-                data = request.form.get('data')
-                local = request.form.get('local')
-                cidade = request.form.get('cidade')
-                link_maps = request.form.get('link_maps')
-                if data and local and cidade:
-                    novo_show = Show(data=data, local=local, cidade=cidade, link_maps=link_maps)
-                    db.session.add(novo_show)
-                    db.session.commit()
-            elif form_type == 'linktree':
-                titulo = request.form.get('titulo')
-                url = request.form.get('url')
-                if titulo and url:
-                    novo_link = LinkTree(titulo=titulo, url=url)
-                    db.session.add(novo_link)
-                    db.session.commit()
-        except Exception as e:
-            db.session.rollback()
-            print(f"Erro ao salvar dados pelo painel: {e}")
+        
+        # Lógica de Login integrada do arquivo admin.html
+        if form_type == 'login':
+            username = request.form.get('username')
+            password = request.form.get('password')
+            
+            if username == USER_ADMIN and password == PASSWORD_ADMIN:
+                session['logado'] = True
+            return redirect(url_for('admin'))
+            
+        # Só permite executar as ações abaixo se estiver de fato logado
+        if session.get('logado'):
+            try:
+                if form_type == 'show':
+                    data = request.form.get('data')
+                    local = request.form.get('local')
+                    cidade = request.form.get('cidade')
+                    link_maps = request.form.get('link_maps')
+                    if data and local and cidade:
+                        novo_show = Show(data=data, local=local, cidade=cidade, link_maps=link_maps)
+                        db.session.add(novo_show)
+                        db.session.commit()
+                elif form_type == 'linktree':
+                    titulo = request.form.get('titulo')
+                    url = request.form.get('url')
+                    if titulo and url:
+                        novo_link = LinkTree(titulo=titulo, url=url)
+                        db.session.add(novo_link)
+                        db.session.commit()
+            except Exception as e:
+                db.session.rollback()
+                print(f"Erro ao salvar dados pelo painel: {e}")
         return redirect(url_for('admin'))
 
     total_acessos = 0
     historico_acessos = []
     shows_query = []
     links_query = []
-    try:
-        todos_acessos = Acesso.query.all()
-        total_acessos = sum(a.quantidade for a in todos_acessos)
-        historico_acessos = Acesso.query.order_by(Acesso.data.desc()).all()
-        shows_query = ordenar_shows(Show.query.all())
-        links_query = LinkTree.query.order_by(LinkTree.id).all()
-    except Exception as e:
-        print(f"Erro ao coletar dados para o admin: {e}")
+    
+    # Busca os dados apenas se estiver autenticado
+    if session.get('logado'):
+        try:
+            todos_acessos = Acesso.query.all()
+            total_acessos = sum(a.quantidade for a in todos_acessos)
+            historico_acessos = Acesso.query.order_by(Acesso.data.desc()).all()
+            shows_query = ordenar_shows(Show.query.all())
+            links_query = LinkTree.query.order_by(LinkTree.id).all()
+        except Exception as e:
+            print(f"Erro ao coletar dados para o admin: {e}")
     
     return render_template(
         'admin.html', 
@@ -155,9 +174,12 @@ def admin():
         historico_acessos=historico_acessos
     )
 
-# Rota de Edição de Show (Recuperada)
+# Rota de Edição de Show (Protegida)
 @app.route('/admin/editar/<int:id>', methods=['GET', 'POST'])
 def editar_show(id):
+    if not session.get('logado'):
+        return redirect(url_for('admin'))
+        
     show = Show.query.get_or_404(id)
     if request.method == 'POST':
         try:
@@ -172,9 +194,12 @@ def editar_show(id):
         return redirect(url_for('admin'))
     return render_template('editar.html', show=show)
 
-# Rota 4: Excluir Show
+# Rota 4: Excluir Show (Protegida)
 @app.route('/admin/excluir/<int:id>')
 def excluir_show_painel(id):
+    if not session.get('logado'):
+        return redirect(url_for('admin'))
+        
     try:
         show = Show.query.get_or_404(id)
         db.session.delete(show)
@@ -184,9 +209,12 @@ def excluir_show_painel(id):
         print(f"Erro ao excluir show: {e}")
     return redirect(url_for('admin'))
 
-# Rota 5: Excluir Link 
+# Rota 5: Excluir Link (Protegida)
 @app.route('/admin/excluir-link/<int:id>')
 def excluir_link_panel(id):
+    if not session.get('logado'):
+        return redirect(url_for('admin'))
+        
     try:
         link = LinkTree.query.get_or_404(id)
         db.session.delete(link)
@@ -196,9 +224,11 @@ def excluir_link_panel(id):
         print(f"Erro ao excluir link: {e}")
     return redirect(url_for('admin'))
 
+# Rota de Logout atualizada para resetar a sessão do Admin
 @app.route('/logout')
 def logout():
-    return redirect(url_for('index'))
+    session.clear()
+    return redirect(url_for('admin'))
 
 if __name__ == '__main__':
     app.run(debug=True)
