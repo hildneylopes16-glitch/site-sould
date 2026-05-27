@@ -66,7 +66,7 @@ def index():
             if registro_acesso:
                 registro_acesso.quantidade += 1
             else:
-                novo_acesso = Acesso(data=hoje, quantity=1)
+                novo_acesso = Acesso(data=hoje, quantidade=1)
                 db.session.add(novo_acesso)
             db.session.commit()
             session['ultimo_acesso'] = hoje_str
@@ -127,7 +127,8 @@ def admin():
                     local = request.form.get('local')
                     cidade = request.form.get('cidade')
                     link_maps = request.form.get('link_maps')
-                    if data and local and city:
+                    # CORREÇÃO AQUI: Mudado de 'city' para 'cidade' para validar corretamente
+                    if data and local and cidade:
                         novo_show = Show(data=data, local=local, cidade=cidade, link_maps=link_maps)
                         db.session.add(novo_show)
                         db.session.commit()
