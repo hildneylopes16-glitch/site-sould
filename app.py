@@ -22,7 +22,7 @@ def ping():
     # Retorna uma resposta rápida sem computar acesso ou tocar no banco
     return jsonify({"status": "healthy", "timestamp": datetime.utcnow().isoformat()}), 200
 
-# --- Seus Modelos permanecem iguais ---
+# --- Seus Modelos permanecem iguais (Tabela Acesso Removida para Economia) ---
 class Show(db.Model):
     __tablename__ = 'shows'
     id = db.Column(db.Integer, primary_key=True)
@@ -30,12 +30,6 @@ class Show(db.Model):
     local = db.Column(db.String(100), nullable=False)
     cidade = db.Column(db.String(50), nullable=False)
     link_maps = db.Column(db.String(255), nullable=True)
-
-class Acesso(db.Model):
-    __tablename__ = 'acessos'
-    id = db.Column(db.Integer, primary_key=True)
-    data = db.Column(db.Date, unique=True, nullable=False, default=datetime.utcnow)
-    quantidade = db.Column(db.Integer, nullable=False, default=1)
 
 class LinkTree(db.Model):
     __tablename__ = 'linktree'
@@ -55,25 +49,9 @@ with app.app_context():
     except Exception as e:
         print(f"Aviso na criação de tabelas: {e}")
 
-# Rota 1: Página Principal
+# Rota 1: Página Principal (ATUALIZADA: SEM GRAVAÇÃO PESADA NO BANCO)
 @app.route('/')
 def index():
-    try:
-        hoje_str = datetime.utcnow().strftime('%Y-%m-%d')
-        if session.get('ultimo_acesso') != hoje_str:
-            hoje = datetime.utcnow().date()
-            registro_acesso = Acesso.query.filter_by(data=hoje).first()
-            if registro_acesso:
-                registro_acesso.quantidade += 1
-            else:
-                novo_acesso = Acesso(data=hoje, quantidade=1)
-                db.session.add(novo_acesso)
-            db.session.commit()
-            session['ultimo_acesso'] = hoje_str
-    except Exception as e:
-        db.session.rollback()
-        print(f"Erro ao registrar acesso: {e}")
-
     shows_query = []
     links_query = []
     try:
@@ -127,7 +105,6 @@ def admin():
                     local = request.form.get('local')
                     cidade = request.form.get('cidade')
                     link_maps = request.form.get('link_maps')
-                    # CORREÇÃO AQUI: Mudado de 'city' para 'cidade' para validar corretamente
                     if data and local and cidade:
                         novo_show = Show(data=data, local=local, cidade=cidade, link_maps=link_maps)
                         db.session.add(novo_show)
@@ -144,16 +121,11 @@ def admin():
                 print(f"Erro ao salvar dados pelo painel: {e}")
         return redirect(url_for('admin'))
 
-    total_acessos = 0
-    historico_acessos = []
     shows_query = []
     links_query = []
     
     if session.get('logado'):
         try:
-            todos_acessos = Acesso.query.all()
-            total_acessos = sum(a.quantidade for a in todos_acessos)
-            historico_acessos = Acesso.query.order_by(Acesso.data.desc()).all()
             shows_query = ordenar_shows(Show.query.all())
             links_query = LinkTree.query.order_by(LinkTree.id).all()
         except Exception as e:
@@ -163,8 +135,8 @@ def admin():
         'admin.html', 
         shows=shows_query, 
         links=links_query,
-        total_acessos=total_acessos, 
-        historico_acessos=historico_acessos
+        total_acessos=0, 
+        historico_acessos=[]
     )
 
 @app.route('/admin/editar/<int:id>', methods=['GET', 'POST'])
