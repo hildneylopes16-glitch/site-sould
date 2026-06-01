@@ -107,12 +107,18 @@ def admin():
                 if form_type == 'show':
                     data = request.form.get('data')
                     local = request.form.get('local')
-                    cidade = request.form.get('cidade')
                     link_maps = request.form.get('link_maps')
+                    
+                    # CORREÇÃO: Tenta pegar 'cidade', se não achar, tenta pegar 'city'
+                    cidade = request.form.get('cidade') or request.form.get('city')
+                    
                     if data and local and cidade:
                         novo_show = Show(data=data, local=local, cidade=cidade, link_maps=link_maps)
                         db.session.add(novo_show)
                         db.session.commit()
+                    else:
+                        print(f"Formulário incompleto recebido: data={data}, local={local}, cidade={cidade}")
+                        
                 elif form_type == 'linktree':
                     titulo = request.form.get('titulo')
                     url = request.form.get('url')
@@ -152,7 +158,7 @@ def editar_show(id):
         try:
             show.data = request.form.get('data')
             show.local = request.form.get('local')
-            show.cidade = request.form.get('cidade')
+            show.cidade = request.form.get('cidade') or request.form.get('city')
             show.link_maps = request.form.get('link_maps')
             db.session.commit()
         except Exception as e:

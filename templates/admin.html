@@ -87,7 +87,7 @@
                 <input type="hidden" name="form_type" value="show">
                 <div class="col-md-2">
                     <label class="small text-secondary">DATA</label>
-                    <input type="text" name="data" class="form-control" placeholder="DD/MM/AAAA" required>
+                    <input type="text" name="cidade" id="data" name="data" class="form-control" placeholder="DD/MM/AAAA" required>
                 </div>
                 <div class="col-md-3">
                     <label class="small text-secondary">NOME DO LOCAL</label>
@@ -137,12 +137,12 @@
                             <div class="d-flex justify-content-center gap-2">
                                 <a href="{{ url_for('editar_show', id=show.id) }}" 
                                    class="btn btn-sm btn-outline-warning rounded-0 px-2">
-                                   <i class="fas fa-edit me-1"></i>Editar
+                                    <i class="fas fa-edit me-1"></i>Editar
                                 </a>
                                 <a href="{{ url_for('excluir_show_painel', id=show.id) }}" 
                                    class="btn btn-sm btn-outline-danger rounded-0 px-2"
                                    onclick="return confirm('Deseja remover este show?')">
-                                   <i class="fas fa-trash-alt me-1"></i>Excluir
+                                    <i class="fas fa-trash-alt me-1"></i>Excluir
                                 </a>
                             </div>
                         </td>
@@ -168,7 +168,7 @@
                 </div>
                 <div class="col-md-6">
                     <label class="small text-secondary">URL DO LINK (DESTINO)</label>
-                    <input type="url" name="url" class="form-control" placeholder="Ex: http://spotify.com..." required>
+                    <input type="url" name="url" class="form-control" placeholder="Ex: https://spotify.com/..." required>
                 </div>
                 <div class="col-md-2 d-flex align-items-end">
                     <button type="submit" class="btn w-100 py-2" style="background-color: #00f3ff; color: black; font-weight: bold; border: none; border-radius: 0;">CRIAR LINK</button>
