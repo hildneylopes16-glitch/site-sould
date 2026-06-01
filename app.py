@@ -14,15 +14,10 @@ db = SQLAlchemy(app)
 USER_ADMIN = "admin"
 PASSWORD_ADMIN = "sould2026"
 
-# =================================================================
-# NOVA ROTA: Rota de Ping para o UptimeRobot ou Scripts Externos
-# =================================================================
 @app.route('/ping', methods=['GET'])
 def ping():
-    # Retorna uma resposta rápida sem computar acesso ou tocar no banco
     return jsonify({"status": "healthy", "timestamp": datetime.utcnow().isoformat()}), 200
 
-# --- Seus Modelos permanecem iguais (Tabela Acesso Removida para Economia) ---
 class Show(db.Model):
     __tablename__ = 'shows'
     id = db.Column(db.Integer, primary_key=True)
@@ -43,17 +38,12 @@ def ordenar_shows(lista_shows):
     except Exception:
         return sorted(lista_shows, key=lambda x: x.id)
 
-# =================================================================
-# INICIALIZAÇÃO PADRÃO DO BANCO DE DADOS (Código Limpo)
-# =================================================================
 with app.app_context():
     try:
-        # Garante a criação apenas das tabelas necessárias (shows e linktree)
         db.create_all()
     except Exception as e:
         print(f"Aviso na criação de tabelas: {e}")
 
-# Rota 1: Página Principal (ATUALIZADA: SEM GRAVAÇÃO PESADA NO BANCO)
 @app.route('/')
 def index():
     shows_query = []
@@ -63,10 +53,8 @@ def index():
         links_query = LinkTree.query.order_by(LinkTree.id).all()
     except Exception as e:
         print(f"Erro ao ler tabelas na index: {e}")
-
     return render_template('index.html', shows=shows_query, links=links_query)
 
-# Rota 2: Linktree Público
 @app.route('/links')
 def linktree_publico():
     links_query = []
@@ -76,7 +64,6 @@ def linktree_publico():
         print(f"Erro ao ler tabelas de links: {e}")
     return render_template('links.html', links=links_query)
 
-# Rota Nova: Galeria de Fotos
 @app.route('/galeria')
 def galeria():
     try:
@@ -90,7 +77,6 @@ def galeria():
         print(f"Erro crítico na rota galeria: {e}")
         return "<html><body style='background:#121212;color:white;text-align:center;padding-top:100px;'><h1>GALERIA SOULD</h1><p>Erro ao processar mídias.</p></body></html>"
 
-# Rota 3: Painel Administrativo
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
     if request.method == 'POST':
@@ -107,17 +93,17 @@ def admin():
                 if form_type == 'show':
                     data = request.form.get('data')
                     local = request.form.get('local')
+                    cidade = request.form.get('cidade')
                     link_maps = request.form.get('link_maps')
                     
-                    # CORREÇÃO: Tenta pegar 'cidade', se não achar, tenta pegar 'city'
-                    cidade = request.form.get('cidade') or request.form.get('city')
-                    
+                    # LOG DE DEBBUG: Se algo falhar, veremos no painel do Render
                     if data and local and cidade:
                         novo_show = Show(data=data, local=local, cidade=cidade, link_maps=link_maps)
                         db.session.add(novo_show)
                         db.session.commit()
+                        print(f"SUCESSO: Show em {cidade} adicionado.")
                     else:
-                        print(f"Formulário incompleto recebido: data={data}, local={local}, cidade={cidade}")
+                        print(f"AVISO: Falha ao validar campos. Recebido -> data: {data}, local: {local}, cidade: {cidade}")
                         
                 elif form_type == 'linktree':
                     titulo = request.form.get('titulo')
@@ -128,12 +114,11 @@ def admin():
                         db.session.commit()
             except Exception as e:
                 db.session.rollback()
-                print(f"Erro ao salvar dados pelo painel: {e}")
+                print(f"Erro crítico ao salvar no banco: {e}")
         return redirect(url_for('admin'))
 
     shows_query = []
     links_query = []
-    
     if session.get('logado'):
         try:
             shows_query = ordenar_shows(Show.query.all())
@@ -158,7 +143,7 @@ def editar_show(id):
         try:
             show.data = request.form.get('data')
             show.local = request.form.get('local')
-            show.cidade = request.form.get('cidade') or request.form.get('city')
+            show.cidade = request.form.get('cidade')
             show.link_maps = request.form.get('link_maps')
             db.session.commit()
         except Exception as e:
