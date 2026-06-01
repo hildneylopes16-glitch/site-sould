@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, session, j
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import os
+import re
 
 app = Flask(__name__)
 
@@ -33,9 +34,37 @@ class LinkTree(db.Model):
     url = db.Column(db.String(255), nullable=False)
 
 def ordenar_shows(lista_shows):
+    def criterio_ordenacao(show):
+        # 1. Tenta extrair a data pura (DD/MM/AAAA) ignorando o resto do texto
+        data_match = re.search(r'(\d{2})/(\d{2})/(\d{4})', show.data)
+        if data_match:
+            dia, mes, ano = map(int, data_match.groups())
+        else:
+            # Caso não ache data nenhuma, joga para o fim da lista
+            return (datetime.max, 0, 0)
+        
+        # 2. Tenta extrair o horário da string (ex: "19h", "às 23h", "20:30")
+        hora = 0
+        minuto = 0
+        
+        # Procura padrões como "19h", "23h", "08h"
+        hora_match = re.search(r'(\d{1,2})\s*[hH]', show.data)
+        if hora_match:
+            hora = int(hora_match.group(1))
+        else:
+            # Procura padrões como "19:30" ou "23:00"
+            hora_min_match = re.search(r'(\d{1,2}):(\d{2})', show.data)
+            if hora_min_match:
+                hora = int(hora_min_match.group(1))
+                minuto = int(hora_min_match.group(2))
+                
+        # Retorna a tupla de ordenação crescente: Ano -> Mês -> Dia -> Hora -> Minuto
+        return (datetime(ano, mes, dia), hora, minuto)
+
     try:
-        return sorted(lista_shows, key=lambda x: datetime.strptime(x.data, '%d/%m/%Y'))
-    except Exception:
+        return sorted(lista_shows, key=criterio_ordenacao)
+    except Exception as e:
+        print(f"Erro na ordenação avançada: {e}")
         return sorted(lista_shows, key=lambda x: x.id)
 
 with app.app_context():
@@ -96,7 +125,6 @@ def admin():
                     cidade = request.form.get('cidade')
                     link_maps = request.form.get('link_maps')
                     
-                    # LOG DE DEBBUG: Se algo falhar, veremos no painel do Render
                     if data and local and cidade:
                         novo_show = Show(data=data, local=local, cidade=cidade, link_maps=link_maps)
                         db.session.add(novo_show)
