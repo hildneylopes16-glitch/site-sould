@@ -116,7 +116,7 @@ def admin():
                     cidade = request.form.get('cidade')
                     link_maps = request.form.get('link_maps')
                     if data and local and cidade:
-                        novo_show = Show(data=data, local=local, cidade=cidade, link_maps=link_maps)
+                        novo_show = Show(data=data, local=local, city=cidade, link_maps=link_maps)
                         db.session.add(novo_show)
                         db.session.commit()
                 elif form_type == 'linktree':
@@ -143,4 +143,60 @@ def admin():
     
     return render_template(
         'admin.html', 
-        shows
+        shows=shows_query, 
+        links=links_query,
+        total_acessos=0, 
+        historico_acessos=[]
+    )
+
+@app.route('/admin/editar/<int:id>', methods=['GET', 'POST'])
+def editar_show(id):
+    if not session.get('logado'):
+        return redirect(url_for('admin'))
+    show = Show.query.get_or_404(id)
+    if request.method == 'POST':
+        try:
+            show.data = request.form.get('data')
+            show.local = request.form.get('local')
+            show.cidade = request.form.get('cidade')
+            show.link_maps = request.form.get('link_maps')
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            print(f"Erro ao editar show: {e}")
+        return redirect(url_for('admin'))
+    return render_template('editar.html', show=show)
+
+@app.route('/admin/excluir/<int:id>')
+def excluir_show_painel(id):
+    if not session.get('logado'):
+        return redirect(url_for('admin'))
+    try:
+        show = Show.query.get_or_404(id)
+        db.session.delete(show)
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        print(f"Erro ao excluir show: {e}")
+    return redirect(url_for('admin'))
+
+@app.route('/admin/excluir-link/<int:id>')
+def excluir_link_panel(id):
+    if not session.get('logado'):
+        return redirect(url_for('admin'))
+    try:
+        link = LinkTree.query.get_or_404(id)
+        db.session.delete(link)
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        print(f"Erro ao excluir link: {e}")
+    return redirect(url_for('admin'))
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('admin'))
+
+if __name__ == '__main__':
+    app.run(debug=True)
