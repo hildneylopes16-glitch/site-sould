@@ -44,20 +44,14 @@ def ordenar_shows(lista_shows):
         return sorted(lista_shows, key=lambda x: x.id)
 
 # =================================================================
-# COMANDO FORÇADO DE LIMPEZA INTERNA (Evita bloqueios externos do Render)
+# INICIALIZAÇÃO PADRÃO DO BANCO DE DADOS (Código Limpo)
 # =================================================================
 with app.app_context():
     try:
-        # Executa o comando de dentro da infraestrutura antes de levantar o site
-        db.session.execute(db.text("DROP TABLE IF EXISTS acessos CASCADE;"))
-        db.session.commit()
-        print("SUCESSO: Tabela de acessos deletada com sucesso!")
-        
-        # Recria as tabelas oficiais (shows e linktree) se necessário
+        # Garante a criação apenas das tabelas necessárias (shows e linktree)
         db.create_all()
     except Exception as e:
-        db.session.rollback()
-        print(f"Aviso/Erro na inicialização ou limpeza: {e}")
+        print(f"Aviso na criação de tabelas: {e}")
 
 # Rota 1: Página Principal (ATUALIZADA: SEM GRAVAÇÃO PESADA NO BANCO)
 @app.route('/')
@@ -116,7 +110,7 @@ def admin():
                     cidade = request.form.get('cidade')
                     link_maps = request.form.get('link_maps')
                     if data and local and cidade:
-                        novo_show = Show(data=data, local=local, city=cidade, link_maps=link_maps)
+                        novo_show = Show(data=data, local=local, cidade=cidade, link_maps=link_maps)
                         db.session.add(novo_show)
                         db.session.commit()
                 elif form_type == 'linktree':
