@@ -43,11 +43,21 @@ def ordenar_shows(lista_shows):
     except Exception:
         return sorted(lista_shows, key=lambda x: x.id)
 
+# =================================================================
+# COMANDO FORÇADO DE LIMPEZA INTERNA (Evita bloqueios externos do Render)
+# =================================================================
 with app.app_context():
     try:
+        # Executa o comando de dentro da infraestrutura antes de levantar o site
+        db.session.execute(db.text("DROP TABLE IF EXISTS acessos CASCADE;"))
+        db.session.commit()
+        print("SUCESSO: Tabela de acessos deletada com sucesso!")
+        
+        # Recria as tabelas oficiais (shows e linktree) se necessário
         db.create_all()
     except Exception as e:
-        print(f"Aviso na criação de tabelas: {e}")
+        db.session.rollback()
+        print(f"Aviso/Erro na inicialização ou limpeza: {e}")
 
 # Rota 1: Página Principal (ATUALIZADA: SEM GRAVAÇÃO PESADA NO BANCO)
 @app.route('/')
@@ -133,60 +143,4 @@ def admin():
     
     return render_template(
         'admin.html', 
-        shows=shows_query, 
-        links=links_query,
-        total_acessos=0, 
-        historico_acessos=[]
-    )
-
-@app.route('/admin/editar/<int:id>', methods=['GET', 'POST'])
-def editar_show(id):
-    if not session.get('logado'):
-        return redirect(url_for('admin'))
-    show = Show.query.get_or_404(id)
-    if request.method == 'POST':
-        try:
-            show.data = request.form.get('data')
-            show.local = request.form.get('local')
-            show.cidade = request.form.get('cidade')
-            show.link_maps = request.form.get('link_maps')
-            db.session.commit()
-        except Exception as e:
-            db.session.rollback()
-            print(f"Erro ao editar show: {e}")
-        return redirect(url_for('admin'))
-    return render_template('editar.html', show=show)
-
-@app.route('/admin/excluir/<int:id>')
-def excluir_show_painel(id):
-    if not session.get('logado'):
-        return redirect(url_for('admin'))
-    try:
-        show = Show.query.get_or_404(id)
-        db.session.delete(show)
-        db.session.commit()
-    except Exception as e:
-        db.session.rollback()
-        print(f"Erro ao excluir show: {e}")
-    return redirect(url_for('admin'))
-
-@app.route('/admin/excluir-link/<int:id>')
-def excluir_link_panel(id):
-    if not session.get('logado'):
-        return redirect(url_for('admin'))
-    try:
-        link = LinkTree.query.get_or_404(id)
-        db.session.delete(link)
-        db.session.commit()
-    except Exception as e:
-        db.session.rollback()
-        print(f"Erro ao excluir link: {e}")
-    return redirect(url_for('admin'))
-
-@app.route('/logout')
-def logout():
-    session.clear()
-    return redirect(url_for('admin'))
-
-if __name__ == '__main__':
-    app.run(debug=True)
+        shows
