@@ -59,14 +59,22 @@
         .slide:nth-child(3) { background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.7)), url('/static/img/show3.jpg'); animation-delay: 10s; }
         
         @media (max-width: 768px) {
-            /* Força a altura a se adaptar bem no celular e foca o centro da imagem */
+            /* Ajusta a altura da capa no celular para não cortar a foto e nem cobrir a tela toda */
             .hero-section {
-                height: 100vh;
-                height: -webkit-fill-available; /* Correção para navegadores de celular */
+                height: 320px; 
             }
             .slide {
                 background-size: cover;
                 background-position: center center;
+            }
+            /* Diminui o logo central no celular para não tapar as fotos do fundo */
+            .hero-content img {
+                max-width: 260px; 
+            }
+            /* Diminui o espaçamento do texto abaixo do logo */
+            .hero-content p {
+                font-size: 0.9rem;
+                letter-spacing: 3px !important;
             }
         }
         
