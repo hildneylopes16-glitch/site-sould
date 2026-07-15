@@ -3,135 +3,148 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Galeria | SOULD</title>
+    <title>Galeria SOULD | Shows & Bastidores</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Lightbox2 CSS para um visualizador de fotos moderno -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css" rel="stylesheet">
     
     <style>
-        body { background-color: #000; color: white; font-family: 'Arial Black', sans-serif; overflow-x: hidden; }
+        body { background-color: #121212; color: white; font-family: 'Arial Black', sans-serif; }
+        .navbar { border-bottom: 1px solid #222; }
+        .navbar-logo { height: 45px; width: auto; filter: drop-shadow(0px 0px 5px rgba(255, 0, 0, 0.6)); }
         
-        /* HEADER DA GALERIA */
-        .gallery-header {
-            padding: 40px 0;
-            border-bottom: 2px solid #ff0000;
-            background: linear-gradient(rgba(255,0,0,0.1), rgba(0,0,0,1));
-            text-align: center;
+        /* Estilos dos Cards dos Álbuns (Pastas) */
+        .album-card {
+            background-color: #1a1a1a;
+            border: 1px solid #333;
+            transition: 0.3s ease-in-out;
+            cursor: pointer;
+            overflow: hidden;
+            height: 100%;
+        }
+        .album-card:hover {
+            border-color: #ff0000;
+            transform: translateY(-5px);
+            box-shadow: 0px 10px 20px rgba(255, 0, 0, 0.15);
+        }
+        .album-img-container {
+            width: 100%;
+            aspect-ratio: 16/9;
+            overflow: hidden;
+            position: relative;
+            background-color: #000;
+        }
+        .album-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: 0.5s ease;
+        }
+        .album-card:hover .album-img {
+            transform: scale(1.05);
+        }
+        /* Selo com a quantidade de fotos */
+        .foto-badge {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(255, 0, 0, 0.85);
+            color: #fff;
+            padding: 4px 10px;
+            font-size: 0.75rem;
+            font-family: sans-serif;
+            font-weight: bold;
+            border-radius: 4px;
+        }
+        .album-title {
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #fff;
         }
         .btn-back {
-            background-color: transparent;
-            color: #ff0000;
-            border: 1px solid #ff0000;
-            font-weight: bold;
-            padding: 8px 20px;
+            color: #fff;
             text-decoration: none;
+            font-family: sans-serif;
+            font-weight: bold;
             transition: 0.3s;
-            text-transform: uppercase;
-            font-size: 0.8rem;
         }
-        .btn-back:hover { background-color: #ff0000; color: white; }
-
-        /* GRADE DE FOTOS AJUSTADA */
-        .gallery-container { padding: 50px 0; }
-        .gallery-item {
-            position: relative;
-            overflow: hidden;
-            border: 1px solid #222;
-            height: 300px; /* Altura fixa para manter a linha organizada */
-            cursor: pointer;
-            background-color: #080808; /* Fundo levemente mais claro que o body para destaque */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .gallery-item img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain; /* GARANTE QUE A FOTO NÃO SEJA CORTADA */
-            filter: grayscale(100%);
-            transition: 0.5s ease-in-out;
-        }
-        .gallery-item:hover img {
-            filter: grayscale(0%);
-            transform: scale(1.02); /* Zoom menor para não sair da borda */
-        }
-        .gallery-item::after {
-            content: "\f00e"; 
-            font-family: "Font Awesome 5 Free";
-            font-weight: 900;
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 2rem;
+        .btn-back:hover {
             color: #ff0000;
-            opacity: 0;
-            transition: 0.3s;
-            pointer-events: none;
         }
-        .gallery-item:hover::after { opacity: 0.8; }
-
-        /* LIGHTBOX (IMAGEM EXPANDIDA) */
-        #lightboxModal .modal-content { background: rgba(0,0,0,0.95); border: none; }
-        #lightboxModal .modal-body { display: flex; justify-content: center; align-items: center; padding: 10px; }
-        #lightboxImage { max-width: 100%; max-height: 85vh; border: 1px solid #ff0000; object-fit: contain; }
-        .btn-close-white { filter: invert(1) grayscale(100%) brightness(200%); }
-
-        footer { border-top: 1px solid #333; padding: 40px 0; background: #000; font-size: 0.7rem; color: #555; text-align: center; }
-
-        /* Responsividade para telas menores */
-        @media (max-width: 768px) {
-            .gallery-item { height: 200px; }
-        }
+        
+        /* Oculta as fotos extras que serão usadas apenas pelo Lightbox */
+        .hidden-photos { display: none; }
     </style>
 </head>
 <body>
 
-    <header class="gallery-header">
-        <div class="container">
-            <h1 style="letter-spacing: 5px; margin-bottom: 20px;">GALERIA SOULD</h1>
-            <a href="/" class="btn-back"><i class="fas fa-arrow-left me-2"></i> Voltar ao Site Principal</a>
+    <!-- NAVBAR SIMPLIFICADA PARA VOLTAR -->
+    <nav class="navbar navbar-dark bg-black py-3">
+        <div class="container d-flex justify-content-between align-items-center">
+            <a href="/" class="btn-back"><i class="fas fa-arrow-left me-2"></i>VOLTAR AO SITE</a>
+            <img src="{{ url_for('static', filename='img/logo.png') }}" class="navbar-logo" alt="SOULD">
         </div>
-    </header>
+    </nav>
 
-    <main class="gallery-container container">
-        <div class="row g-3">
-            {% for foto in fotos %}
-            <div class="col-6 col-md-4 col-lg-3">
-                <div class="gallery-item" onclick="openLightbox('{{ url_for('static', filename='img/galeria/' + foto) }}')">
-                    <img src="{{ url_for('static', filename='img/galeria/' + foto) }}" alt="Show Sould">
+    <div class="container py-5 text-center">
+        <h1 class="display-5 mb-3">GALERIA DE FOTOS</h1>
+        <p class="lead text-secondary mb-5" style="font-family: sans-serif;">Clique em um álbum para reviver a energia de cada show.</p>
+
+        {% if albuns %}
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 justify-content-center">
+            {% for album in albuns %}
+            <div class="col">
+                <!-- Ao clicar no card, disparamos o clique na primeira foto da galeria oculta correspondente -->
+                <div class="album-card h-100" onclick="document.getElementById('link-{{ album.pasta }}-0').click();">
+                    <div class="album-img-container">
+                        <img src="{{ url_for('static', filename=album.capa) }}" class="album-img" alt="{{ album.nome }}">
+                        <span class="foto-badge"><i class="fas fa-camera me-1"></i> {{ album.total_fotos }} FOTOS</span>
+                    </div>
+                    <div class="p-3 text-start">
+                        <h5 class="album-title m-0">{{ album.nome }}</h5>
+                    </div>
                 </div>
-            </div>
-            {% else %}
-            <div class="col-12 text-center py-5">
-                <p class="text-secondary">Nenhuma foto encontrada na pasta static/img/galeria/</p>
+
+                <!-- Lista de links ocultos do Lightbox2 para este álbum -->
+                <div class="hidden-photos">
+                    {% for foto in album.fotos %}
+                    <a href="{{ url_for('static', filename=foto) }}" 
+                       data-lightbox="album-{{ album.pasta }}" 
+                       data-title="{{ album.nome }} - Foto {{ loop.index }} de {{ album.total_fotos }}" 
+                       id="link-{{ album.pasta }}-{{ loop.index0 }}">
+                       FOTO {{ loop.index }}
+                    </a>
+                    {% endfor %}
+                </div>
             </div>
             {% endfor %}
         </div>
-    </main>
-
-    <div class="modal fade" id="lightboxModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-xl">
-            <div class="modal-content">
-                <div class="modal-header border-0 pb-0">
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <img src="" id="lightboxImage" alt="Zoom Sould">
-                </div>
-            </div>
+        {% else %}
+        <div class="py-5" style="font-family: sans-serif;">
+            <i class="fas fa-images fs-1 text-secondary mb-3"></i>
+            <p class="text-secondary">Nenhum álbum encontrado ainda.</p>
+            <p class="text-muted small">Crie pastas com fotos dentro de <code>static/img/galeria/</code> no seu projeto para vê-las aqui.</p>
         </div>
+        {% endif %}
     </div>
 
-    <footer>
-        &copy; 2026 SOULD | SÃO JOSÉ DOS CAMPOS | TODOS OS DIREITOS RESERVADOS
-    </footer>
-
+    <!-- SCRIPTS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- jQuery necessário para o Lightbox2 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js"></script>
+    
     <script>
-        function openLightbox(src) {
-            const modal = new bootstrap.Modal(document.getElementById('lightboxModal'));
-            document.getElementById('lightboxImage').src = src;
-            modal.show();
-        }
+        // Configurações do Visualizador de Imagens (Lightbox)
+        lightbox.option({
+          'albumLabel': "Foto %1 de %2",
+          'wrapAround': true,
+          'fadeDuration': 300,
+          'imageFadeDuration': 300,
+          'resizeDuration': 300
+        })
     </script>
 </body>
 </html>

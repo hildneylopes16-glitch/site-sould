@@ -96,12 +96,43 @@ def linktree_publico():
 @app.route('/galeria')
 def galeria():
     try:
-        pasta_galeria = os.path.join(app.static_folder, 'img', 'galeria')
-        fotos = []
-        if os.path.exists(pasta_galeria):
-            fotos = [f for f in os.listdir(pasta_galeria) if f.lower().endswith(('.png', '.jpg', '.jpeg', '.webp', '.gif'))]
-            fotos.sort()
-        return render_template('galeria.html', fotos=fotos)
+        # Caminho físico para a pasta principal da galeria
+        galeria_path = os.path.join(app.static_folder, 'img', 'galeria')
+        albuns = []
+        
+        if os.path.exists(galeria_path):
+            # Lista as subpastas (que serão nossos álbuns/shows) e ordena de forma reversa
+            pastas_albuns = sorted(
+                [f for f in os.listdir(galeria_path) if os.path.isdir(os.path.join(galeria_path, f))],
+                reverse=True
+            )
+            
+            for pasta in pastas_albuns:
+                pasta_completa = os.path.join(galeria_path, pasta)
+                
+                # Lista apenas arquivos de imagem válidos dentro da subpasta
+                fotos = sorted([
+                    f for f in os.listdir(pasta_completa)
+                    if f.lower().endswith(('.png', '.jpg', '.jpeg', '.webp', '.gif'))
+                ])
+                
+                if fotos:
+                    # Nome amigável do show trocando underlines por espaços para mostrar na tela
+                    nome_exibicao = pasta.replace('_', ' ')
+                    # Usamos a primeira imagem como capa do álbum
+                    foto_capa = f"img/galeria/{pasta}/{fotos[0]}"
+                    # Mapeia todas as fotos para enviar ao template
+                    lista_fotos = [f"img/galeria/{pasta}/{foto}" for foto in fotos]
+                    
+                    albuns.append({
+                        'pasta': pasta,
+                        'nome': nome_exibicao,
+                        'capa': foto_capa,
+                        'fotos': lista_fotos,
+                        'total_fotos': len(fotos)
+                    })
+                    
+        return render_template('galeria.html', albuns=albuns)
     except Exception as e:
         print(f"Erro crítico na rota galeria: {e}")
         return "<html><body style='background:#121212;color:white;text-align:center;padding-top:100px;'><h1>GALERIA SOULD</h1><p>Erro ao processar mídias.</p></body></html>"
