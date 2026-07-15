@@ -6,7 +6,7 @@
     <title>Galeria SOULD | Shows & Bastidores</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Lightbox2 CSS para um visualizador de fotos moderno -->
+    <!-- Lightbox2 CSS para o visualizador da foto individual -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css" rel="stylesheet">
     
     <style>
@@ -44,12 +44,11 @@
         .album-card:hover .album-img {
             transform: scale(1.05);
         }
-        /* Selo com a quantidade de fotos */
         .foto-badge {
             position: absolute;
             bottom: 10px;
             right: 10px;
-            background: rgba(255, 0, 0, 0.85);
+            background: rgba(255, 0, 0, 0.9);
             color: #fff;
             padding: 4px 10px;
             font-size: 0.75rem;
@@ -73,14 +72,33 @@
         .btn-back:hover {
             color: #ff0000;
         }
+
+        /* Estilo das Miniaturas dentro do Álbum */
+        .foto-miniatura-container {
+            width: 100%;
+            aspect-ratio: 1/1; /* Deixa as fotos quadradinhas no grid */
+            overflow: hidden;
+            border: 2px solid #222;
+            transition: 0.2s;
+        }
+        .foto-miniatura-container:hover {
+            border-color: #ff0000;
+            transform: scale(1.02);
+        }
+        .foto-miniatura {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
         
-        /* Oculta as fotos extras que serão usadas apenas pelo Lightbox */
-        .hidden-photos { display: none; }
+        /* Controla a exibição das seções */
+        .secao-album { display: none; }
+        .visivel { display: block !important; }
     </style>
 </head>
 <body>
 
-    <!-- NAVBAR SIMPLIFICADA PARA VOLTAR -->
+    <!-- NAVBAR -->
     <nav class="navbar navbar-dark bg-black py-3">
         <div class="container d-flex justify-content-between align-items-center">
             <a href="/" class="btn-back"><i class="fas fa-arrow-left me-2"></i>VOLTAR AO SITE</a>
@@ -88,63 +106,96 @@
         </div>
     </nav>
 
-    <div class="container py-5 text-center">
-        <h1 class="display-5 mb-3">GALERIA DE FOTOS</h1>
-        <p class="lead text-secondary mb-5" style="font-family: sans-serif;">Clique em um álbum para reviver a energia de cada show.</p>
+    <div class="container py-5">
+        
+        <!-- ================= SEÇÃO 1: TODAS AS PASTAS (ÁLBUNS) ================= -->
+        <div id="secao-pastas" class="visivel text-center">
+            <h1 class="display-5 mb-3">GALERIA DE FOTOS</h1>
+            <p class="lead text-secondary mb-5" style="font-family: sans-serif;">Selecione uma pasta para ver as fotos do show.</p>
 
-        {% if albuns %}
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 justify-content-center">
-            {% for album in albuns %}
-            <div class="col">
-                <!-- Ao clicar no card, disparamos o clique na primeira foto da galeria oculta correspondente -->
-                <div class="album-card h-100" onclick="document.getElementById('link-{{ album.pasta }}-0').click();">
-                    <div class="album-img-container">
-                        <img src="{{ url_for('static', filename=album.capa) }}" class="album-img" alt="{{ album.nome }}">
-                        <span class="foto-badge"><i class="fas fa-camera me-1"></i> {{ album.total_fotos }} FOTOS</span>
-                    </div>
-                    <div class="p-3 text-start">
-                        <h5 class="album-title m-0">{{ album.nome }}</h5>
+            {% if albuns %}
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 justify-content-center">
+                {% for album in albuns %}
+                <div class="col">
+                    <div class="album-card h-100" onclick="abrirAlbum('{{ album.pasta }}')">
+                        <div class="album-img-container">
+                            <img src="{{ url_for('static', filename=album.capa) }}" class="album-img" alt="{{ album.nome }}">
+                            <span class="foto-badge"><i class="fas fa-folder me-1"></i> {{ album.total_fotos }} FOTOS</span>
+                        </div>
+                        <div class="p-3 text-start">
+                            <h5 class="album-title m-0">{{ album.nome }}</h5>
+                        </div>
                     </div>
                 </div>
-
-                <!-- Lista de links ocultos do Lightbox2 para este álbum -->
-                <div class="hidden-photos">
-                    {% for foto in album.fotos %}
-                    <a href="{{ url_for('static', filename=foto) }}" 
-                       data-lightbox="album-{{ album.pasta }}" 
-                       data-title="{{ album.nome }} - Foto {{ loop.index }} de {{ album.total_fotos }}" 
-                       id="link-{{ album.pasta }}-{{ loop.index0 }}">
-                       FOTO {{ loop.index }}
-                    </a>
-                    {% endfor %}
-                </div>
+                {% endfor %}
             </div>
-            {% endfor %}
+            {% else %}
+            <div class="py-5" style="font-family: sans-serif;">
+                <i class="fas fa-images fs-1 text-secondary mb-3"></i>
+                <p class="text-secondary">Nenhum álbum encontrado.</p>
+            </div>
+            {% endif %}
         </div>
-        {% else %}
-        <div class="py-5" style="font-family: sans-serif;">
-            <i class="fas fa-images fs-1 text-secondary mb-3"></i>
-            <p class="text-secondary">Nenhum álbum encontrado ainda.</p>
-            <p class="text-muted small">Crie pastas com fotos dentro de <code>static/img/galeria/</code> no seu projeto para vê-las aqui.</p>
+
+        <!-- ================= SEÇÃO 2: DETALHES DO ÁLBUM SELECIONADO ================= -->
+        {% for album in albuns %}
+        <div id="album-{{ album.pasta }}" class="secao-album text-center">
+            <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom border-secondary">
+                <button class="btn btn-outline-light btn-sm" onclick="voltarParaPastas()" style="font-family: sans-serif;">
+                    <i class="fas fa-chevron-left me-2"></i> Voltar para as Pastas
+                </button>
+                <h2 class="m-0 text-uppercase fs-4">{{ album.nome }}</h2>
+                <span class="text-secondary small" style="font-family: sans-serif;">{{ album.total_fotos }} Fotos</span>
+            </div>
+
+            <!-- Grid com as miniaturas das fotos da pasta -->
+            <div class="row row-cols-2 row-cols-md-4 row-cols-lg-5 g-3">
+                {% for foto in album.fotos %}
+                <div class="col">
+                    <a href="{{ url_for('static', filename=foto) }}" data-lightbox="grupo-{{ album.pasta }}" data-title="{{ album.nome }}">
+                        <div class="foto-miniatura-container">
+                            <img src="{{ url_for('static', filename=foto) }}" class="foto-miniatura" alt="Foto de {{ album.nome }}">
+                        </div>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
         </div>
-        {% endif %}
+        {% endfor %}
+
     </div>
 
     <!-- SCRIPTS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- jQuery necessário para o Lightbox2 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js"></script>
     
     <script>
-        // Configurações do Visualizador de Imagens (Lightbox)
+        // Configurações do Lightbox
         lightbox.option({
           'albumLabel': "Foto %1 de %2",
           'wrapAround': true,
-          'fadeDuration': 300,
-          'imageFadeDuration': 300,
-          'resizeDuration': 300
-        })
+          'fadeDuration': 200,
+          'resizeDuration': 200
+        });
+
+        // Função para esconder as pastas e exibir as fotos do álbum clicado
+        function abrirAlbum(pastaId) {
+            document.getElementById('secao-pastas').classList.remove('visivel');
+            document.getElementById('album-' + pastaId).classList.add('visivel');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Função para voltar à tela principal de pastas
+        function voltarParaPastas() {
+            // Esconde todas as seções de álbuns
+            const secoes = document.querySelectorAll('.secao-album');
+            secoes.forEach(secao => secao.classList.remove('visivel'));
+            
+            // Mostra as pastas novamente
+            document.getElementById('secao-pastas').classList.add('visivel');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
     </script>
 </body>
 </html>
