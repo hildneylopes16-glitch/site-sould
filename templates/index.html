@@ -147,8 +147,8 @@
         }
         .integrante-card img {  
             width: 100%; height: 100%; 
-            object-fit: cover; /* Ajustado para preencher o container sem distorcer */
-            object-position: top center; /* Garante que o foco seja no rosto/topo da foto */
+            object-fit: cover; 
+            object-position: top center; 
             filter: grayscale(100%); transition: 0.4s;  
         }
         .integrante-card:hover img { filter: grayscale(0%); transform: scale(1.05); }
@@ -304,7 +304,7 @@
                         <p>A Sould é uma banda de pop-rock nacional e hardcore formada em outubro de 2025, em São José dos Campos/SP. O nome representa a fusão entre 'som' e 'alma', simbolizando a essência do grupo — músicos que se reúnem para tocar, se divertir e transmitir energia verdadeira em cada apresentação. Mais do que uma banda, a Sould é um projeto de conexão entre atitude, emoção e autenticidade.</p>
                         
                         <h4 class="bio-title">ESTILO E INFLUÊNCIAS</h4>
-                        <p>Com influências de bandas como CPM 22, Detonautas, NX Zero e Dead Fish, a Sould mantém viva a essência do rock nacional, unindo melodia, peso e mensagens que refletem a reality e o sentimento de uma geração. Além das músicas próprias, o grupo se destaca por versões criativas e energéticas de artistas como Imagine Dragons, One Republic, Lady Gaga e Bruno Mars, adaptadas ao estilo da banda.</p>
+                        <p>Com influências de bandas como CPM 22, Detonautas, NX Zero e Dead Fish, a Sould mantém viva a essência do rock nacional, unindo melodia, peso e mensagens que refletem a realidade e o sentimento de uma geração. Além das músicas próprias, o grupo se destaca por versões criativas e energéticas de artistas como Imagine Dragons, One Republic, Lady Gaga e Bruno Mars, adaptadas ao estilo da banda.</p>
 
                         <h4 class="bio-title">DESTAQUES E ATUAÇÃO</h4>
                         <p>Apesar de recente, a Sould já marca presença em eventos e casas renomadas como Gilmour Brewpub, Hocus Pocus, Bar do Columba, Emo Véio, Daruma Rock Bar e ST Pauls PUB. A banda está em processo de composição e gravação do seu primeiro material autoral, mantendo o foco em levar o rock nacional com autenticidade a novos públicos.</p>
@@ -447,7 +447,7 @@
                 <!-- Parceiro 2: Sigma Música -->
                 <div class="col-12 col-sm-6 col-md-4 d-flex flex-column align-items-center">
                     <h5 class="text-secondary mb-3" style="letter-spacing: 2px;">SIGMA MÚSICA</h5>
-                    <a href="#" target="_blank"> <!-- Se tiver o link/Instagram deles, coloque aqui no href -->
+                    <a href="#" target="_blank">
                         <img src="{{ url_for('static', filename='img/sigma.png') }}" class="img-parceiro-efeito" alt="Parceiro Sigma Música">
                     </a>
                 </div>
@@ -480,8 +480,8 @@
         document.querySelectorAll('.navbar-nav .nav-link').forEach(link => {
             link.addEventListener('click', () => {
                 const navbarCollapse = document.getElementById('menuSould');
-                const bsCollapse = new bootstrap.Collapse(navbarCollapse, { toggle: false });
                 if (navbarCollapse.classList.contains('show')) {
+                    const bsCollapse = bootstrap.Collapse.getInstance(navbarCollapse) || new bootstrap.Collapse(navbarCollapse);
                     bsCollapse.hide();
                 }
             });
