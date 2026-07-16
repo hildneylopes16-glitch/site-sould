@@ -170,8 +170,16 @@
 
         /* DNA & QR CODE SECTIONS */
         .dna-section img { width: 100%; max-width: 600px; height: auto; border: 1px solid #333; margin-top: 20px; box-shadow: 0px 0px 20px rgba(255, 0, 0, 0.2); }
-        .qrcode-section img { width: 100%; max-width: 400px; height: auto; border-radius: 50%; border: 2px solid #ff0000; box-shadow: 0px 0px 25px rgba(255, 0, 0, 0.4); transition: 0.3s; }
-        .qrcode-section img:hover { transform: scale(1.03); box-shadow: 0px 0px 35px rgba(255, 0, 0, 0.6); }
+        
+        /* Ajuste fino na qrcode-section para suportar a imagem limpa e a artística */
+        .qrcode-section .qr-clean { 
+            width: 100%; max-width: 180px; height: auto; 
+            border: 8px solid white; background-color: white; 
+            box-shadow: 0px 0px 25px rgba(255, 0, 0, 0.4); transition: 0.3s; 
+        }
+        .qrcode-section .qr-clean:hover { transform: scale(1.03); box-shadow: 0px 0px 35px rgba(255, 0, 0, 0.6); }
+        .qrcode-section .qr-artistic { width: 100%; max-width: 250px; height: auto; opacity: 0.5; transition: 0.3s; }
+        .qrcode-section .qr-artistic:hover { opacity: 0.8; }
 
         /* SEÇÃO PARCEIROS */
         #parceiros { background-color: #0b0b0b; border-top: 1px solid #222; padding: 60px 0; }
@@ -430,13 +438,22 @@
         <img src="{{ url_for('static', filename='img/dna_sould.jpg') }}" class="img-fluid mx-auto d-block" alt="DNA Banda SOULD">
     </section>
 
-    <!-- NOVA SEÇÃO: QR CODE PLATAFORMA -->
+    <!-- SEÇÃO: QR CODE PLATAFORMA ATUALIZADA -->
     <section id="qrcode" class="py-5 qrcode-section text-center bg-black">
         <div class="container">
             <h2 class="mb-3">PLATAFORMA SOULD</h2>
             <p class="lead text-secondary mb-4" style="font-family: sans-serif;">Aponte a câmera do seu celular para o QR Code abaixo e acesse nosso portal oficial e redes sociais!</p>
-            <div class="d-flex justify-content-center">
-                <img src="{{ url_for('static', filename='img/qrcode_sould.jpg') }}" class="img-fluid" alt="QR Code Oficial Banda SOULD">
+            
+            <div class="d-flex justify-content-center align-items-center flex-column gap-4">
+                <!-- QR Code Limpo Gerado Dinamicamente para Leitura 100% Funcional -->
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://www.bandasould.com.br" 
+                     class="img-fluid qr-clean" 
+                     alt="QR Code Oficial Banda SOULD">
+                
+                <!-- Arte Estilizada da Banda (Fim estético mantido) -->
+                <img src="{{ url_for('static', filename='img/qrcode_sould.jpg') }}" 
+                     class="img-fluid qr-artistic" 
+                     alt="Arte Banda SOULD">
             </div>
         </div>
     </section>
