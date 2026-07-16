@@ -59,7 +59,6 @@
         .slide:nth-child(3) { background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.7)), url('/static/img/show3.jpg'); animation-delay: 10s; }
         
         @media (max-width: 768px) {
-            /* Ajusta a altura da capa no celular para não cortar a foto e nem cobrir a tela toda */
             .hero-section {
                 height: 320px;
             }
@@ -67,11 +66,9 @@
                 background-size: cover;
                 background-position: center center;
             }
-            /* Diminui o tamanho do logo central para as fotos de fundo aparecerem no celular */
             .hero-content img {
                 max-width: 240px;
             }
-            /* Ajusta o texto do subtítulo no celular */
             .hero-content p {
                 font-size: 0.9rem;
                 letter-spacing: 3px !important;
@@ -171,13 +168,14 @@
         .btn-buy { background: #ff0000; color: white; border-radius: 0; width: 100%; font-weight: bold; margin-top: auto; text-decoration: none; text-align: center; display: block; padding: 10px; }
         .btn-buy:hover { background: #cc0000; color: white; }
 
-        /* DNA SECTION */
+        /* DNA & QR CODE SECTIONS */
         .dna-section img { width: 100%; max-width: 600px; height: auto; border: 1px solid #333; margin-top: 20px; box-shadow: 0px 0px 20px rgba(255, 0, 0, 0.2); }
+        .qrcode-section img { width: 100%; max-width: 400px; height: auto; border-radius: 50%; border: 2px solid #ff0000; box-shadow: 0px 0px 25px rgba(255, 0, 0, 0.4); transition: 0.3s; }
+        .qrcode-section img:hover { transform: scale(1.03); box-shadow: 0px 0px 35px rgba(255, 0, 0, 0.6); }
 
         /* SEÇÃO PARCEIROS */
         #parceiros { background-color: #0b0b0b; border-top: 1px solid #222; padding: 60px 0; }
         
-        /* CLASSE PARCEIRO COMPLETA E SEM FUNDO */
         .img-parceiro-efeito {
             max-width: 250px;
             width: 100%;
@@ -224,6 +222,7 @@
                     <a class="nav-link px-3" href="#loja">LOJA</a>
                     <a class="nav-link px-3" href="{{ url_for('galeria') }}">GALERIA</a>
                     <a class="nav-link px-3" href="#dna">DNA</a>
+                    <a class="nav-link px-3" href="#qrcode">PLATAFORMA</a>
                     <a class="nav-link px-3" href="#parceiros">PARCEIROS</a>
                     <a class="nav-link px-3" href="#contato">CONTATO</a>
                 </div>
@@ -241,13 +240,12 @@
         </div>
     </header>
 
-    <!-- NOVA SEÇÃO: LANÇAMENTO DESTAQUE -->
+    <!-- VÍDEO LANÇAMENTO (COBRANÇAS) -->
     <section id="lancamento">
         <div class="container">
             <div class="row align-items-center g-5">
                 <div class="col-lg-7">
                     <div class="video-container">
-                        <!-- Link incorporado do clipe "COBRANÇAS" -->
                         <iframe src="https://www.youtube.com/embed/CUW8fpb8Xs8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
                     </div>
                 </div>
@@ -432,19 +430,28 @@
         <img src="{{ url_for('static', filename='img/dna_sould.jpg') }}" class="img-fluid mx-auto d-block" alt="DNA Banda SOULD">
     </section>
 
+    <!-- NOVA SEÇÃO: QR CODE PLATAFORMA -->
+    <section id="qrcode" class="py-5 qrcode-section text-center bg-black">
+        <div class="container">
+            <h2 class="mb-3">PLATAFORMA SOULD</h2>
+            <p class="lead text-secondary mb-4" style="font-family: sans-serif;">Aponte a câmera do seu celular para o QR Code abaixo e acesse nosso portal oficial e redes sociais!</p>
+            <div class="d-flex justify-content-center">
+                <img src="{{ url_for('static', filename='img/qrcode_sould.jpg') }}" class="img-fluid" alt="QR Code Oficial Banda SOULD">
+            </div>
+        </div>
+    </section>
+
     <!-- SEÇÃO PARCEIROS (Beco 79 & Sigma Música) -->
     <section id="parceiros" class="text-center">
         <div class="container">
             <h2 class="mb-5">NOSSOS PARCEIROS</h2>
             <div class="row justify-content-center align-items-center g-4">
-                <!-- Parceiro 1: Beco 79 -->
                 <div class="col-12 col-sm-6 col-md-4 d-flex flex-column align-items-center">
                     <h5 class="text-secondary mb-3" style="letter-spacing: 2px;">BECO 79</h5>
                     <a href="https://www.instagram.com/beco79_" target="_blank">
                         <img src="{{ url_for('static', filename='img/beco79.png') }}" class="img-parceiro-efeito" alt="Parceiro Beco 79">
                     </a>
                 </div>
-                <!-- Parceiro 2: Sigma Música -->
                 <div class="col-12 col-sm-6 col-md-4 d-flex flex-column align-items-center">
                     <h5 class="text-secondary mb-3" style="letter-spacing: 2px;">SIGMA MÚSICA</h5>
                     <a href="#" target="_blank">
