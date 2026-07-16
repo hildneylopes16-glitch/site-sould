@@ -168,18 +168,8 @@
         .btn-buy { background: #ff0000; color: white; border-radius: 0; width: 100%; font-weight: bold; margin-top: auto; text-decoration: none; text-align: center; display: block; padding: 10px; }
         .btn-buy:hover { background: #cc0000; color: white; }
 
-        /* DNA & QR CODE SECTIONS */
+        /* DNA SECTION */
         .dna-section img { width: 100%; max-width: 600px; height: auto; border: 1px solid #333; margin-top: 20px; box-shadow: 0px 0px 20px rgba(255, 0, 0, 0.2); }
-        
-        /* Ajuste fino na qrcode-section para suportar a imagem limpa e a artística */
-        .qrcode-section .qr-clean { 
-            width: 100%; max-width: 180px; height: auto; 
-            border: 8px solid white; background-color: white; 
-            box-shadow: 0px 0px 25px rgba(255, 0, 0, 0.4); transition: 0.3s; 
-        }
-        .qrcode-section .qr-clean:hover { transform: scale(1.03); box-shadow: 0px 0px 35px rgba(255, 0, 0, 0.6); }
-        .qrcode-section .qr-artistic { width: 100%; max-width: 250px; height: auto; opacity: 0.5; transition: 0.3s; }
-        .qrcode-section .qr-artistic:hover { opacity: 0.8; }
 
         /* SEÇÃO PARCEIROS */
         #parceiros { background-color: #0b0b0b; border-top: 1px solid #222; padding: 60px 0; }
@@ -230,7 +220,6 @@
                     <a class="nav-link px-3" href="#loja">LOJA</a>
                     <a class="nav-link px-3" href="{{ url_for('galeria') }}">GALERIA</a>
                     <a class="nav-link px-3" href="#dna">DNA</a>
-                    <a class="nav-link px-3" href="#qrcode">PLATAFORMA</a>
                     <a class="nav-link px-3" href="#parceiros">PARCEIROS</a>
                     <a class="nav-link px-3" href="#contato">CONTATO</a>
                 </div>
@@ -310,7 +299,7 @@
                         <p>A Sould é uma banda de pop-rock nacional e hardcore formada em outubro de 2025, em São José dos Campos/SP. O nome representa a fusão entre 'som' e 'alma', simbolizando a essência do grupo — músicos que se reúnem para tocar, se divertir e transmitir energia verdadeira em cada apresentação. Mais do que uma banda, a Sould é um projeto de conexão entre atitude, emoção e autenticidade.</p>
                         
                         <h4 class="bio-title">ESTILO E INFLUÊNCIAS</h4>
-                        <p>Com influências de bandas como CPM 22, Detonautas, NX Zero e Dead Fish, a Sould mantém viva a essência do rock nacional, unindo melodia, peso e mensagens que refletem a realidade e o sentimento de uma geração. Além das músicas próprias, o grupo se destaca por versões criativas e energéticas de artistas como Imagine Dragons, One Republic, Lady Gaga e Bruno Mars, adaptadas ao estilo da banda.</p>
+                        <p>Com influências de bandas como CPM 22, Detonautas, NX Zero e Dead Fish, a Sould mantém viva a essência do rock nacional, unindo melodia, peso e mensagens que refletem a reality e o sentimento de uma geração. Além das músicas próprias, o grupo se destaca por versões criativas e energéticas de artistas como Imagine Dragons, One Republic, Lady Gaga e Bruno Mars, adaptadas ao estilo da banda.</p>
 
                         <h4 class="bio-title">DESTAQUES E ATUAÇÃO</h4>
                         <p>Apesar de recente, a Sould já marca presença em eventos e casas renomadas como Gilmour Brewpub, Hocus Pocus, Bar do Columba, Emo Véio, Daruma Rock Bar e ST Pauls PUB. A banda está em processo de composição e gravação do seu primeiro material autoral, mantendo o foco em levar o rock nacional com autenticidade a novos públicos.</p>
@@ -436,26 +425,6 @@
     <section id="dna" class="py-5 dna-section text-center">
         <h2 class="mb-4">DNA SOULD</h2>
         <img src="{{ url_for('static', filename='img/dna_sould.jpg') }}" class="img-fluid mx-auto d-block" alt="DNA Banda SOULD">
-    </section>
-
-    <!-- SEÇÃO: QR CODE PLATAFORMA ATUALIZADA -->
-    <section id="qrcode" class="py-5 qrcode-section text-center bg-black">
-        <div class="container">
-            <h2 class="mb-3">PLATAFORMA SOULD</h2>
-            <p class="lead text-secondary mb-4" style="font-family: sans-serif;">Aponte a câmera do seu celular para o QR Code abaixo e acesse nosso portal oficial e redes sociais!</p>
-            
-            <div class="d-flex justify-content-center align-items-center flex-column gap-4">
-                <!-- QR Code Limpo Gerado Dinamicamente para Leitura 100% Funcional -->
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://www.bandasould.com.br" 
-                     class="img-fluid qr-clean" 
-                     alt="QR Code Oficial Banda SOULD">
-                
-                <!-- Arte Estilizada da Banda (Fim estético mantido) -->
-                <img src="{{ url_for('static', filename='img/qrcode_sould.jpg') }}" 
-                     class="img-fluid qr-artistic" 
-                     alt="Arte Banda SOULD">
-            </div>
-        </div>
     </section>
 
     <!-- SEÇÃO PARCEIROS (Beco 79 & Sigma Música) -->
