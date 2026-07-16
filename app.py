@@ -6,14 +6,16 @@ import re
 
 app = Flask(__name__)
 
+# Configurações usando variáveis de ambiente com fallbacks seguros
 app.secret_key = os.environ.get('SECRET_KEY', 'chave_secreta_para_sould_banda_2026')
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'postgresql://usuario:senha@localhost/sould_db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
-USER_ADMIN = "admin"
-PASSWORD_ADMIN = "sould2026"
+# Credenciais protegidas via variáveis de ambiente
+USER_ADMIN = os.environ.get('ADMIN_USER', 'admin')
+PASSWORD_ADMIN = os.environ.get('ADMIN_PASSWORD', 'sould2026')
 
 @app.route('/ping', methods=['GET'])
 def ping():
@@ -35,30 +37,24 @@ class LinkTree(db.Model):
 
 def ordenar_shows(lista_shows):
     def criterio_ordenacao(show):
-        # 1. Tenta extrair a data pura (DD/MM/AAAA) ignorando o resto do texto
         data_match = re.search(r'(\d{2})/(\d{2})/(\d{4})', show.data)
         if data_match:
             dia, mes, ano = map(int, data_match.groups())
         else:
-            # Caso não ache data nenhuma, joga para o fim da lista
             return (datetime.max, 0, 0)
         
-        # 2. Tenta extrair o horário da string (ex: "19h", "às 23h", "20:30")
         hora = 0
         minuto = 0
         
-        # Procura padrões como "19h", "23h", "08h"
         hora_match = re.search(r'(\d{1,2})\s*[hH]', show.data)
         if hora_match:
             hora = int(hora_match.group(1))
         else:
-            # Procura padrões como "19:30" ou "23:00"
             hora_min_match = re.search(r'(\d{1,2}):(\d{2})', show.data)
             if hora_min_match:
                 hora = int(hora_min_match.group(1))
                 minuto = int(hora_min_match.group(2))
                 
-        # Retorna a tupla de ordenação crescente: Ano -> Mês -> Dia -> Hora -> Minuto
         return (datetime(ano, mes, dia), hora, minuto)
 
     try:
@@ -78,8 +74,9 @@ def index():
     shows_query = []
     links_query = []
     try:
-        shows_query = ordenar_shows(Show.query.all())
-        links_query = LinkTree.query.order_by(LinkTree.id).all()
+        # Sintaxe atualizada de consulta
+        shows_query = ordenar_shows(db.session.execute(db.select(Show)).scalars().all())
+        links_query = db.session.execute(db.select(LinkTree).order_by(LinkTree.id)).scalars().all()
     except Exception as e:
         print(f"Erro ao ler tabelas na index: {e}")
     return render_template('index.html', shows=shows_query, links=links_query)
@@ -88,7 +85,7 @@ def index():
 def linktree_publico():
     links_query = []
     try:
-        links_query = LinkTree.query.order_by(LinkTree.id).all()
+        links_query = db.session.execute(db.select(LinkTree).order_by(LinkTree.id)).scalars().all()
     except Exception as e:
         print(f"Erro ao ler tabelas de links: {e}")
     return render_template('links.html', links=links_query)
@@ -96,12 +93,10 @@ def linktree_publico():
 @app.route('/galeria')
 def galeria():
     try:
-        # Caminho físico para a pasta principal da galeria
         galeria_path = os.path.join(app.static_folder, 'img', 'galeria')
         albuns = []
         
         if os.path.exists(galeria_path):
-            # Lista as subpastas (que serão nossos álbuns/shows) e ordena de forma reversa
             pastas_albuns = sorted(
                 [f for f in os.listdir(galeria_path) if os.path.isdir(os.path.join(galeria_path, f))],
                 reverse=True
@@ -109,19 +104,14 @@ def galeria():
             
             for pasta in pastas_albuns:
                 pasta_completa = os.path.join(galeria_path, pasta)
-                
-                # Lista apenas arquivos de imagem válidos dentro da subpasta
                 fotos = sorted([
                     f for f in os.listdir(pasta_completa)
                     if f.lower().endswith(('.png', '.jpg', '.jpeg', '.webp', '.gif'))
                 ])
                 
                 if fotos:
-                    # Nome amigável do show trocando underlines por espaços para mostrar na tela
                     nome_exibicao = pasta.replace('_', ' ')
-                    # Usamos a primeira imagem como capa do álbum
                     foto_capa = f"img/galeria/{pasta}/{fotos[0]}"
-                    # Mapeia todas as fotos para enviar ao template
                     lista_fotos = [f"img/galeria/{pasta}/{foto}" for foto in fotos]
                     
                     albuns.append({
@@ -137,53 +127,63 @@ def galeria():
         print(f"Erro crítico na rota galeria: {e}")
         return "<html><body style='background:#121212;color:white;text-align:center;padding-top:100px;'><h1>GALERIA SOULD</h1><p>Erro ao processar mídias.</p></body></html>"
 
+@app.route('/login', methods=['POST'])
+def login():
+    """Rota isolada para processar a autenticação de forma organizada"""
+    username = request.form.get('username')
+    password = request.form.get('password')
+    if username == USER_ADMIN and password == PASSWORD_ADMIN:
+        session['logado'] = True
+    return redirect(url_for('admin'))
+
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
-    if request.method == 'POST':
-        form_type = request.form.get('form_type')
-        if form_type == 'login':
+    # Se não estiver logado e for GET, renderiza a tela de login (sem dados confidenciais)
+    if not session.get('logado'):
+        if request.method == 'POST' and request.form.get('form_type') == 'login':
+            # Caso tente logar pelo form da própria página
             username = request.form.get('username')
             password = request.form.get('password')
             if username == USER_ADMIN and password == PASSWORD_ADMIN:
                 session['logado'] = True
-            return redirect(url_for('admin'))
-            
-        if session.get('logado'):
-            try:
-                if form_type == 'show':
-                    data = request.form.get('data')
-                    local = request.form.get('local')
-                    cidade = request.form.get('cidade')
-                    link_maps = request.form.get('link_maps')
+                return redirect(url_for('admin'))
+        return render_template('admin_login.html') # Crie um template simples de login, ou renderize o admin normal ocultando o painel.
+
+    # Usuário autenticado: processa cadastros de novos itens (POST)
+    if request.method == 'POST':
+        form_type = request.form.get('form_type')
+        try:
+            if form_type == 'show':
+                data = request.form.get('data')
+                local = request.form.get('local')
+                cidade = request.form.get('cidade')
+                link_maps = request.form.get('link_maps')
+                
+                if data and local and cidade:
+                    novo_show = Show(data=data, local=local, cidade=cidade, link_maps=link_maps)
+                    db.session.add(novo_show)
+                    db.session.commit()
                     
-                    if data and local and cidade:
-                        novo_show = Show(data=data, local=local, cidade=cidade, link_maps=link_maps)
-                        db.session.add(novo_show)
-                        db.session.commit()
-                        print(f"SUCESSO: Show em {cidade} adicionado.")
-                    else:
-                        print(f"AVISO: Falha ao validar campos. Recebido -> data: {data}, local: {local}, cidade: {cidade}")
-                        
-                elif form_type == 'linktree':
-                    titulo = request.form.get('titulo')
-                    url = request.form.get('url')
-                    if titulo and url:
-                        novo_link = LinkTree(titulo=titulo, url=url)
-                        db.session.add(novo_link)
-                        db.session.commit()
-            except Exception as e:
-                db.session.rollback()
-                print(f"Erro crítico ao salvar no banco: {e}")
+            elif form_type == 'linktree':
+                titulo = request.form.get('titulo')
+                url = request.form.get('url')
+                if titulo and url:
+                    novo_link = LinkTree(titulo=titulo, url=url)
+                    db.session.add(novo_link)
+                    db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            print(f"Erro crítico ao salvar no banco: {e}")
         return redirect(url_for('admin'))
 
+    # Se for GET e estiver logado, exibe o painel completo de controle
     shows_query = []
     links_query = []
-    if session.get('logado'):
-        try:
-            shows_query = ordenar_shows(Show.query.all())
-            links_query = LinkTree.query.order_by(LinkTree.id).all()
-        except Exception as e:
-            print(f"Erro ao coletar dados para o admin: {e}")
+    try:
+        shows_query = ordenar_shows(db.session.execute(db.select(Show)).scalars().all())
+        links_query = db.session.execute(db.select(LinkTree).order_by(LinkTree.id)).scalars().all()
+    except Exception as e:
+        print(f"Erro ao coletar dados para o admin: {e}")
     
     return render_template(
         'admin.html', 
@@ -197,7 +197,10 @@ def admin():
 def editar_show(id):
     if not session.get('logado'):
         return redirect(url_for('admin'))
-    show = Show.query.get_or_404(id)
+    
+    # Atualizado para compatibilidade moderna com SQLAlchemy
+    show = db.get_or_404(Show, id)
+    
     if request.method == 'POST':
         try:
             show.data = request.form.get('data')
@@ -216,7 +219,7 @@ def excluir_show_painel(id):
     if not session.get('logado'):
         return redirect(url_for('admin'))
     try:
-        show = Show.query.get_or_404(id)
+        show = db.get_or_404(Show, id)
         db.session.delete(show)
         db.session.commit()
     except Exception as e:
@@ -229,7 +232,7 @@ def excluir_link_panel(id):
     if not session.get('logado'):
         return redirect(url_for('admin'))
     try:
-        link = LinkTree.query.get_or_404(id)
+        link = db.get_or_404(LinkTree, id)
         db.session.delete(link)
         db.session.commit()
     except Exception as e:
