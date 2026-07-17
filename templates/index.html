@@ -143,9 +143,9 @@
             width: 100%; height: 250px;
         }
         .integrante-card img {  
-            width: 100%; height: 100%; 
-            object-fit: cover; 
-            object-position: top center; 
+            width: 100%; height: 100%;  
+            object-fit: cover;  
+            object-position: top center;  
             filter: grayscale(100%); transition: 0.4s;  
         }
         .integrante-card:hover img { filter: grayscale(0%); transform: scale(1.05); }
@@ -175,19 +175,22 @@
         #parceiros { background-color: #0b0b0b; border-top: 1px solid #222; padding: 60px 0; }
         
         .img-parceiro-efeito {
-            max-width: 250px;
+            max-width: 240px;
             width: 100%;
             height: auto;
             background: transparent !important;
             border: none !important;
             box-shadow: none !important;
             filter: grayscale(100%);
+            transform: scale(1.15); /* Pequeno zoom padrão em todos os 3 logos */
+            transform-origin: center;
+            margin-top: 15px; /* Espaçamento adequado do nome com o logo */
             transition: filter 0.4s ease-in-out, transform 0.4s ease-in-out;
         }
         
         .img-parceiro-efeito:hover {
             filter: grayscale(0%);
-            transform: scale(1.05);
+            transform: scale(1.25); /* Zoom adicional controlado no hover */
         }
 
         footer { border-top: 2px solid #333; padding: 60px 0; background: #000; }
@@ -296,10 +299,10 @@
                 <div class="col-lg-8 text-center">
                     <h2 class="mb-5">SOBRE A BANDA</h2>
                     <div class="bio-text">
-                        <p>A Sould é uma banda de pop-rock nacional e hardcore formada em outubro de 2025, em São José dos Campos/SP. O nome representa a fusão entre 'som' e 'alma', simbolizando a essência do grupo — músicos que se reúnem para tocar, se divertir e transmitir energia verdadeira em cada apresentação. Mais do que uma banda, a Sould é um projeto de conexão entre atitude, emoção e autenticidade.</p>
+                        <p>A Sould é uma banda de pop-rock nacional e hardcore formada em outubro de 2025, em São José dos Campos/SP. O nome representa a fusão entre 'som' e 'alma', simbolizando a essência do group — músicos que se reúnem para tocar, se divertir e transmitir energia verdadeira em cada apresentação. Mais do que uma banda, a Sould é um projeto de conexão entre atitude, emoção e autenticidade.</p>
                         
                         <h4 class="bio-title">ESTILO E INFLUÊNCIAS</h4>
-                        <p>Com influências de bandas como CPM 22, Detonautas, NX Zero e Dead Fish, a Sould mantém viva a essência do rock nacional, unindo melodia, peso e mensagens que refletem a realidade e o sentimento de uma generation. Além das músicas próprias, o grupo se destaca por versões criativas e energéticas de artistas como Imagine Dragons, One Republic, Lady Gaga e Bruno Mars, adaptadas ao estilo da banda.</p>
+                        <p>Com influências de bandas como CPM 22, Detonautas, NX Zero e Dead Fish, a Sould mantém viva a essência do rock nacional, unindo melodia, peso e mensagens que refletem a realidade e o sentimento de uma geração. Além das músicas próprias, o grupo se destaca por versões criativas e energéticas de artistas como Imagine Dragons, One Republic, Lady Gaga e Bruno Mars, adaptadas ao estilo da banda.</p>
 
                         <h4 class="bio-title">DESTAQUES E ATUAÇÃO</h4>
                         <p>Apesar de recente, a Sould já marca presença em eventos e casas renomadas como Gilmour Brewpub, Hocus Pocus, Bar do Columba, Emo Véio, Daruma Rock Bar e ST Pauls PUB. A banda está em processo de composição e gravação do seu primeiro material autoral, mantendo o foco em levar o rock nacional com autenticidade a novos públicos.</p>
@@ -442,11 +445,11 @@
                         <img src="{{ url_for('static', filename='img/beco79.png') }}" class="img-parceiro-efeito" alt="Parceiro Beco 79">
                     </a>
                 </div>
-                <!-- SIGMA MÚSICA (Com zoom ajustado original mantido) -->
+                <!-- SIGMA MÚSICA -->
                 <div class="col-6 col-md-4 d-flex flex-column align-items-center">
                     <h5 class="text-secondary mb-3" style="letter-spacing: 2px;">SIGMA MÚSICA</h5>
                     <a href="https://www.instagram.com/sigmamusica?igsh=bXB5MXdyOTY3NXho" target="_blank">
-                        <img src="{{ url_for('static', filename='img/sigma.png') }}" class="img-parceiro-efeito" style="transform: scale(1.3); transform-origin: center;" alt="Parceiro Sigma Música">
+                        <img src="{{ url_for('static', filename='img/sigma.png') }}" class="img-parceiro-efeito" alt="Parceiro Sigma Música">
                     </a>
                 </div>
                 <!-- CASA 90 -->
