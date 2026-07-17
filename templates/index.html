@@ -104,7 +104,7 @@
         .agenda-wrapper::-webkit-scrollbar-thumb { background: #ff0000; border-radius: 10px; }
 
         .list-group-item { 
-            background-color: #1a1a1a !important; border: 1px solid #333 !important; 
+            background-color: #1a1a1a !important; border: 1px solid #333 !important;  
             margin-bottom: 10px; transition: 0.3s;
         }
         .list-group-item:hover { border-color: #ff0000 !important; }
@@ -164,7 +164,7 @@
         .shop-card:hover { border-color: #ff0000; }
         .shop-img-container { width: 100%; aspect-ratio: 1/1; overflow: hidden; margin-bottom: 15px; background: #121212; }
         .shop-img { width: 100%; height: 100%; object-fit: contain; }
-        .shop-desc { font-size: 0.85rem; color: #bbb; font-family: sans-serif; margin-bottom: 15px; text-align: left; }
+        .shop-img-desc { font-size: 0.85rem; color: #bbb; font-family: sans-serif; margin-bottom: 15px; text-align: left; }
         .btn-buy { background: #ff0000; color: white; border-radius: 0; width: 100%; font-weight: bold; margin-top: auto; text-decoration: none; text-align: center; display: block; padding: 10px; }
         .btn-buy:hover { background: #cc0000; color: white; }
 
@@ -190,14 +190,13 @@
             transform: scale(1.05);
         }
 
-        /* Efeito de destaque controlado para o parceiro que necessita de maior proporção */
-        .wrapper-sigma-musica img {
-            filter: grayscale(100%);
-            transition: filter 0.4s ease-in-out, transform 0.4s ease-in-out;
-        }
-        .wrapper-sigma-musica:hover img {
-            filter: grayscale(0%);
-            transform: scale(1.35);
+        /* AJUSTE ESPECÍFICO DO BANNER INFERIOR */
+        .banner-parceiros {
+            max-width: 1000px;
+            width: 100%;
+            height: auto;
+            border: 1px solid #222;
+            box-shadow: 0px 0px 15px rgba(255, 0, 0, 0.1);
         }
 
         footer { border-top: 2px solid #333; padding: 60px 0; background: #000; }
@@ -377,7 +376,7 @@
                 <div class="col-lg-7 ps-lg-5 text-lg-start">
                     <h3 class="text-danger fw-bold mb-3">SIDNEY LOPES</h3>
                     <p class="lead" style="font-family: sans-serif; color: #ccc;">
-                        Toda grande banda precisa de um olhar que capture a sua essência. <strong>Sidney Lopes</strong> não é apenas o fotógrafo oficial da SOULD; ele é o tradutor da nossa energy em frames. 
+                        Toda grande banda precisa de um olhar que capture a sua essência. <strong>Sidney Lopes</strong> não é apenas o fotógrafo oficial da SOULD; ele é o tradutor da nossa energia em frames. 
                     </p>
                     <p style="font-family: sans-serif; color: #aaa; text-align: justify;">
                         Como Videomaker e Filmmaker de elite, Sidney realiza trabalhos fantásticos, transformando o suor do palco e o peso das guitarras em arte visual imersiva. Com uma técnica refinada, ele imortaliza a atitude Hardcore e a vibração do Pop Rock, garantindo que a alma da banda vai muito além do som.
@@ -407,7 +406,7 @@
                             <img src="{{ url_for('static', filename='img/camisa.jpg') }}" class="shop-img">
                         </div>
                         <h5 class="fw-bold">CAMISETA BANDA SOULD</h5>
-                        <div class="shop-desc">
+                        <div class="shop-img-desc">
                             ➡️ Do P ao GG (Unissex/Babylook) – <strong>R$ 60,00</strong><br>
                             ➡️ G1 ao G2 – <strong>R$ 65,00</strong><br>
                             ➡️ G3 ao G4 – <strong>R$ 70,00</strong>
@@ -421,7 +420,7 @@
                             <img src="{{ url_for('static', filename='img/bone.jpg') }}" class="shop-img">
                         </div>
                         <h5 class="fw-bold">BONÉ SOULD</h5>
-                        <div class="shop-desc">
+                        <div class="shop-img-desc">
                             Boné oficial bordado com regulagem traseira snapback. Material premium de alta durabilidade.
                         </div>
                         <p class="text-danger fs-4 fw-bold mb-3">R$ 80,00</p>
@@ -437,7 +436,7 @@
         <img src="{{ url_for('static', filename='img/dna_sould.jpg') }}" class="img-fluid mx-auto d-block" alt="DNA Banda SOULD">
     </section>
 
-    <!-- SEÇÃO PARCEIROS (Beco 79, Sigma Música & Casa 90) -->
+    <!-- SEÇÃO PARCEIROS -->
     <section id="parceiros" class="text-center">
         <div class="container">
             <h2 class="mb-2">NOSSOS PARCEIROS</h2>
@@ -452,11 +451,11 @@
                         <img src="{{ url_for('static', filename='img/beco79.png') }}" class="img-parceiro-efeito" alt="Parceiro Beco 79">
                     </a>
                 </div>
-                <!-- SIGMA MÚSICA (Com tratamento de overflow e zoom controlado via CSS) -->
+                <!-- SIGMA MÚSICA (Com zoom ajustado original mantido) -->
                 <div class="col-6 col-md-4 d-flex flex-column align-items-center">
                     <h5 class="text-secondary mb-3" style="letter-spacing: 2px;">SIGMA MÚSICA</h5>
-                    <a href="https://www.instagram.com/sigmamusica?igsh=bXB5MXdyOTY3NXho" target="_blank" class="wrapper-sigma-musica" style="display: inline-block; overflow: visible; padding: 10px;">
-                        <img src="{{ url_for('static', filename='img/sigma.png') }}" class="img-fluid" style="max-width: 180px; width: 100%; height: auto; transition: transform 0.4s ease-in-out;" alt="Parceiro Sigma Música">
+                    <a href="https://www.instagram.com/sigmamusica?igsh=bXB5MXdyOTY3NXho" target="_blank">
+                        <img src="{{ url_for('static', filename='img/sigma.png') }}" class="img-parceiro-efeito" style="transform: scale(1.3); transform-origin: center;" alt="Parceiro Sigma Música">
                     </a>
                 </div>
                 <!-- CASA 90 -->
@@ -465,6 +464,13 @@
                     <a href="https://www.instagram.com/casa90.oficial" target="_blank">
                         <img src="{{ url_for('static', filename='img/casa 90.png') }}" class="img-parceiro-efeito" alt="Parceiro Casa 90">
                     </a>
+                </div>
+            </div>
+
+            <!-- FOTO BANNER PARCEIROS ADICIONADA AQUI EMBAIXO -->
+            <div class="row justify-content-center mt-5 pt-4">
+                <div class="col-12 text-center">
+                    <img src="{{ url_for('static', filename='img/parceiros_banner.jpeg') }}" class="img-fluid banner-parceiros" alt="Banner Parceiros Oficiais SOULD">
                 </div>
             </div>
         </div>
