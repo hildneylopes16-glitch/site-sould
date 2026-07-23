@@ -4,49 +4,72 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SOULD | Links Oficiais</title>
+
+    <!-- Fonts Google -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap CSS & FontAwesome -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
+        :root {
+            --primary-red: #ff0000;
+            --bg-dark: #0b0b0b;
+            --card-bg: #121212;
+            --font-heading: 'Oswald', sans-serif;
+            --font-body: 'Montserrat', sans-serif;
+        }
+
         body {
-            background-color: #0b0b0b;
+            background-color: var(--bg-dark);
             color: white;
-            font-family: 'Arial Black', sans-serif;
+            font-family: var(--font-body);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 30px 15px;
         }
+
         .links-container {
             width: 100%;
-            max-width: 480px;
+            max-width: 460px;
             text-align: center;
         }
+
         .band-logo {
-            max-width: 160px;
+            max-width: 170px;
             height: auto;
             margin-bottom: 15px;
-            filter: drop-shadow(0px 0px 10px rgba(255, 0, 0, 0.6));
+            filter: drop-shadow(0px 0px 12px rgba(255, 0, 0, 0.6));
+            transition: transform 0.3s ease;
         }
+        .band-logo:hover {
+            transform: scale(1.03);
+        }
+
         .band-sub {
-            font-size: 0.85rem;
+            font-family: var(--font-heading);
+            font-size: 0.95rem;
             letter-spacing: 4px;
             color: #aaa;
-            margin-bottom: 40px;
+            margin-bottom: 35px;
             text-transform: uppercase;
         }
         
-        /* ESTILIZAÇÃO DOS BOTÕES ESTILO LINKTREE HARDCORE */
+        /* BOTÕES LINKTREE HARDCORE */
         .btn-linktree {
-            background-color: #121212;
-            color: white;
+            background-color: var(--card-bg);
+            color: #ffffff;
             border: 2px solid #222;
-            border-radius: 0px;
+            border-radius: 6px;
             padding: 16px 20px;
-            font-size: 1rem;
-            font-weight: bold;
-            letter-spacing: 1px;
+            font-family: var(--font-heading);
+            font-size: 1.1rem;
+            letter-spacing: 1.5px;
             text-transform: uppercase;
             display: flex;
             align-items: center;
@@ -54,78 +77,84 @@
             margin-bottom: 16px;
             transition: all 0.3s ease-in-out;
             text-decoration: none;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.4);
         }
-        .btn-linktree i {
+
+        .btn-linktree i.btn-icon-left {
             font-size: 1.3rem;
             width: 30px;
             text-align: center;
         }
+
         .btn-linktree .btn-icon-right {
             font-size: 0.85rem;
-            opacity: 0.3;
-            transition: 0.3s;
+            opacity: 0.4;
+            transition: transform 0.3s ease, opacity 0.3s ease;
         }
         
-        /* HOVERS E CORES DOS ÍCONES */
+        /* HOVERS DE CADA BOTÃO */
         .btn-linktree:hover {
-            background-color: #ff0000;
-            color: white;
-            border-color: #ff0000;
+            background-color: var(--primary-red);
+            color: #ffffff;
+            border-color: var(--primary-red);
             transform: translateY(-3px);
-            box-shadow: 0px 0px 15px rgba(255, 0, 0, 0.5);
+            box-shadow: 0px 6px 18px rgba(255, 0, 0, 0.5);
         }
+
         .btn-linktree:hover .btn-icon-right {
             opacity: 1;
-            transform: translateX(3px);
+            transform: translateX(4px);
         }
 
         .btn-instagram:hover { 
             background-color: #E1306C; 
             border-color: #E1306C; 
-            box-shadow: 0px 0px 15px rgba(225, 48, 108, 0.5); 
+            box-shadow: 0px 6px 18px rgba(225, 48, 108, 0.5); 
         }
 
         .footer-credits {
             margin-top: 40px;
             font-size: 0.75rem;
-            color: #555;
+            color: #666;
             letter-spacing: 1px;
+            font-weight: 600;
         }
     </style>
 </head>
 <body>
 
     <div class="links-container">
-        <img src="{{ url_for('static', filename='img/logo_sould_transparente.png') }}" alt="SOULD" class="band-logo">
+        <a href="{{ url_for('index') }}">
+            <img src="{{ url_for('static', filename='img/logo_sould_transparente.png') }}" alt="Banda SOULD" class="band-logo">
+        </a>
         <div class="band-sub">Hardcore & Pop Rock</div>
 
-        <a href="https://wa.me/5512982147326?text=Olá!%20Gostaria%20de%20obter%20mais%20informações%20sobre%20orçamento%20de%20shows%20da%20Banda%20SOULD." target="_blank" class="btn-linktree">
-            <i class="fab fa-whatsapp text-success"></i>
+        <a href="https://wa.me/5512982147326?text=Olá!%20Gostaria%20de%20obter%20mais%20informações%20sobre%20orçamento%20de%20shows%20da%20Banda%20SOULD." target="_blank" rel="noopener" class="btn-linktree">
+            <i class="fab fa-whatsapp text-success btn-icon-left"></i>
             <span>Contratar Show</span>
             <i class="fas fa-chevron-right btn-icon-right"></i>
         </a>
 
         <a href="{{ url_for('index') }}#agenda" class="btn-linktree">
-            <i class="fas fa-calendar-alt text-danger"></i>
+            <i class="fas fa-calendar-alt text-danger btn-icon-left"></i>
             <span>Próximos Shows</span>
             <i class="fas fa-chevron-right btn-icon-right"></i>
         </a>
 
         <a href="{{ url_for('index') }}#loja" class="btn-linktree">
-            <i class="fas fa-shopping-cart text-warning"></i>
+            <i class="fas fa-shopping-cart text-warning btn-icon-left"></i>
             <span>Camisetas e Bonés</span>
             <i class="fas fa-chevron-right btn-icon-right"></i>
         </a>
 
         <a href="{{ url_for('galeria') }}" class="btn-linktree">
-            <i class="fas fa-images text-info"></i>
+            <i class="fas fa-images text-info btn-icon-left"></i>
             <span>Galeria de Fotos</span>
             <i class="fas fa-chevron-right btn-icon-right"></i>
         </a>
 
-        <a href="https://www.instagram.com/bandasould" target="_blank" class="btn-linktree btn-instagram">
-            <i class="fab fa-instagram" style="color: #E1306C;"></i>
+        <a href="https://www.instagram.com/bandasould" target="_blank" rel="noopener" class="btn-linktree btn-instagram">
+            <i class="fab fa-instagram btn-icon-left" style="color: #E1306C;"></i>
             <span>Instagram Oficial</span>
             <i class="fas fa-chevron-right btn-icon-right"></i>
         </a>
