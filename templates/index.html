@@ -63,29 +63,30 @@
 
         /* HERO SECTION */
         .hero-section {  
-            height: 100vh;  
+            min-height: 85vh;  
             display: flex; align-items: center; justify-content: center; text-align: center; 
             position: relative; overflow: hidden;
+            padding: 40px 0;
         }
         .hero-slider { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
         .slide {
             position: absolute; width: 100%; height: 100%;
             background-repeat: no-repeat;
-            background-position: center center;
+            background-position: center top;
             background-size: cover;
             opacity: 0; animation: sliderAnim 15s infinite;
         }
         
         .slide:nth-child(1) {  
-            background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.8)), url("{{ url_for('static', filename='img/show1.jpg') }}");  
+            background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.85)), url("{{ url_for('static', filename='img/show1.jpg') }}");  
             animation-delay: 0s;  
         }
         .slide:nth-child(2) { 
-            background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.8)), url("{{ url_for('static', filename='img/show2.jpg') }}"); 
+            background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.85)), url("{{ url_for('static', filename='img/show2.jpg') }}"); 
             animation-delay: 5s; 
         }
         .slide:nth-child(3) { 
-            background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.8)), url("{{ url_for('static', filename='img/show3.jpg') }}"); 
+            background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.85)), url("{{ url_for('static', filename='img/show3.jpg') }}"); 
             animation-delay: 10s; 
         }
         
@@ -98,12 +99,14 @@
         }
 
         .hero-content { position: relative; z-index: 2; width: 90%; }
-        .hero-content img { width: 100%; max-width: 500px; height: auto; filter: drop-shadow(0px 0px 18px rgba(255, 0, 0, 0.6)); }
+        .hero-content img { width: 100%; max-width: 450px; height: auto; filter: drop-shadow(0px 0px 18px rgba(255, 0, 0, 0.6)); }
 
+        /* AJUSTES RESPONSIVOS HERO (CELULAR) */
         @media (max-width: 768px) {
-            .hero-section { height: 60vh; min-height: 380px; }
-            .hero-content img { max-width: 260px; }
-            .hero-content p { font-size: 1rem; letter-spacing: 3px !important; }
+            .hero-section { min-height: 75vh; }
+            .slide { background-size: contain; background-position: center center; background-color: #000; }
+            .hero-content img { max-width: 220px; }
+            .hero-content p { font-size: 0.9rem; letter-spacing: 2px !important; margin-top: 10px; }
         }
 
         /* SEÇÃO LANÇAMENTO */
@@ -129,7 +132,7 @@
             max-width: 1200px; margin: 0 auto; gap: 30px;
         }
         .agenda-wrapper {
-            flex: 1; max-height: 500px; overflow-y: auto; max-width: 800px; z-index: 2; padding-right: 10px;
+            flex: 1; max-height: 550px; overflow-y: auto; width: 100%; max-width: 800px; z-index: 2; padding-right: 5px;
         }
         .agenda-wrapper::-webkit-scrollbar { width: 6px; }
         .agenda-wrapper::-webkit-scrollbar-thumb { background: var(--primary-red); border-radius: 10px; }
@@ -137,9 +140,10 @@
         .list-group-item { 
             background-color: var(--bg-card) !important; 
             border: 1px solid #333 !important;  
-            margin-bottom: 12px; 
-            border-radius: 6px !important;
+            margin-bottom: 14px; 
+            border-radius: 8px !important;
             transition: border-color 0.3s ease, transform 0.2s ease;
+            padding: 20px !important;
         }
         .list-group-item:hover { 
             border-color: var(--primary-red) !important; 
@@ -151,13 +155,36 @@
             text-decoration: none; 
             font-weight: 600; 
             display: inline-block;
-            margin-top: 5px;
+            margin-top: 6px;
             transition: all 0.2s ease-in-out;
+            word-break: break-word;
         }
         .link-maps i { margin-right: 6px; font-size: 0.95rem; }
         .link-maps:hover { 
             color: #ffffff; 
             text-decoration: underline;
+        }
+
+        .show-badge {
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            white-space: normal;
+            text-align: center;
+        }
+
+        /* RESPONSIVIDADE DA AGENDA (CELULAR) */
+        @media (max-width: 768px) {
+            .list-group-item {
+                flex-direction: column !align-items-start !important;
+                align-items: flex-start !important;
+                gap: 12px;
+            }
+            .show-badge {
+                width: 100%;
+                display: block;
+                padding: 8px 12px !important;
+                font-size: 0.9rem;
+            }
         }
 
         .souldinho-box { width: 280px; z-index: 1; }
@@ -291,7 +318,7 @@
 
         @media (max-width: 991px) {
             .agenda-container-flex { flex-direction: column; }
-            .souldinho-box { width: 180px; order: -1; }
+            .souldinho-box { width: 160px; order: -1; margin-bottom: 20px; }
         }
     </style>
 </head>
@@ -352,7 +379,7 @@
                         <span class="badge bg-danger mb-3 px-3 py-2 fs-6">NOVO CLIPE OFICIAL</span>
                         <h2 class="text-white fw-bold mb-3 display-6">COBRANÇAS</h2>
                         <p class="bio-text text-lg-start mb-4">
-                            Assista agora ao nosso primeiro material audiovisual oficial! Uma produção pesada que traz a essência da <strong>SOULD</strong> direto do estúdio para as telas. Sinta o peso das guitavras, a batida marcante e a intensidade de um som feito com a alma.
+                            Assista agora ao nosso primeiro material audiovisual oficial! Uma produção pesada que traz a essência da <strong>SOULD</strong> direto do estúdio para as telas. Sinta o peso das guitarras, a batida marcante e a intensidade de um som feito com a alma.
                         </p>
                         <div>
                             <a href="https://youtu.be/CUW8fpb8Xs8?si=JGMoWGpPLjSQIFCA" target="_blank" rel="noopener" class="btn btn-danger btn-lg rounded-1 px-4 py-3 fw-bold w-100 w-sm-auto">
@@ -371,9 +398,9 @@
                 <div class="agenda-wrapper">
                     <div class="list-group">
                         {% for show in shows %}
-                        <div class="list-group-item text-white d-flex justify-content-between align-items-center p-4">
+                        <div class="list-group-item text-white d-flex justify-content-between align-items-center">
                             <div class="text-start">
-                                <strong style="font-size: 1.15rem; letter-spacing: 1px;">{{ show.data }}</strong><br>
+                                <strong style="font-size: 1.2rem; letter-spacing: 1px;">{{ show.data }}</strong><br>
                                 {% if show.link_maps %}
                                     <a href="{{ show.link_maps }}" target="_blank" rel="noopener" class="link-maps">
                                         <i class="fas fa-map-marker-alt"></i>{{ show.local }}
@@ -382,7 +409,7 @@
                                     <small class="text-secondary d-block mt-1">{{ show.local }}</small>
                                 {% endif %}
                             </div>
-                            <span class="badge bg-danger px-3 py-2 ms-2 fs-6">{{ show.cidade|upper }}</span>
+                            <span class="badge bg-danger show-badge px-3 py-2 ms-md-2">{{ show.cidade|upper }}</span>
                         </div>
                         {% endfor %}
                     </div>
@@ -476,7 +503,7 @@
                             Toda grande banda precisa de um olhar que capture a sua essência. <strong>Sidney Lopes</strong> não é apenas o fotógrafo oficial da SOULD; ele é o tradutor da nossa energia em frames. 
                         </p>
                         <p class="bio-text text-lg-start">
-                            Como Videomaker e Filmmaker de elite, Sidney realiza trabalhos fantásticos, transformando o suor do palco e o peso das guitarras em arte visual imersiva. Com uma técnica refinada, ele imortaliza a atitude Hardcore e a vibração do Pop Rock, garantindo que a alma da banda vai muito além do som.
+                            Como Videomaker e Filmmaker de elite, Sidney realiza trabalhos fantásticos, transformando o suor do palco e o peso das guitavras em arte visual imersiva. Com uma técnica refinada, ele imortaliza a atitude Hardcore e a vibração do Pop Rock, garantindo que a alma da banda vai muito além do som.
                         </p>
                         <div class="mt-4">
                             <div class="mb-3">
