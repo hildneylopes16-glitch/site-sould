@@ -4,21 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Galeria SOULD | Shows & Bastidores</title>
+    
+    <!-- CSS Dependencies -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Lightbox2 CSS para o visualizador da foto individual -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css" rel="stylesheet">
     
     <style>
-        body { background-color: #121212; color: white; font-family: 'Arial Black', sans-serif; }
-        .navbar { border-bottom: 1px solid #222; }
-        .navbar-logo { height: 45px; width: auto; filter: drop-shadow(0px 0px 5px rgba(255, 0, 0, 0.6)); }
+        body { 
+            background-color: #121212; 
+            color: #ffffff; 
+            font-family: 'Arial Black', 'Helvetica Neue', sans-serif; 
+        }
         
-        /* Estilos dos Cards dos Álbuns (Pastas) */
+        /* Navbar */
+        .navbar { border-bottom: 1px solid #222; }
+        .navbar-logo { 
+            height: 45px; 
+            width: auto; 
+            filter: drop-shadow(0px 0px 6px rgba(255, 0, 0, 0.6)); 
+        }
+        .btn-back {
+            color: #fff;
+            text-decoration: none;
+            font-family: sans-serif;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+        .btn-back:hover { color: #ff0000; }
+
+        /* Album Cards (Pastas) */
         .album-card {
             background-color: #1a1a1a;
-            border: 1px solid #333;
-            transition: 0.3s ease-in-out;
+            border: 1px solid #2a2a2a;
+            transition: all 0.3s ease-in-out;
             cursor: pointer;
             overflow: hidden;
             height: 100%;
@@ -26,7 +45,7 @@
         .album-card:hover {
             border-color: #ff0000;
             transform: translateY(-5px);
-            box-shadow: 0px 10px 20px rgba(255, 0, 0, 0.15);
+            box-shadow: 0px 10px 20px rgba(255, 0, 0, 0.2);
         }
         .album-img-container {
             width: 100%;
@@ -39,7 +58,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: 0.5s ease;
+            transition: transform 0.5s ease;
         }
         .album-card:hover .album-img {
             transform: scale(1.05);
@@ -62,24 +81,16 @@
             letter-spacing: 1px;
             color: #fff;
         }
-        .btn-back {
-            color: #fff;
-            text-decoration: none;
-            font-family: sans-serif;
-            font-weight: bold;
-            transition: 0.3s;
-        }
-        .btn-back:hover {
-            color: #ff0000;
-        }
 
-        /* Estilo das Miniaturas dentro do Álbum */
+        /* Grid de Miniaturas dentro do Álbum */
         .foto-miniatura-container {
+            position: relative;
             width: 100%;
-            aspect-ratio: 1/1; /* Deixa as fotos quadradinhas no grid */
+            aspect-ratio: 1/1;
             overflow: hidden;
             border: 2px solid #222;
-            transition: 0.2s;
+            background-color: #000;
+            transition: border-color 0.2s ease, transform 0.2s ease;
         }
         .foto-miniatura-container:hover {
             border-color: #ff0000;
@@ -91,27 +102,52 @@
             object-fit: cover;
         }
         
-        /* Controla a exibição das seções */
-        .secao-album { display: none; }
-        .visivel { display: block !important; }
+        .foto-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+        .foto-miniatura-container:hover .foto-overlay {
+            opacity: 1;
+        }
+        
+        /* Alternância de Visibilidade & Animação Fade-in */
+        .secao-album, #secao-pastas { 
+            display: none; 
+            opacity: 0;
+            transition: opacity 0.4s ease-in-out;
+        }
+        
+        .visivel { 
+            display: block !important; 
+        }
+        
+        .fade-in-active {
+            opacity: 1 !important;
+        }
     </style>
 </head>
 <body>
 
     <!-- NAVBAR -->
-    <nav class="navbar navbar-dark bg-black py-3">
+    <nav class="navbar navbar-dark bg-black py-3 sticky-top">
         <div class="container d-flex justify-content-between align-items-center">
             <a href="/" class="btn-back"><i class="fas fa-arrow-left me-2"></i>VOLTAR AO SITE</a>
-            <img src="{{ url_for('static', filename='img/logo.png') }}" class="navbar-logo" alt="SOULD">
+            <img src="{{ url_for('static', filename='img/logo.png') }}" class="navbar-logo" alt="Logo SOULD">
         </div>
     </nav>
 
     <div class="container py-5">
         
-        <!-- ================= SEÇÃO 1: TODAS AS PASTAS (ÁLBUNS) ================= -->
-        <div id="secao-pastas" class="visivel text-center">
-            <h1 class="display-5 mb-3">GALERIA DE FOTOS</h1>
-            <p class="lead text-secondary mb-5" style="font-family: sans-serif;">Selecione uma pasta para ver as fotos do show.</p>
+        <!-- ================= SEÇÃO 1: TODAS AS PASTAS (VISÃO INICIAL) ================= -->
+        <div id="secao-pastas" class="visivel fade-in-active text-center">
+            <h1 class="display-5 mb-2">GALERIA DE FOTOS</h1>
+            <p class="lead text-secondary mb-5" style="font-family: sans-serif;">Selecione um álbum para ver a cobertura do show.</p>
 
             {% if albuns %}
             <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 justify-content-center">
@@ -119,8 +155,8 @@
                 <div class="col">
                     <div class="album-card h-100" onclick="abrirAlbum('{{ album.pasta }}')">
                         <div class="album-img-container">
-                            <img src="{{ url_for('static', filename=album.capa) }}" class="album-img" alt="{{ album.nome }}">
-                            <span class="foto-badge"><i class="fas fa-folder me-1"></i> {{ album.total_fotos }} FOTOS</span>
+                            <img src="{{ url_for('static', filename=album.capa) }}" class="album-img" alt="Capa do álbum {{ album.nome }}" loading="lazy">
+                            <span class="foto-badge"><i class="fas fa-camera me-1"></i> {{ album.total_fotos }} FOTOS</span>
                         </div>
                         <div class="p-3 text-start">
                             <h5 class="album-title m-0">{{ album.nome }}</h5>
@@ -132,29 +168,34 @@
             {% else %}
             <div class="py-5" style="font-family: sans-serif;">
                 <i class="fas fa-images fs-1 text-secondary mb-3"></i>
-                <p class="text-secondary">Nenhum álbum encontrado.</p>
+                <p class="text-secondary fs-5">Nenhum álbum disponível no momento.</p>
             </div>
             {% endif %}
         </div>
 
-        <!-- ================= SEÇÃO 2: DETALHES DO ÁLBUM SELECIONADO ================= -->
+        <!-- ================= SEÇÃO 2: ÁLBUM SELECIONADO ================= -->
         {% for album in albuns %}
         <div id="album-{{ album.pasta }}" class="secao-album text-center">
+            
+            <!-- Cabeçalho Interno do Álbum -->
             <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom border-secondary">
                 <button class="btn btn-outline-light btn-sm" onclick="voltarParaPastas()" style="font-family: sans-serif;">
-                    <i class="fas fa-chevron-left me-2"></i> Voltar para as Pastas
+                    <i class="fas fa-chevron-left me-2"></i> Voltar para Álbuns
                 </button>
-                <h2 class="m-0 text-uppercase fs-4">{{ album.nome }}</h2>
-                <span class="text-secondary small" style="font-family: sans-serif;">{{ album.total_fotos }} Fotos</span>
+                <h2 class="m-0 text-uppercase fs-4 fw-bold">{{ album.nome }}</h2>
+                <span class="text-secondary small" style="font-family: sans-serif;">{{ album.total_fotos }} fotos</span>
             </div>
 
-            <!-- Grid com as miniaturas das fotos da pasta -->
+            <!-- Grid do Álbum -->
             <div class="row row-cols-2 row-cols-md-4 row-cols-lg-5 g-3">
                 {% for foto in album.fotos %}
                 <div class="col">
                     <a href="{{ url_for('static', filename=foto) }}" data-lightbox="grupo-{{ album.pasta }}" data-title="{{ album.nome }}">
                         <div class="foto-miniatura-container">
-                            <img src="{{ url_for('static', filename=foto) }}" class="foto-miniatura" alt="Foto de {{ album.nome }}">
+                            <img src="{{ url_for('static', filename=foto) }}" class="foto-miniatura" alt="Foto de {{ album.nome }}" loading="lazy">
+                            <div class="foto-overlay">
+                                <i class="fas fa-search-plus text-white fs-4"></i>
+                            </div>
                         </div>
                     </a>
                 </div>
@@ -171,30 +212,49 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js"></script>
     
     <script>
-        // Configurações do Lightbox
         lightbox.option({
-          'albumLabel': "Foto %1 de %2",
-          'wrapAround': true,
-          'fadeDuration': 200,
-          'resizeDuration': 200
+            'albumLabel': "Foto %1 de %2",
+            'wrapAround': true,
+            'fadeDuration': 200,
+            'resizeDuration': 200,
+            'disableScrolling': true
         });
 
-        // Função para esconder as pastas e exibir as fotos do álbum clicado
+        // Transição SPA com efeito Fade-In
         function abrirAlbum(pastaId) {
-            document.getElementById('secao-pastas').classList.remove('visivel');
-            document.getElementById('album-' + pastaId).classList.add('visivel');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            const secaoPastas = document.getElementById('secao-pastas');
+            const albumAlvo = document.getElementById('album-' + pastaId);
+
+            secaoPastas.classList.remove('fade-in-active');
+            
+            setTimeout(() => {
+                secaoPastas.classList.remove('visivel');
+                
+                if (albumAlvo) {
+                    albumAlvo.classList.add('visivel');
+                    setTimeout(() => {
+                        albumAlvo.classList.add('fade-in-active');
+                    }, 50);
+                }
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, 300);
         }
 
-        // Função para voltar à tela principal de pastas
         function voltarParaPastas() {
-            // Esconde todas as seções de álbuns
             const secoes = document.querySelectorAll('.secao-album');
-            secoes.forEach(secao => secao.classList.remove('visivel'));
-            
-            // Mostra as pastas novamente
-            document.getElementById('secao-pastas').classList.add('visivel');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            const secaoPastas = document.getElementById('secao-pastas');
+
+            secoes.forEach(secao => secao.classList.remove('fade-in-active'));
+
+            setTimeout(() => {
+                secoes.forEach(secao => secao.classList.remove('visivel'));
+                
+                secaoPastas.classList.add('visivel');
+                setTimeout(() => {
+                    secaoPastas.classList.add('fade-in-active');
+                }, 50);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, 300);
         }
     </script>
 </body>
