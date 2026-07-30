@@ -138,7 +138,7 @@
     <nav class="navbar navbar-dark bg-black py-3 sticky-top">
         <div class="container d-flex justify-content-between align-items-center">
             <a href="/" class="btn-back"><i class="fas fa-arrow-left me-2"></i>VOLTAR AO SITE</a>
-            <img src="{{ url_for('static', filename='img/logo.png') }}" class="navbar-logo" alt="Logo SOULD">
+            <img src="{{ url_for('static', filename='img/logo.png') }}" class="navbar-logo" alt="Logo SOULD" width="180" height="45">
         </div>
     </nav>
 
@@ -155,7 +155,14 @@
                 <div class="col">
                     <div class="album-card h-100" onclick="abrirAlbum('{{ album.pasta }}')">
                         <div class="album-img-container">
-                            <img src="{{ url_for('static', filename=album.capa) }}" class="album-img" alt="Capa do álbum {{ album.nome }}" loading="lazy">
+                            <!-- Capa do álbum: Usando versão miniatura com atributos de dimensões e decodificação assíncrona -->
+                            <img src="{{ url_for('static', filename=album.capa_thumb if album.capa_thumb else album.capa) }}" 
+                                 class="album-img" 
+                                 alt="Capa do álbum {{ album.nome }}" 
+                                 loading="lazy" 
+                                 decoding="async" 
+                                 width="400" 
+                                 height="225">
                             <span class="foto-badge"><i class="fas fa-camera me-1"></i> {{ album.total_fotos }} FOTOS</span>
                         </div>
                         <div class="p-3 text-start">
@@ -190,9 +197,17 @@
             <div class="row row-cols-2 row-cols-md-4 row-cols-lg-5 g-3">
                 {% for foto in album.fotos %}
                 <div class="col">
-                    <a href="{{ url_for('static', filename=foto) }}" data-lightbox="grupo-{{ album.pasta }}" data-title="{{ album.nome }}">
+                    <!-- O link carrega a foto ORIGINAL em alta resolução para o Lightbox -->
+                    <a href="{{ url_for('static', filename=foto.original if foto.original else foto) }}" data-lightbox="grupo-{{ album.pasta }}" data-title="{{ album.nome }}">
                         <div class="foto-miniatura-container">
-                            <img src="{{ url_for('static', filename=foto) }}" class="foto-miniatura" alt="Foto de {{ album.nome }}" loading="lazy">
+                            <!-- A tag img carrega APENAS a MINIATURA leve (thumb) para a grade -->
+                            <img src="{{ url_for('static', filename=foto.thumb if foto.thumb else foto) }}" 
+                                 class="foto-miniatura" 
+                                 alt="Foto de {{ album.nome }}" 
+                                 loading="lazy" 
+                                 decoding="async" 
+                                 width="300" 
+                                 height="300">
                             <div class="foto-overlay">
                                 <i class="fas fa-search-plus text-white fs-4"></i>
                             </div>
