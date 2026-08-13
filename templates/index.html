@@ -175,7 +175,7 @@
         /* RESPONSIVIDADE DA AGENDA (CELULAR) */
         @media (max-width: 768px) {
             .list-group-item {
-                flex-direction: column !align-items-start !important;
+                flex-direction: column !important;
                 align-items: flex-start !important;
                 gap: 12px;
             }
@@ -503,7 +503,7 @@
                             Toda grande banda precisa de um olhar que capture a sua essência. <strong>Sidney Lopes</strong> não é apenas o fotógrafo oficial da SOULD; ele é o tradutor da nossa energia em frames. 
                         </p>
                         <p class="bio-text text-lg-start">
-                            Como Videomaker e Filmmaker de elite, Sidney realiza trabalhos fantásticos, transformando o suor do palco e o peso das guitavras em arte visual imersiva. Com uma técnica refinada, ele imortaliza a atitude Hardcore e a vibração do Pop Rock, garantindo que a alma da banda vai muito além do som.
+                            Como Videomaker e Filmmaker de elite, Sidney realiza trabalhos fantásticos, transformando o suor do palco e o peso das guitarras em arte visual imersiva. Com uma técnica refinada, ele imortaliza a atitude Hardcore e a vibração do Pop Rock, garantindo que a alma da banda vai muito além do som.
                         </p>
                         <div class="mt-4">
                             <div class="mb-3">
@@ -582,50 +582,34 @@
                             <img src="{{ url_for('static', filename='img/sigma.png') }}" class="img-parceiro-efeito" alt="Parceiro Sigma Música">
                         </a>
                     </div>
-                    <div class="col-6 col-md-4 d-flex flex-column align-items-center">
-                        <h5 class="text-secondary mb-2">CASA 90</h5>
-                        <a href="https://www.instagram.com/casa90.oficial" target="_blank" rel="noopener">
-                            <img src="{{ url_for('static', filename='img/casa 90.png') }}" class="img-parceiro-efeito" alt="Parceiro Casa 90">
-                        </a>
-                    </div>
                 </div>
+            </div>
+        </section>
+
+        <!-- CONTATO -->
+        <section id="contato" class="py-5 text-center bg-black">
+            <div class="container">
+                <h2 class="mb-4 display-5 fw-bold">CONTATO & SHOWS</h2>
+                <p class="lead text-secondary mb-4">Leve a energia da SOULD para o seu evento!</p>
+                <a href="https://wa.me/5512982147326?text=Olá! Gostaria de cotar um show da Banda SOULD." target="_blank" rel="noopener" class="btn btn-danger btn-lg rounded-1 px-5 py-3 fw-bold">
+                    <i class="fab fa-whatsapp me-2"></i> FALE CONOSCO NO WHATSAPP
+                </a>
             </div>
         </section>
     </main>
 
     <!-- FOOTER -->
-    <footer id="contato">
-        <div class="container text-center">
+    <footer class="text-center text-white">
+        <div class="container">
             <div class="mb-4">
-                <a href="https://www.instagram.com/bandasould" target="_blank" rel="noopener" class="text-white social-link fs-2 mx-3" aria-label="Instagram da Banda Sould"><i class="fab fa-instagram"></i></a>
-                <a href="#" class="text-white social-link fs-2 mx-3" aria-label="Spotify da Banda Sould"><i class="fab fa-spotify"></i></a>
-                <a href="https://www.tiktok.com/@bandasould?_r=1&_t=ZS-98H71oiWRM1" target="_blank" rel="noopener" class="text-white social-link fs-2 mx-3" aria-label="TikTok da Banda Sould"><i class="fab fa-tiktok"></i></a>
+                <a href="https://www.instagram.com/souldoficial" target="_blank" rel="noopener" class="text-white mx-3 fs-3 social-link"><i class="fab fa-instagram"></i></a>
+                <a href="https://youtu.be/CUW8fpb8Xs8?si=JGMoWGpPLjSQIFCA" target="_blank" rel="noopener" class="text-white mx-3 fs-3 social-link"><i class="fab fa-youtube"></i></a>
             </div>
-            <div class="row justify-content-center g-3">
-                <div class="col-md-5">
-                    <a href="https://wa.me/5512982147326" target="_blank" rel="noopener" class="btn btn-outline-danger w-100 py-3 rounded-1 fw-bold">SHOWS: (12) 982147326 (BRUNO)</a>
-                </div>
-                <div class="col-md-5">
-                    <a href="https://wa.me/5512974106100" target="_blank" rel="noopener" class="btn btn-outline-danger w-100 py-3 rounded-1 fw-bold">SHOWS: (12) 974106100 (MARCIO)</a>
-                </div>
-            </div>
-            <p class="mt-5 text-secondary small mb-0">&copy; 2026 SOULD - SÃO JOSÉ DOS CAMPOS/SP</p>
+            <p class="text-secondary mb-0">&copy; 2026 SOULD - Todos os direitos reservados.</p>
         </div>
     </footer>
 
-    <!-- Scripts -->
+    <!-- Bootstrap JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        // Fecha o menu mobile automaticamente ao clicar em um link
-        document.querySelectorAll('.navbar-nav .nav-link').forEach(link => {
-            link.addEventListener('click', () => {
-                const navbarCollapse = document.getElementById('menuSould');
-                if (navbarCollapse.classList.contains('show')) {
-                    const bsCollapse = bootstrap.Collapse.getInstance(navbarCollapse) || new bootstrap.Collapse(navbarCollapse);
-                    bsCollapse.hide();
-                }
-            });
-        });
-    </script>
 </body>
 </html>
