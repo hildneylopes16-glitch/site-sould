@@ -1,1261 +1,732 @@
-"<!DOCTYPE html>
-
+<!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>SOULD | Hardcore & Pop Rock</title>
-
     
-
     <!-- Google Fonts -->
-
     <link rel="preconnect" href="https://fonts.googleapis.com">
-
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
-
     
-
     <!-- Bootstrap CSS & FontAwesome -->
-
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
     
-
     <style>
-
         :root {
-
             --primary-red: #ff0000;
-
             --primary-red-hover: #cc0000;
-
             --bg-dark: #121212;
-
             --bg-card: #1a1a1a;
-
             --font-heading: 'Oswald', sans-serif;
-
             --font-body: 'Montserrat', sans-serif;
-
         }
-
-
 
         html { scroll-behavior: smooth; }
-
         body { 
-
             background-color: var(--bg-dark); 
-
             color: #ffffff; 
-
             font-family: var(--font-body); 
-
             overflow-x: hidden; 
-
         }
-
         
-
         h1, h2, h3, h4, h5, .nav-link, .btn {
-
             font-family: var(--font-heading);
-
             text-transform: uppercase;
-
             letter-spacing: 1px;
-
         }
-
-
 
         /* NAVBAR */
-
         .navbar { border-bottom: 1px solid #222; }
-
         .navbar-toggler { border: none; color: var(--primary-red); font-size: 1.5rem; }
-
         .navbar-toggler:focus { box-shadow: none; outline: none; }
-
         
-
         .navbar-logo {
-
             height: 45px;
-
             width: auto;
-
             object-fit: cover;
-
             border-radius: 4px;
-
             filter: drop-shadow(0px 0px 6px rgba(255, 0, 0, 0.6));
-
             transition: transform 0.3s ease, filter 0.3s ease;
-
         }
-
         .navbar-logo:hover {
-
             transform: scale(1.05);
-
             filter: drop-shadow(0px 0px 10px rgba(255, 0, 0, 0.9));
-
         }
-
         
-
         @media (max-width: 991px) {
-
             .navbar-collapse { background-color: #000; padding: 20px; text-align: center; }
-
             .nav-link { font-size: 1.2rem; margin: 10px 0; border-bottom: 1px solid #111; }
-
         }
-
-
 
         /* HERO SECTION */
-
         .hero-section {  
-
             min-height: 85vh;  
-
             display: flex; align-items: center; justify-content: center; text-align: center; 
-
             position: relative; overflow: hidden;
-
             padding: 40px 0;
-
         }
-
         .hero-slider { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
-
         .slide {
-
             position: absolute; width: 100%; height: 100%;
-
             background-repeat: no-repeat;
-
             background-position: center top;
-
             background-size: cover;
-
             opacity: 0; animation: sliderAnim 15s infinite;
-
         }
-
         
-
         .slide:nth-child(1) {  
-
             background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.85)), url("{{ url_for('static', filename='img/show1.jpg') }}");  
-
             animation-delay: 0s;  
-
         }
-
         .slide:nth-child(2) { 
-
             background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.85)), url("{{ url_for('static', filename='img/show2.jpg') }}"); 
-
             animation-delay: 5s; 
-
         }
-
         .slide:nth-child(3) { 
-
             background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.85)), url("{{ url_for('static', filename='img/show3.jpg') }}"); 
-
             animation-delay: 10s; 
-
         }
-
         
-
         @keyframes sliderAnim {
-
             0% { opacity: 0; }
-
             10% { opacity: 1; }
-
             33% { opacity: 1; }
-
             43% { opacity: 0; } 
-
             100% { opacity: 0; }
-
         }
-
-
 
         .hero-content { position: relative; z-index: 2; width: 90%; }
-
         .hero-content img { width: 100%; max-width: 450px; height: auto; filter: drop-shadow(0px 0px 18px rgba(255, 0, 0, 0.6)); }
 
-
-
         /* AJUSTES RESPONSIVOS HERO (CELULAR) */
-
         @media (max-width: 768px) {
-
             .hero-section { min-height: 75vh; }
-
             .slide { background-size: contain; background-position: center center; background-color: #000; }
-
             .hero-content img { max-width: 220px; }
-
             .hero-content p { font-size: 0.9rem; letter-spacing: 2px !important; margin-top: 10px; }
-
         }
-
-
 
         /* SEÇÃO LANÇAMENTO */
-
         #lancamento { background: #070707; padding: 80px 0; border-bottom: 1px solid #222; }
-
         .video-container { 
-
             position: relative; 
-
             padding-bottom: 56.25%; 
-
             height: 0; 
-
             overflow: hidden; 
-
             max-width: 100%; 
-
             border: 2px solid #333; 
-
             border-radius: 8px;
-
             box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-
             transition: border-color 0.3s ease;
-
         }
-
         .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
-
         .video-container:hover { border-color: var(--primary-red); }
 
-
+        /* SEÇÃO MATÉRIA / BECO 79 */
+        #materia { 
+            background: #0f0f0f; 
+            padding: 80px 0; 
+            border-bottom: 1px solid #222; 
+        }
+        .article-card {
+            background-color: var(--bg-card);
+            border: 1px solid #2d2d2d;
+            border-left: 4px solid var(--primary-red);
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .article-meta {
+            color: var(--primary-red);
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+        .article-title {
+            font-size: 2.2rem;
+            color: #ffffff;
+            margin-bottom: 20px;
+            line-height: 1.2;
+            font-weight: 700;
+        }
+        .article-lead {
+            font-size: 1.15rem;
+            color: #dddddd;
+            font-weight: 600;
+            margin-bottom: 25px;
+            line-height: 1.6;
+            border-bottom: 1px solid #333;
+            padding-bottom: 20px;
+        }
+        .article-quote {
+            background-color: #111;
+            border-left: 3px solid var(--primary-red);
+            padding: 20px 25px;
+            margin: 25px 0;
+            font-style: italic;
+            color: #ffffff;
+            font-size: 1.1rem;
+        }
 
         /* AGENDA & SOULDINHO */
-
         #agenda { padding: 80px 0; }
-
         .agenda-container-flex {
-
             display: flex; align-items: center; justify-content: center;
-
             max-width: 1200px; margin: 0 auto; gap: 30px;
-
         }
-
         .agenda-wrapper {
-
             flex: 1; max-height: 550px; overflow-y: auto; width: 100%; max-width: 800px; z-index: 2; padding-right: 5px;
-
         }
-
         .agenda-wrapper::-webkit-scrollbar { width: 6px; }
-
         .agenda-wrapper::-webkit-scrollbar-thumb { background: var(--primary-red); border-radius: 10px; }
 
-
-
         .list-group-item { 
-
             background-color: var(--bg-card) !important; 
-
             border: 1px solid #333 !important;  
-
             margin-bottom: 14px; 
-
             border-radius: 8px !important;
-
             transition: border-color 0.3s ease, transform 0.2s ease;
-
             padding: 20px !important;
-
         }
-
         .list-group-item:hover { 
-
             border-color: var(--primary-red) !important; 
-
             transform: translateX(4px);
-
         }
-
         
-
         .link-maps { 
-
             color: var(--primary-red); 
-
             text-decoration: none; 
-
             font-weight: 600; 
-
             display: inline-block;
-
             margin-top: 6px;
-
             transition: all 0.2s ease-in-out;
-
             word-break: break-word;
-
         }
-
         .link-maps i { margin-right: 6px; font-size: 0.95rem; }
-
         .link-maps:hover { 
-
             color: #ffffff; 
-
             text-decoration: underline;
-
         }
-
-
 
         .show-badge {
-
             font-size: 0.85rem;
-
             letter-spacing: 1px;
-
             white-space: normal;
-
             text-align: center;
-
         }
-
-
 
         /* RESPONSIVIDADE DA AGENDA (CELULAR) */
-
         @media (max-width: 768px) {
-
             .list-group-item {
-
-                flex-direction: column !align-items-start !important;
-
+                flex-direction: column !important;
                 align-items: flex-start !important;
-
                 gap: 12px;
-
             }
-
             .show-badge {
-
                 width: 100%;
-
                 display: block;
-
                 padding: 8px 12px !important;
-
                 font-size: 0.9rem;
-
             }
-
+            .article-card { padding: 25px 20px; }
+            .article-title { font-size: 1.6rem; }
         }
-
-
 
         .souldinho-box { width: 280px; z-index: 1; }
-
         .souldinho-img { width: 100%; filter: drop-shadow(0px 0px 20px rgba(255, 0, 0, 0.4)); animation: float 3s ease-in-out infinite; }
-
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
 
-
-
         /* BIO SECTION */
-
         #bio { background-color: #000; padding: 80px 0; }
-
         .bio-text { color: #ddd; line-height: 1.8; text-align: justify; font-size: 0.98rem; }
-
         .bio-title { color: var(--primary-red); font-weight: 700; margin-top: 35px; letter-spacing: 1.5px; }
 
-
-
         /* INTEGRANTES */
-
         .integrante-card {
-
             background-color: var(--bg-card);
-
             border-radius: 8px;
-
             padding: 12px;
-
             border: 1px solid #282828;
-
             transition: border-color 0.3s ease;
-
         }
-
         .integrante-card:hover {
-
             border-color: var(--primary-red);
-
         }
-
         .integrante-img-container {  
-
             overflow: hidden; 
-
             border: 1px solid #333; 
-
             background-color: #1a1a1a;
-
             width: 100%; 
-
             height: 250px;
-
             border-radius: 4px;
-
         }
-
         .integrante-card img {  
-
             width: 100%; height: 100%;  
-
             object-fit: cover;  
-
             object-position: top center;  
-
             filter: grayscale(100%); 
-
             transition: filter 0.4s ease, transform 0.4s ease;  
-
         }
-
         .integrante-card:hover img { filter: grayscale(0%); transform: scale(1.05); }
 
-
-
         /* FOTÓGRAFO */
-
         #fotografo { background-color: #080808; padding: 80px 0; border-top: 1px solid #222; }
-
         .foto-sidney { 
-
             width: 100%; 
-
             border: 2px solid #333; 
-
             border-radius: 6px;
-
             transition: all 0.4s ease; 
-
             filter: grayscale(100%); 
-
             object-fit: cover; 
-
             height: 300px; 
-
         }
-
         .foto-sidney:hover { border-color: var(--primary-red); filter: grayscale(0%); transform: scale(1.02); }
-
         .btn-sidney { 
-
             background: var(--primary-red); 
-
             color: white; 
-
             font-weight: bold; 
-
             border-radius: 4px; 
-
             border: none; 
-
             padding: 14px 25px; 
-
             text-decoration: none; 
-
             display: inline-block; 
-
             transition: all 0.3s ease; 
-
             width: 100%; 
-
             max-width: 350px; 
-
         }
-
         .btn-sidney:hover { background: #fff; color: var(--primary-red); }
-
         .insta-sidney { color: #fff; text-decoration: none; font-size: 1.1rem; transition: 0.3s; }
-
         .insta-sidney:hover { color: var(--primary-red); }
 
-
-
         /* LOJA */
-
         .shop-card { 
-
             background: var(--bg-card); 
-
             border: 1px solid #333; 
-
             border-radius: 8px;
-
             padding: 24px; 
-
             transition: border-color 0.3s ease, transform 0.3s ease; 
-
             height: 100%; 
-
             display: flex; 
-
             flex-direction: column; 
-
         }
-
         .shop-card:hover { border-color: var(--primary-red); transform: translateY(-4px); }
-
         .shop-img-container { width: 100%; aspect-ratio: 1/1; overflow: hidden; margin-bottom: 15px; background: #121212; border-radius: 4px; }
-
         .shop-img { width: 100%; height: 100%; object-fit: contain; }
-
         .shop-img-desc { font-size: 0.9rem; color: #bbb; margin-bottom: 15px; text-align: left; line-height: 1.5; }
-
         .btn-buy { 
-
             background: var(--primary-red); 
-
             color: white; 
-
             border-radius: 4px; 
-
             width: 100%; 
-
             font-weight: bold; 
-
             margin-top: auto; 
-
             text-decoration: none; 
-
             text-align: center; 
-
             display: block; 
-
             padding: 12px; 
-
             transition: background-color 0.3s ease;
-
         }
-
         .btn-buy:hover { background: var(--primary-red-hover); color: white; }
 
-
-
         /* DNA SECTION */
-
         .dna-section img { 
-
             width: 100%; 
-
             max-width: 600px; 
-
             height: auto; 
-
             border: 1px solid #333; 
-
             border-radius: 8px;
-
             margin-top: 20px; 
-
             box-shadow: 0px 0px 20px rgba(255, 0, 0, 0.2); 
-
         }
-
-
 
         /* PARCEIROS */
-
         #parceiros { background-color: #0b0b0b; border-top: 1px solid #222; padding: 60px 0; }
-
         .img-parceiro-efeito {
-
             max-width: 220px;
-
             width: 100%;
-
             height: auto;
-
             background: transparent !important;
-
             border: none !important;
-
             filter: grayscale(100%);
-
             transform: scale(1);
-
             transition: filter 0.4s ease, transform 0.4s ease;
-
             margin-top: 10px;
-
         }
-
         .img-parceiro-efeito:hover {
-
             filter: grayscale(0%);
-
             transform: scale(1.1);
-
         }
-
-
 
         footer { border-top: 2px solid #222; padding: 60px 0; background: #000; }
-
         .social-link { transition: color 0.3s ease; }
-
         .social-link:hover { color: var(--primary-red) !important; }
 
-
-
         @media (max-width: 991px) {
-
             .agenda-container-flex { flex-direction: column; }
-
             .souldinho-box { width: 160px; order: -1; margin-bottom: 20px; }
-
         }
-
     </style>
-
 </head>
-
 <body>
 
-
-
     <!-- NAVBAR -->
-
     <nav class="navbar navbar-expand-lg navbar-dark sticky-top bg-black">
-
         <div class="container">
-
             <a class="navbar-brand d-flex align-items-center" href="#">
-
                 <img src="{{ url_for('static', filename='img/logo.png') }}" alt="SOULD" class="navbar-logo">
-
             </a>
-
             
-
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuSould" aria-controls="menuSould" aria-expanded="false" aria-label="Alternar navegação">
-
                 <i class="fas fa-bars"></i>
-
             </button>
 
-
-
             <div class="collapse navbar-collapse" id="menuSould">
-
                 <div class="navbar-nav ms-auto">
-
                     <a class="nav-link px-3" href="#lancamento">Clipe</a>
-
+                    <a class="nav-link px-3" href="#materia">Matéria</a>
                     <a class="nav-link px-3" href="#agenda">Shows</a>
-
                     <a class="nav-link px-3" href="#bio">A Banda</a>
-
                     <a class="nav-link px-3" href="#banda">Integrantes</a>
-
                     <a class="nav-link px-3" href="#fotografo">Fotógrafo</a>
-
                     <a class="nav-link px-3" href="#loja">Loja</a>
-
                     <a class="nav-link px-3" href="{{ url_for('galeria') }}">Galeria</a>
-
                     <a class="nav-link px-3" href="#dna">DNA</a>
-
                     <a class="nav-link px-3" href="#parceiros">Parceiros</a>
-
                     <a class="nav-link px-3" href="#contato">Contato</a>
-
                 </div>
-
             </div>
-
         </div>
-
     </nav>
 
-
-
     <!-- HERO -->
-
     <header class="hero-section">
-
         <div class="hero-slider">
-
             <div class="slide"></div>
-
             <div class="slide"></div>
-
             <div class="slide"></div>
-
         </div>
-
         <div class="hero-content">
-
             <img src="{{ url_for('static', filename='img/logo_sould_transparente.png') }}" alt="Logo SOULD">
-
             <p class="lead mt-3" style="letter-spacing: 5px;">HARDCORE / POP ROCK</p>
-
         </div>
-
     </header>
 
-
-
     <main>
-
         <!-- SEÇÃO LANÇAMENTO (CLIPE) -->
-
         <section id="lancamento">
-
             <div class="container">
-
                 <div class="row align-items-center g-5">
-
                     <div class="col-lg-7">
-
                         <div class="video-container">
-
                             <iframe src="https://www.youtube.com/embed/CUW8fpb8Xs8" title="Vídeo Oficial Cobranças - SOULD" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-
                         </div>
-
                     </div>
-
                     <div class="col-lg-5 text-center text-lg-start">
-
                         <span class="badge bg-danger mb-3 px-3 py-2 fs-6">NOVO CLIPE OFICIAL</span>
-
                         <h2 class="text-white fw-bold mb-3 display-6">COBRANÇAS</h2>
-
                         <p class="bio-text text-lg-start mb-4">
-
                             Assista agora ao nosso primeiro material audiovisual oficial! Uma produção pesada que traz a essência da <strong>SOULD</strong> direto do estúdio para as telas. Sinta o peso das guitarras, a batida marcante e a intensidade de um som feito com a alma.
-
                         </p>
-
                         <div>
-
                             <a href="https://youtu.be/CUW8fpb8Xs8?si=JGMoWGpPLjSQIFCA" target="_blank" rel="noopener" class="btn btn-danger btn-lg rounded-1 px-4 py-3 fw-bold w-100 w-sm-auto">
-
                                 <i class="fab fa-youtube me-2"></i> ASSISTIR NO YOUTUBE
-
                             </a>
-
                         </div>
-
                     </div>
-
                 </div>
-
             </div>
-
         </section>
 
+        <!-- SEÇÃO MATÉRIA DESTAQUE (BECO 79) -->
+        <section id="materia">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-10">
+                        <article class="article-card">
+                            
+                            <!-- Categoria & Fonte -->
+                            <div class="article-meta">
+                                <i class="fa-solid fa-newspaper me-2"></i> Matéria Especial &bull; Portal Beco 79
+                            </div>
 
+                            <!-- Título da Matéria -->
+                            <h2 class="article-title">
+                                EM NOITE ESPECIAL, A BANDA JOSEENSE FAZ SEU PRIMEIRO SHOW EM VERSÃO ACÚSTICA NO QUINTAL DA AVENIDA EM PARAIBUNA
+                            </h2>
+
+                            <!-- Lead / Resumo -->
+                            <p class="article-lead">
+                                Noite de lua cheia, clima agradável e o Quintal cheio de rock: a SOULD estreou seu formato acústico inédito no "Chão Caipira" do Vale do Paraíba.
+                            </p>
+
+                            <!-- Conteúdo / Destaque -->
+                            <div class="bio-text text-start mb-4">
+                                <p>
+                                    A cena do rock alternativo e hardcore ganha uma nova dimensão com a versatilidade da <strong>SOULD</strong>. Em uma apresentação marcante no <em>Quintal da Avenida</em> em Paraibuna, a banda joseense provou que a força das suas composições se mantém viva e potente até mesmo quando desplugada de amplificadores e distorções pesadas.
+                                </p>
+
+                                <div class="article-quote">
+                                    "Essa foi a primeira vez que os joseenses se apresentaram neste formato e os amantes do rock que estiveram presentes saíram de lá satisfeitos." — Portal Beco 79
+                                </div>
+
+                                <p>
+                                    Unindo a atitude de suas raízes ao feeling de arranjos desplugados, a SOULD entregou um repertório vibrante para o público, reforçando sua capacidade de se conectar com plateias em qualquer formato.
+                                </p>
+                            </div>
+
+                            <!-- Botão de Link Externo -->
+                            <div>
+                                <a href="https://beco79.com/3-notas/em-noite-especial-a-banda-joseense-faz-seu-primeiro-show-em-versao-acustica-no-quintal-da-avenida-em-paraibuna/" target="_blank" rel="noopener noreferrer" class="btn btn-outline-danger btn-lg rounded-1 px-4 py-3 fw-bold">
+                                    <i class="fa-solid fa-arrow-up-right-from-square me-2"></i> LER MATÉRIA COMPLETA NO BECO 79
+                                </a>
+                            </div>
+
+                        </article>
+                    </div>
+                </div>
+            </div>
+        </section>
 
         <!-- AGENDA -->
-
         <section id="agenda" class="container text-center">
-
             <h2 class="mb-5 display-5 fw-bold">PRÓXIMOS SHOWS</h2>
-
             <div class="agenda-container-flex">
-
                 <div class="agenda-wrapper">
-
                     <div class="list-group">
-
                         {% for show in shows %}
-
                         <div class="list-group-item text-white d-flex justify-content-between align-items-center">
-
                             <div class="text-start">
-
                                 <strong style="font-size: 1.2rem; letter-spacing: 1px;">{{ show.data }}</strong><br>
-
                                 {% if show.link_maps %}
-
                                     <a href="{{ show.link_maps }}" target="_blank" rel="noopener" class="link-maps">
-
                                         <i class="fas fa-map-marker-alt"></i>{{ show.local }}
-
                                     </a>
-
                                 {% else %}
-
                                     <small class="text-secondary d-block mt-1">{{ show.local }}</small>
-
                                 {% endif %}
-
                             </div>
-
                             <span class="badge bg-danger show-badge px-3 py-2 ms-md-2">{{ show.cidade|upper }}</span>
-
                         </div>
-
                         {% endfor %}
-
                     </div>
-
                 </div>
-
                 <div class="souldinho-box">
-
                     <img src="{{ url_for('static', filename='img/souldinho.png') }}" class="souldinho-img" alt="Mascote Souldinho">
-
                 </div>
-
             </div>
-
         </section>
-
-
 
         <!-- BIO -->
-
         <section id="bio">
-
             <div class="container">
-
                 <div class="row justify-content-center">
-
                     <div class="col-lg-9 text-center">
-
                         <h2 class="mb-5 display-5 fw-bold">SOBRE A BANDA</h2>
-
                         <div class="bio-text">
-
                             <p>A Sould é uma banda de pop-rock nacional e hardcore formada em outubro de 2025, em São José dos Campos/SP. O nome representa a fusão entre 'som' e 'alma', simbolizando a essência do grupo — músicos que se reúnem para tocar, se divertir e transmitir energia verdadeira em cada apresentação. Mais do que uma banda, a Sould é um projeto de conexão entre atitude, emoção e autenticidade.</p>
-
                             
-
                             <h4 class="bio-title">ESTILO E INFLUÊNCIAS</h4>
-
                             <p>Com influências de bandas como CPM 22, Detonautas, NX Zero e Dead Fish, a Sould mantém viva a essência do rock nacional, unindo melodia, peso e mensagens que refletem a realidade e o sentimento de uma geração. Além das músicas próprias, o grupo se destaca por versões criativas e energéticas de artistas como Imagine Dragons, One Republic, Lady Gaga e Bruno Mars, adaptadas ao estilo da banda.</p>
 
-
-
                             <h4 class="bio-title">DESTAQUES E ATUAÇÃO</h4>
-
                             <p>Apesar de recente, a Sould já marca presença em eventos e casas renomadas como Gilmour Brewpub, Hocus Pocus, Bar do Columba, Emo Véio, Daruma Rock Bar e ST Pauls PUB. A banda está em processo de composição e gravação do seu primeiro material autoral, mantendo o foco em levar o rock nacional com autenticidade a novos públicos.</p>
-
                         </div>
-
                     </div>
-
                 </div>
-
             </div>
-
         </section>
-
-
 
         <!-- INTEGRANTES -->
-
         <section id="banda" class="py-5 container text-center">
-
             <h2 class="mb-5 display-5 fw-bold">OS INTEGRANTES</h2>
-
             <div class="row justify-content-center g-4">
-
                 <div class="col-6 col-md-4 col-lg-2">
-
                     <div class="integrante-card">
-
                         <div class="integrante-img-container"><img src="{{ url_for('static', filename='img/vocal.jpg') }}" alt="Bruno - Vocal"></div>
-
                         <div class="mt-3 text-danger fw-bold fs-5">BRUNO</div>
-
                         <div class="small text-secondary fw-semibold">VOCAL</div>
-
                     </div>
-
                 </div>
-
                 <div class="col-6 col-md-4 col-lg-2">
-
                     <div class="integrante-card">
-
                         <div class="integrante-img-container"><img src="{{ url_for('static', filename='img/guitarra1.jpg') }}" alt="Evandro - Guitarra"></div>
-
                         <div class="mt-3 text-danger fw-bold fs-5">EVANDRO</div>
-
                         <div class="small text-secondary fw-semibold">GUITARRA</div>
-
                     </div>
-
                 </div>
-
                 <div class="col-6 col-md-4 col-lg-2">
-
                     <div class="integrante-card">
-
                         <div class="integrante-img-container"><img src="{{ url_for('static', filename='img/guitarra2.jpg') }}" alt="Marcio - Guitarra"></div>
-
                         <div class="mt-3 text-danger fw-bold fs-5">MARCIO</div>
-
                         <div class="small text-secondary fw-semibold">GUITARRA</div>
-
                     </div>
-
                 </div>
-
                 <div class="col-6 col-md-4 col-lg-2">
-
                     <div class="integrante-card">
-
                         <div class="integrante-img-container"><img src="{{ url_for('static', filename='img/baixo.jpg') }}" alt="Matheus - Baixo"></div>
-
                         <div class="mt-3 text-danger fw-bold fs-5">MATHEUS</div>
-
                         <div class="small text-secondary fw-semibold">BAIXO</div>
-
                     </div>
-
                 </div>
-
                 <div class="col-6 col-md-4 col-lg-2">
-
                     <div class="integrante-card">
-
                         <div class="integrante-img-container"><img src="{{ url_for('static', filename='img/bateria.jpg') }}" alt="Hildney - Bateria"></div>
-
                         <div class="mt-3 text-danger fw-bold fs-5">HILDNEY</div>
-
                         <div class="small text-secondary fw-semibold">BATERIA</div>
-
                     </div>
-
                 </div>
-
             </div>
-
         </section>
-
-
 
         <!-- FOTÓGRAFO -->
-
         <section id="fotografo">
-
             <div class="container text-center">
-
                 <h2 class="mb-5 display-5 fw-bold">FOTÓGRAFO OFICIAL</h2>
-
                 <div class="row align-items-center justify-content-center">
-
                     <div class="col-lg-5 mb-4 mb-lg-0">
-
                         <div class="row g-2">
-
                             <div class="col-6">
-
                                 <img src="{{ url_for('static', filename='img/sidney1.jpg') }}" class="foto-sidney" alt="Sidney Lopes 1">
-
                             </div>
-
                             <div class="col-6">
-
                                 <img src="{{ url_for('static', filename='img/sidney2.jpg') }}" class="foto-sidney" alt="Sidney Lopes 2">
-
                             </div>
-
                         </div>
-
                     </div>
-
                     <div class="col-lg-7 ps-lg-5 text-lg-start">
-
                         <h3 class="text-danger fw-bold mb-3 display-6">SIDNEY LOPES</h3>
-
                         <p class="lead text-white-50">
-
                             Toda grande banda precisa de um olhar que capture a sua essência. <strong>Sidney Lopes</strong> não é apenas o fotógrafo oficial da SOULD; ele é o tradutor da nossa energia em frames. 
-
                         </p>
-
                         <p class="bio-text text-lg-start">
-
-                            Como Videomaker e Filmmaker de elite, Sidney realiza trabalhos fantásticos, transformando o suor do palco e o peso das guitavras em arte visual imersiva. Com uma técnica refinada, ele imortaliza a atitude Hardcore e a vibração do Pop Rock, garantindo que a alma da banda vai muito além do som.
-
+                            Como Videomaker e Filmmaker de elite, Sidney realiza trabalhos fantásticos, transformando o suor do palco e o peso das guitarras em arte visual imersiva. Com uma técnica refinada, ele imortaliza a atitude Hardcore e a vibração do Pop Rock, garantindo que a alma da banda vai muito além do som.
                         </p>
-
                         <div class="mt-4">
-
                             <div class="mb-3">
-
                                 <a href="https://www.instagram.com/Osidneylopes" target="_blank" rel="noopener" class="insta-sidney fw-semibold">
-
                                     <i class="fab fa-instagram text-danger me-1"></i> @Osidneylopes
-
                                 </a>
-
                             </div>
-
                             <a href="https://wa.me/5512981606958?text=Olá Sidney! Vi seu trabalho no site da Banda SOULD e gostaria de fazer um orçamento." target="_blank" rel="noopener" class="btn-sidney">
-
                                 <i class="fab fa-whatsapp me-2"></i> ORÇAMENTO COM FOTÓGRAFO
-
                             </a>
-
                         </div>
-
                     </div>
-
                 </div>
-
             </div>
-
         </section>
-
-
 
         <!-- LOJA -->
-
         <section id="loja" class="py-5 bg-black text-center">
-
             <div class="container">
-
                 <h2 class="mb-5 display-5 fw-bold">LOJA OFICIAL</h2>
-
                 <div class="row g-4 justify-content-center">
-
                     <div class="col-md-5 col-lg-4">
-
                         <div class="shop-card">
-
                             <div class="shop-img-container">
-
                                 <img src="{{ url_for('static', filename='img/camisa.jpg') }}" class="shop-img" alt="Camiseta Banda SOULD">
-
                             </div>
-
                             <h5 class="fw-bold mb-3">CAMISETA BANDA SOULD</h5>
-
                             <div class="shop-img-desc">
-
                                 ➡️ Do P ao GG (Unissex/Babylook) – <strong>R$ 60,00</strong><br>
-
                                 ➡️ G1 ao G2 – <strong>R$ 65,00</strong><br>
-
                                 ➡️ G3 ao G4 – <strong>R$ 70,00</strong>
-
                             </div>
-
                             <a href="https://wa.me/5512982147326?text=Olá! Tenho interesse em comprar a Camiseta Banda SOULD." target="_blank" rel="noopener" class="btn-buy">COMPRAR</a>
-
                         </div>
-
                     </div>
-
                     <div class="col-md-5 col-lg-4">
-
                         <div class="shop-card">
-
                             <div class="shop-img-container">
-
                                 <img src="{{ url_for('static', filename='img/bone.jpg') }}" class="shop-img" alt="Boné SOULD">
-
                             </div>
-
                             <h5 class="fw-bold mb-2">BONÉ SOULD</h5>
-
                             <div class="shop-img-desc">
-
                                 Boné oficial bordado com regulagem traseira snapback. Material premium de alta durabilidade.
-
                             </div>
-
                             <p class="text-danger fs-3 fw-bold mb-3">R$ 80,00</p>
-
                             <a href="https://wa.me/5512974106100?text=Olá! Tenho interesse em comprar o Boné SOULD." target="_blank" rel="noopener" class="btn-buy">COMPRAR</a>
-
                         </div>
-
                     </div>
-
                 </div>
-
             </div>
-
         </section>
-
-
 
         <!-- DNA -->
-
         <section id="dna" class="py-5 dna-section text-center">
-
             <h2 class="mb-4 display-5 fw-bold">DNA SOULD</h2>
-
             <img src="{{ url_for('static', filename='img/dna_sould.jpg') }}" class="img-fluid mx-auto d-block" alt="DNA Banda SOULD">
-
         </section>
-
-
 
         <!-- PARCEIROS -->
-
         <section id="parceiros" class="text-center">
-
             <div class="container">
-
                 <h2 class="mb-2 display-5 fw-bold">NOSSOS PARCEIROS</h2>
-
                 <p class="mb-5 text-secondary">
-
                     Apoie quem fortalece a cena! Clique nos logos para visitar o Instagram dos nossos parceiros oficiais.
-
                 </p>
-
                 <div class="row justify-content-center align-items-center g-4">
-
                     <div class="col-6 col-md-4 d-flex flex-column align-items-center">
-
                         <h5 class="text-secondary mb-2">BECO 79</h5>
-
                         <a href="https://www.instagram.com/radiobeco79?igsh=MXZ3ODJiOWJzY3B1dw==" target="_blank" rel="noopener">
-
                             <img src="{{ url_for('static', filename='img/beco79.png') }}" class="img-parceiro-efeito" alt="Parceiro Beco 79">
-
                         </a>
-
                     </div>
-
                     <div class="col-6 col-md-4 d-flex flex-column align-items-center">
-
                         <h5 class="text-secondary mb-2">SIGMA MÚSICA</h5>
-
                         <a href="https://www.instagram.com/sigmamusica?igsh=bXB5MXdyOTY3NXho" target="_blank" rel="noopener">
-
                             <img src="{{ url_for('static', filename='img/sigma.png') }}" class="img-parceiro-efeito" alt="Parceiro Sigma Música">
-
                         </a>
-
                     </div>
-
                     <div class="col-6 col-md-4 d-flex flex-column align-items-center">
-
                         <h5 class="text-secondary mb-2">CASA 90</h5>
-
                         <a href="https://www.instagram.com/casa90.oficial" target="_blank" rel="noopener">
-
                             <img src="{{ url_for('static', filename='img/casa 90.png') }}" class="img-parceiro-efeito" alt="Parceiro Casa 90">
-
                         </a>
-
                     </div>
-
                 </div>
-
             </div>
-
         </section>
-
     </main>
 
-
-
     <!-- FOOTER -->
-
     <footer id="contato">
-
         <div class="container text-center">
-
             <div class="mb-4">
-
                 <a href="https://www.instagram.com/bandasould" target="_blank" rel="noopener" class="text-white social-link fs-2 mx-3" aria-label="Instagram da Banda Sould"><i class="fab fa-instagram"></i></a>
-
                 <a href="#" class="text-white social-link fs-2 mx-3" aria-label="Spotify da Banda Sould"><i class="fab fa-spotify"></i></a>
-
                 <a href="https://www.tiktok.com/@bandasould?_r=1&_t=ZS-98H71oiWRM1" target="_blank" rel="noopener" class="text-white social-link fs-2 mx-3" aria-label="TikTok da Banda Sould"><i class="fab fa-tiktok"></i></a>
-
             </div>
-
             <div class="row justify-content-center g-3">
-
                 <div class="col-md-5">
-
                     <a href="https://wa.me/5512982147326" target="_blank" rel="noopener" class="btn btn-outline-danger w-100 py-3 rounded-1 fw-bold">SHOWS: (12) 982147326 (BRUNO)</a>
-
                 </div>
-
                 <div class="col-md-5">
-
                     <a href="https://wa.me/5512974106100" target="_blank" rel="noopener" class="btn btn-outline-danger w-100 py-3 rounded-1 fw-bold">SHOWS: (12) 974106100 (MARCIO)</a>
-
                 </div>
-
             </div>
-
             <p class="mt-5 text-secondary small mb-0">&copy; 2026 SOULD - SÃO JOSÉ DOS CAMPOS/SP</p>
-
         </div>
-
     </footer>
 
-
-
     <!-- Scripts -->
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
     <script>
-
         // Fecha o menu mobile automaticamente ao clicar em um link
-
         document.querySelectorAll('.navbar-nav .nav-link').forEach(link => {
-
             link.addEventListener('click', () => {
-
                 const navbarCollapse = document.getElementById('menuSould');
-
                 if (navbarCollapse.classList.contains('show')) {
-
                     const bsCollapse = bootstrap.Collapse.getInstance(navbarCollapse) || new bootstrap.Collapse(navbarCollapse);
-
                     bsCollapse.hide();
-
                 }
-
             });
-
         });
-
     </script>
-
 </body>
-
-</html>"
+</html>
