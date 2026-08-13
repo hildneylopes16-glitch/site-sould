@@ -217,6 +217,36 @@
             text-align: center;
         }
 
+        /* HISTÓRICO DE SHOWS */
+        .history-box {
+            background-color: #0d0d0d;
+            border: 1px solid #222;
+            border-radius: 8px;
+            padding: 30px;
+            max-width: 1000px;
+            margin: 50px auto 0 auto;
+        }
+        .history-scroll {
+            max-height: 380px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+        .history-scroll::-webkit-scrollbar { width: 6px; }
+        .history-scroll::-webkit-scrollbar-thumb { background: #444; border-radius: 10px; }
+        .history-scroll::-webkit-scrollbar-thumb:hover { background: var(--primary-red); }
+
+        .history-item {
+            background: var(--bg-card);
+            border-left: 3px solid var(--primary-red);
+            padding: 12px 18px;
+            margin-bottom: 10px;
+            border-radius: 0 6px 6px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.95rem;
+        }
+
         /* RESPONSIVIDADE DA AGENDA (CELULAR) */
         @media (max-width: 768px) {
             .list-group-item {
@@ -232,6 +262,11 @@
             }
             .article-card { padding: 25px 20px; }
             .article-title { font-size: 1.3rem; }
+            .history-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
         }
 
         .souldinho-box { width: 280px; z-index: 1; }
@@ -522,6 +557,136 @@
                 </div>
                 <div class="souldinho-box">
                     <img src="{{ url_for('static', filename='img/souldinho.png') }}" class="souldinho-img" alt="Mascote Souldinho">
+                </div>
+            </div>
+
+            <!-- HISTÓRICO DE SHOWS REALIZADOS EM 2026 -->
+            <div class="history-box text-start">
+                <div class="d-flex align-items-center mb-4">
+                    <i class="fa-solid fa-clock-rotate-left text-danger fs-3 me-3"></i>
+                    <div>
+                        <h4 class="fw-bold mb-0 text-white">SHOWS REALIZADOS EM 2026</h4>
+                        <small class="text-secondary">Confira por onde a SOULD já passou neste ano</small>
+                    </div>
+                </div>
+                
+                <div class="history-scroll">
+                    <div class="history-item">
+                        <span><strong class="text-danger me-2">07/08</strong> Gilmour</span>
+                        <span class="text-secondary small">São José dos Campos</span>
+                    </div>
+                    <div class="history-item">
+                        <span><strong class="text-danger me-2">02/08</strong> BDI</span>
+                        <span class="text-secondary small">Pindamonhangaba</span>
+                    </div>
+                    <div class="history-item">
+                        <span><strong class="text-danger me-2">01/08</strong> Point do Churrasco</span>
+                        <span class="text-secondary small">Caçapava</span>
+                    </div>
+                    <div class="history-item">
+                        <span><strong class="text-danger me-2">18/07</strong> Território Bar Acústico - 21hs</span>
+                        <span class="text-secondary small">São José dos Campos</span>
+                    </div>
+                    <div class="history-item">
+                        <span><strong class="text-danger me-2">18/07</strong> Monsters Festival</span>
+                        <span class="text-secondary small">Taubaté</span>
+                    </div>
+                    <div class="history-item">
+                        <span><strong class="text-danger me-2">12/07</strong> HDC Berggren TAP House - 16hs</span>
+                        <span class="text-secondary small">São José dos Campos</span>
+                    </div>
+                    <div class="history-item">
+                        <span><strong class="text-danger me-2">11/07</strong> Gilmour - 20hs</span>
+                        <span class="text-secondary small">São José dos Campos</span>
+                    </div>
+                    <div class="history-item">
+                        <span><strong class="text-danger me-2">05/07</strong> Cervejaria Sapucaí - 15hs</span>
+                        <span class="text-secondary small">São José dos Campos</span>
+                    </div>
+                    <div class="history-item">
+                        <span><strong class="text-danger me-2">03/07</strong> Rustick Bar - 21hs</span>
+                        <span class="text-secondary small">São José dos Campos</span>
+                    </div>
+                    <div class="history-item">
+                        <span><strong class="text-danger me-2">29/06</strong> Gilmour - 16hs</span>
+                        <span class="text-secondary small">São José dos Campos</span>
+                    </div>
+                    <div class="history-item">
+                        <span><strong class="text-danger me-2">24/06</strong> HDC Berggren TAP House</span>
+                        <span class="text-secondary small">São José dos Campos</span>
+                    </div>
+                    <div class="history-item">
+                        <span><strong class="text-danger me-2">20/06</strong> Hocus Pocus</span>
+                        <span class="text-secondary small">São José dos Campos</span>
+                    </div>
+                    <div class="history-item">
+                        <span><strong class="text-danger me-2">20/06</strong> Gilmour</span>
+                        <span class="text-secondary small">São José dos Campos</span>
+                    </div>
+                    <div class="history-item">
+                        <span><strong class="text-danger me-2">05/06</strong> HUB</span>
+                        <span class="text-secondary small">São Bento do Sapucaí</span>
+                    </div>
+                    <div class="history-item">
+                        <span><strong class="text-danger me-2">30/05</strong> Anexo 2.0</span>
+                        <span class="text-secondary small">Jacareí</span>
+                    </div>
+                    <div class="history-item">
+                        <span><strong class="text-danger me-2">24/05</strong> Parque pôr do sol</span>
+                        <span class="text-secondary small">Taubaté</span>
+                    </div>
+                    <div class="history-item">
+                        <span><strong class="text-danger me-2">23/05</strong> Georges Seven (Acústico)</span>
+                        <span class="text-secondary small">São José dos Campos</span>
+                    </div>
+                    <div class="history-item">
+                        <span><strong class="text-danger me-2">08/05</strong> Gilmour</span>
+                        <span class="text-secondary small">São José dos Campos</span>
+                    </div>
+                    <div class="history-item">
+                        <span><strong class="text-danger me-2">02/05</strong> Anexo 2.0</span>
+                        <span class="text-secondary small">Jacareí</span>
+                    </div>
+                    <div class="history-item">
+                        <span><strong class="text-danger me-2">01/05</strong> Quintal da Avenida</span>
+                        <span class="text-secondary small">Paraibuna</span>
+                    </div>
+                    <div class="history-item">
+                        <span><strong class="text-danger me-2">26/03</strong> A hora do chopp</span>
+                        <span class="text-secondary small">São José dos Campos</span>
+                    </div>
+                    <div class="history-item">
+                        <span><strong class="text-danger me-2">20/04</strong> Gilmour</span>
+                        <span class="text-secondary small">São José dos Campos</span>
+                    </div>
+                    <div class="history-item">
+                        <span><strong class="text-danger me-2">19/04</strong> ST PAUL’s PUB</span>
+                        <span class="text-secondary small">São Paulo</span>
+                    </div>
+                    <div class="history-item">
+                        <span><strong class="text-danger me-2">20/03</strong> Daruma Rock Bar</span>
+                        <span class="text-secondary small">Jacareí</span>
+                    </div>
+                    <div class="history-item">
+                        <span><strong class="text-danger me-2">13/03</strong> Gilmour</span>
+                        <span class="text-secondary small">São José dos Campos</span>
+                    </div>
+                    <div class="history-item">
+                        <span><strong class="text-danger me-2">17/02</strong> Gilmour</span>
+                        <span class="text-secondary small">São José dos Campos</span>
+                    </div>
+                    <div class="history-item">
+                        <span><strong class="text-danger me-2">31/01</strong> Gato Preto Pub</span>
+                        <span class="text-secondary small">Taubaté</span>
+                    </div>
+                    <div class="history-item">
+                        <span><strong class="text-danger me-2">30/01</strong> Hocus Pocus</span>
+                        <span class="text-secondary small">São José dos Campos</span>
+                    </div>
+                    <div class="history-item">
+                        <span><strong class="text-danger me-2">02/01</strong> Gilmour</span>
+                        <span class="text-secondary small">São José dos Campos</span>
+                    </div>
                 </div>
             </div>
         </section>
