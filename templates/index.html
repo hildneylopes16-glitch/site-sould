@@ -101,7 +101,6 @@
         .hero-content { position: relative; z-index: 2; width: 90%; }
         .hero-content img { width: 100%; max-width: 450px; height: auto; filter: drop-shadow(0px 0px 18px rgba(255, 0, 0, 0.6)); }
 
-        /* AJUSTES RESPONSIVOS HERO (CELULAR) */
         @media (max-width: 768px) {
             .hero-section { min-height: 75vh; }
             .slide { background-size: contain; background-position: center center; background-color: #000; }
@@ -247,7 +246,6 @@
             font-size: 0.95rem;
         }
 
-        /* RESPONSIVIDADE DA AGENDA (CELULAR) */
         @media (max-width: 768px) {
             .list-group-item {
                 flex-direction: column !important;
@@ -449,25 +447,61 @@
     </header>
 
     <main>
-        <!-- SEÇÃO LANÇAMENTO (CLIPE) -->
+        <!-- SEÇÃO LANÇAMENTO PRINCIPAL: SATURNO -->
         <section id="lancamento">
             <div class="container">
                 <div class="row align-items-center g-5">
                     <div class="col-lg-7">
                         <div class="video-container">
-                            <iframe src="https://www.youtube.com/embed/CUW8fpb8Xs8" title="Vídeo Oficial Cobranças - SOULD" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                            <iframe src="https://www.youtube.com/embed/IuA1GIQfYUQ" title="Saturno - SOULD (Lyric Video)" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
                         </div>
                     </div>
                     <div class="col-lg-5 text-center text-lg-start">
-                        <span class="badge bg-danger mb-3 px-3 py-2 fs-6">NOVO CLIPE OFICIAL</span>
-                        <h2 class="text-white fw-bold mb-3 display-6">COBRANÇAS</h2>
+                        <span class="badge bg-danger mb-3 px-3 py-2 fs-6">NOVO SINGLE &bull; LYRIC VIDEO</span>
+                        <h2 class="text-white fw-bold mb-3 display-6">SATURNO</h2>
                         <p class="bio-text text-lg-start mb-4">
-                            Assista agora ao nosso primeiro material audiovisual oficial! Uma produção pesada que traz a essência da <strong>SOULD</strong> direto do estúdio para as telas. Sinta o peso das guitavras, a batida marcante e a intensidade de um som feito com a alma.
+                            Ouça agora o nosso novo single autoral <strong>"SATURNO"</strong>! Disponível em todas as plataformas digitais e com lyric video completo no YouTube. Sinta toda a energia e emoção dessa nova fase da banda.
                         </p>
-                        <div>
-                            <a href="https://youtu.be/CUW8fpb8Xs8?si=JGMoWGpPLjSQIFCA" target="_blank" rel="noopener" class="btn btn-danger btn-lg rounded-1 px-4 py-3 fw-bold w-100 w-sm-auto">
+                        <div class="d-grid gap-2">
+                            <a href="https://www.youtube.com/watch?v=IuA1GIQfYUQ" target="_blank" rel="noopener" class="btn btn-danger btn-lg rounded-1 px-4 py-3 fw-bold">
                                 <i class="fab fa-youtube me-2"></i> ASSISTIR NO YOUTUBE
                             </a>
+                            <a href="https://open.spotify.com" target="_blank" rel="noopener" class="btn btn-outline-light btn-lg rounded-1 px-4 py-3 fw-bold">
+                                <i class="fab fa-spotify me-2 text-success"></i> OUVIR NO SPOTIFY
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO ACERVO DE CLIPES (COBRANÇAS) -->
+        <section id="acervo-clipes" class="py-5 bg-black border-bottom border-secondary">
+            <div class="container">
+                <div class="text-center mb-5">
+                    <span class="text-danger fw-semibold text-uppercase tracking-wider small">ACERVO AUDIOVISUAL</span>
+                    <h3 class="display-6 fw-bold text-white mt-1">OUTROS CLIPES</h3>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-lg-8">
+                        <div class="card bg-dark border-secondary p-4 rounded-3">
+                            <div class="row align-items-center g-4">
+                                <div class="col-md-6">
+                                    <div class="video-container" style="border-radius: 6px;">
+                                        <iframe src="https://www.youtube.com/embed/CUW8fpb8Xs8" title="Vídeo Oficial Cobranças - SOULD" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 text-center text-md-start">
+                                    <span class="badge bg-secondary mb-2">CLIPE OFICIAL</span>
+                                    <h4 class="text-white fw-bold mb-2">COBRANÇAS</h4>
+                                    <p class="text-secondary small mb-3">
+                                        Nosso primeiro material audiovisual oficial direto do estúdio para as telas.
+                                    </p>
+                                    <a href="https://youtu.be/CUW8fpb8Xs8?si=JGMoWGpPLjSQIFCA" target="_blank" rel="noopener" class="btn btn-outline-danger btn-sm fw-bold px-3">
+                                        <i class="fab fa-youtube me-1"></i> ASSISTIR COBRANÇAS
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -535,7 +569,6 @@
         <!-- AGENDA -->
         <section id="agenda" class="container text-center">
             
-            <!-- 1. PRÓXIMOS SHOWS (DINÂMICO/FLASK) -->
             <h2 class="mb-5 display-5 fw-bold">PRÓXIMOS SHOWS</h2>
             <div class="agenda-container-flex">
                 <div class="agenda-wrapper">
@@ -562,7 +595,7 @@
                 </div>
             </div>
 
-            <!-- 2. HISTÓRICO DE SHOWS JÁ REALIZADOS EM 2026 -->
+            <!-- HISTÓRICO DE SHOWS -->
             <div class="history-box text-start">
                 <div class="d-flex align-items-center mb-4">
                     <i class="fa-solid fa-clock-rotate-left text-danger fs-3 me-3"></i>
@@ -917,7 +950,7 @@
         <div class="container text-center">
             <div class="mb-4">
                 <a href="https://www.instagram.com/bandasould" target="_blank" rel="noopener" class="text-white social-link fs-2 mx-3" aria-label="Instagram da Banda Sould"><i class="fab fa-instagram"></i></a>
-                <a href="#" class="text-white social-link fs-2 mx-3" aria-label="Spotify da Banda Sould"><i class="fab fa-spotify"></i></a>
+                <a href="https://open.spotify.com" target="_blank" rel="noopener" class="text-white social-link fs-2 mx-3" aria-label="Spotify da Banda Sould"><i class="fab fa-spotify"></i></a>
                 <a href="https://www.tiktok.com/@bandasould?_r=1&_t=ZS-98H71oiWRM1" target="_blank" rel="noopener" class="text-white social-link fs-2 mx-3" aria-label="TikTok da Banda Sould"><i class="fab fa-tiktok"></i></a>
             </div>
             <div class="row justify-content-center g-3">
