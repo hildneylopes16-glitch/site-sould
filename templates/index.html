@@ -27,7 +27,7 @@
 
         html { scroll-behavior: smooth; }
         
-        /* FUNDO CÓSMICO GERAL COM ESTRELAS E BRILHO */
+        /* FUNDO CÓSMICO GERAL COM ESTRELAS E BRILHO ATIVO NO CELULAR E PC */
         body { 
             background-color: #070709; 
             color: #ffffff; 
@@ -48,8 +48,8 @@
                 radial-gradient(2px 2px at 160px 120px, rgba(255,255,255,0.8), rgba(0,0,0,0)),
                 radial-gradient(1.5px 1.5px at 230px 180px, var(--saturn-gold), rgba(0,0,0,0));
             background-repeat: repeat;
-            background-size: 250px 250px;
-            opacity: 0.6;
+            background-size: 200px 200px;
+            opacity: 0.7;
             animation: twinkle 5s ease-in-out infinite alternate;
             pointer-events: none;
             z-index: 0;
@@ -57,7 +57,7 @@
 
         @keyframes twinkle {
             0% { opacity: 0.4; }
-            100% { opacity: 0.8; }
+            100% { opacity: 0.9; }
         }
         
         h1, h2, h3, h4, h5, .nav-link, .btn {
@@ -68,7 +68,7 @@
 
         /* NAVBAR */
         .navbar { border-bottom: 1px solid #222; z-index: 1000; background: rgba(0,0,0,0.95) !important; }
-        .navbar-toggler { border: none; color: var(--primary-red); font-size: 1.5rem; }
+        .navbar-toggler { border: none; color: var(--saturn-gold); font-size: 1.5rem; }
         .navbar-toggler:focus { box-shadow: none; outline: none; }
         
         .navbar-logo {
@@ -76,50 +76,63 @@
             width: auto;
             object-fit: cover;
             border-radius: 4px;
-            filter: drop-shadow(0px 0px 6px rgba(255, 0, 0, 0.6));
+            filter: drop-shadow(0px 0px 6px rgba(243, 210, 107, 0.6));
             transition: transform 0.3s ease, filter 0.3s ease;
         }
         .navbar-logo:hover {
             transform: scale(1.05);
-            filter: drop-shadow(0px 0px 10px rgba(255, 0, 0, 0.9));
+            filter: drop-shadow(0px 0px 10px rgba(243, 210, 107, 0.9));
         }
         
         @media (max-width: 991px) {
-            .navbar-collapse { background-color: #000; padding: 20px; text-align: center; }
-            .nav-link { font-size: 1.2rem; margin: 10px 0; border-bottom: 1px solid #111; }
+            .navbar-collapse { background-color: rgba(0,0,0,0.98); padding: 20px; text-align: center; border-bottom: 2px solid var(--saturn-gold); }
+            .nav-link { font-size: 1.2rem; margin: 10px 0; border-bottom: 1px solid #111; color: #fff !important; }
         }
 
-        /* PLANETAS SATURNO MAIS VISÍVEIS E FLUTUANTES */
+        /* PLANETAS SATURNO VISÍVEIS EM TODAS AS TELAS (PC E CELULAR) */
         .saturn-planet-graphic {
             position: absolute;
-            width: 120px;
-            height: 120px;
+            width: 90px;
+            height: 90px;
             background: radial-gradient(circle at 35% 35%, #f3d26b, #b3861d 70%, #4a350b);
             border-radius: 50%;
-            box-shadow: inset -15px -15px 30px rgba(0,0,0,0.9), 0 0 25px rgba(243, 210, 107, 0.4);
+            box-shadow: inset -12px -12px 25px rgba(0,0,0,0.9), 0 0 20px rgba(243, 210, 107, 0.5);
             pointer-events: none;
             z-index: 5;
             animation: floatPlanet 6s ease-in-out infinite;
         }
 
-        /* Anéis de Saturno realistas em CSS */
         .saturn-planet-graphic::before {
             content: '';
             position: absolute;
             top: 50%;
             left: 50%;
-            width: 200px;
-            height: 50px;
-            border: 4px solid rgba(243, 210, 107, 0.7);
+            width: 150px;
+            height: 38px;
+            border: 3px solid rgba(243, 210, 107, 0.8);
             border-radius: 50%;
             transform: translate(-50%, -50%) rotate(-25deg);
-            box-shadow: 0 0 10px rgba(243, 210, 107, 0.5);
+            box-shadow: 0 0 12px rgba(243, 210, 107, 0.6);
             pointer-events: none;
         }
 
         @keyframes floatPlanet {
             0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-15px) rotate(5deg); }
+            50% { transform: translateY(-12px) rotate(5deg); }
+        }
+
+        /* Ajustes de tamanho e visibilidade para celular */
+        @media (max-width: 768px) {
+            .saturn-planet-graphic {
+                width: 55px;
+                height: 55px;
+                opacity: 0.85; /* Mantém bem visível no mobile */
+            }
+            .saturn-planet-graphic::before {
+                width: 95px;
+                height: 24px;
+                border-width: 2px;
+            }
         }
 
         /* HERO SECTION */
@@ -161,7 +174,7 @@
         }
 
         .hero-content { position: relative; z-index: 2; width: 90%; }
-        .hero-content img { width: 100%; max-width: 450px; height: auto; filter: drop-shadow(0px 0px 18px rgba(255, 0, 0, 0.6)); }
+        .hero-content img { width: 100%; max-width: 450px; height: auto; filter: drop-shadow(0px 0px 18px rgba(243, 210, 107, 0.6)); }
 
         @media (max-width: 768px) {
             .hero-section { min-height: 75vh; }
@@ -220,7 +233,7 @@
         .article-card {
             background-color: var(--bg-card);
             border: 1px solid #2d2d2d;
-            border-top: 4px solid var(--primary-red);
+            border-top: 4px solid var(--saturn-gold);
             padding: 30px;
             border-radius: 8px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.6);
@@ -488,20 +501,15 @@
         footer { border-top: 2px solid #222; padding: 60px 0; background: #000; position: relative; z-index: 2; }
         .social-link { transition: color 0.3s ease; }
         .social-link:hover { color: var(--saturn-gold) !important; }
-
-        @media (max-width: 991px) {
-            .agenda-container-flex { flex-direction: column; }
-            .souldinho-box { width: 160px; order: -1; margin-bottom: 20px; }
-            .saturn-planet-graphic { display: none; } /* Oculta em celulares para não atrapalhar a leitura */
-        }
     </style>
 </head>
 <body>
 
-    <!-- PLANETAS SATURNO DESTAQUE FLUTUANDO PELO SITE -->
-    <div class="saturn-planet-graphic" style="top: 12%; right: 5%; transform: scale(0.9);"></div>
-    <div class="saturn-planet-graphic" style="top: 48%; left: 3%; transform: scale(0.6); animation-delay: 2.5s;"></div>
-    <div class="saturn-planet-graphic" style="top: 78%; right: 7%; transform: scale(0.75); animation-delay: 4.2s;"></div>
+    <!-- PLANETAS SATURNO ESPALHADOS PELO SITE (VISÍVEIS NO PC E NO CELULAR) -->
+    <div class="saturn-planet-graphic" style="top: 8%; right: 4%;"></div>
+    <div class="saturn-planet-graphic" style="top: 35%; left: 2%; animation-delay: 2s; transform: scale(0.7);"></div>
+    <div class="saturn-planet-graphic" style="top: 62%; right: 3%; animation-delay: 4s; transform: scale(0.85);"></div>
+    <div class="saturn-planet-graphic" style="top: 88%; left: 4%; animation-delay: 1.5s; transform: scale(0.65);"></div>
 
     <!-- NAVBAR -->
     <nav class="navbar navbar-expand-lg navbar-dark sticky-top bg-black">
@@ -578,7 +586,7 @@
         <section id="acervo-clipes" class="py-5 bg-black border-bottom border-secondary position-relative z-2">
             <div class="container">
                 <div class="text-center mb-5">
-                    <span class="text-warning fw-semibold text-uppercase tracking-wider small">ACERVO AUDIOVISUAL</span>
+                    <span class="text-warning fw-semibold text-uppercase tracking-wider small" style="color: var(--saturn-gold);">ACERVO AUDIOVISUAL</span>
                     <h3 class="display-6 fw-bold text-white mt-1">OUTROS CLIPES</h3>
                 </div>
                 <div class="row justify-content-center">
@@ -697,7 +705,7 @@
             <!-- HISTÓRICO DE SHOWS -->
             <div class="history-box text-start">
                 <div class="d-flex align-items-center mb-4">
-                    <i class="fa-solid fa-clock-rotate-left text-warning fs-3 me-3" style="color: var(--saturn-gold);"></i>
+                    <i class="fa-solid fa-clock-rotate-left fs-3 me-3" style="color: var(--saturn-gold);"></i>
                     <div>
                         <h4 class="fw-bold mb-0 text-white">SHOWS REALIZADOS EM 2026</h4>
                         <small class="text-secondary">Confira por onde a SOULD já passou neste ano</small>
@@ -706,159 +714,159 @@
                 
                 <div class="history-scroll">
                     <div class="history-item">
-                        <span><strong class="text-warning me-2" style="color: var(--saturn-gold);">25/09</strong> Choperia Don Juan (Acústico)</span>
+                        <span><strong class="me-2" style="color: var(--saturn-gold);">25/09</strong> Choperia Don Juan (Acústico)</span>
                         <span class="text-secondary small">Campos do Jordão</span>
                     </div>
                     <div class="history-item">
-                        <span><strong class="text-warning me-2" style="color: var(--saturn-gold);">19/09</strong> St Pauls</span>
+                        <span><strong class="me-2" style="color: var(--saturn-gold);">19/09</strong> St Pauls</span>
                         <span class="text-secondary small">São Paulo</span>
                     </div>
                     <div class="history-item">
-                        <span><strong class="text-warning me-2" style="color: var(--saturn-gold);">12/09</strong> Rustick</span>
+                        <span><strong class="me-2" style="color: var(--saturn-gold);">12/09</strong> Rustick</span>
                         <span class="text-secondary small">São José dos Campos</span>
                     </div>
                     <div class="history-item">
-                        <span><strong class="text-warning me-2" style="color: var(--saturn-gold);">11/09</strong> Safe Club</span>
+                        <span><strong class="me-2" style="color: var(--saturn-gold);">11/09</strong> Safe Club</span>
                         <span class="text-secondary small">Taubaté</span>
                     </div>
                     <div class="history-item">
-                        <span><strong class="text-warning me-2" style="color: var(--saturn-gold);">10/09</strong> Showtime</span>
+                        <span><strong class="me-2" style="color: var(--saturn-gold);">10/09</strong> Showtime</span>
                         <span class="text-secondary small">São José dos Campos</span>
                     </div>
                     <div class="history-item">
-                        <span><strong class="text-warning me-2" style="color: var(--saturn-gold);">29/08</strong> Emporium BEER</span>
+                        <span><strong class="me-2" style="color: var(--saturn-gold);">29/08</strong> Emporium BEER</span>
                         <span class="text-secondary small">Caçapava</span>
                     </div>
                     <div class="history-item">
-                        <span><strong class="text-warning me-2" style="color: var(--saturn-gold);">28/08</strong> Território Bar</span>
+                        <span><strong class="me-2" style="color: var(--saturn-gold);">28/08</strong> Território Bar</span>
                         <span class="text-secondary small">São José dos Campos</span>
                     </div>
                     <div class="history-item">
-                        <span><strong class="text-warning me-2" style="color: var(--saturn-gold);">22/08</strong> Georges Seven</span>
+                        <span><strong class="me-2" style="color: var(--saturn-gold);">22/08</strong> Georges Seven</span>
                         <span class="text-secondary small">São José dos Campos</span>
                     </div>
                     <div class="history-item">
-                        <span><strong class="text-warning me-2" style="color: var(--saturn-gold);">16/08</strong> HDC TAP House</span>
+                        <span><strong class="me-2" style="color: var(--saturn-gold);">16/08</strong> HDC TAP House</span>
                         <span class="text-secondary small">São José dos Campos</span>
                     </div>
                     <div class="history-item">
-                        <span><strong class="text-warning me-2" style="color: var(--saturn-gold);">15/08</strong> Shopping Esplanada</span>
+                        <span><strong class="me-2" style="color: var(--saturn-gold);">15/08</strong> Shopping Esplanada</span>
                         <span class="text-secondary small">São José dos Campos</span>
                     </div>
                     <div class="history-item">
-                        <span><strong class="text-warning me-2" style="color: var(--saturn-gold);">07/08</strong> Gilmour</span>
+                        <span><strong class="me-2" style="color: var(--saturn-gold);">07/08</strong> Gilmour</span>
                         <span class="text-secondary small">São José dos Campos</span>
                     </div>
                     <div class="history-item">
-                        <span><strong class="text-warning me-2" style="color: var(--saturn-gold);">02/08</strong> BDI</span>
+                        <span><strong class="me-2" style="color: var(--saturn-gold);">02/08</strong> BDI</span>
                         <span class="text-secondary small">Pindamonhangaba</span>
                     </div>
                     <div class="history-item">
-                        <span><strong class="text-warning me-2" style="color: var(--saturn-gold);">01/08</strong> Point do Churrasco</span>
+                        <span><strong class="me-2" style="color: var(--saturn-gold);">01/08</strong> Point do Churrasco</span>
                         <span class="text-secondary small">Caçapava</span>
                     </div>
                     <div class="history-item">
-                        <span><strong class="text-warning me-2" style="color: var(--saturn-gold);">18/07</strong> Território Bar Acústico - 21hs</span>
+                        <span><strong class="me-2" style="color: var(--saturn-gold);">18/07</strong> Território Bar Acústico - 21hs</span>
                         <span class="text-secondary small">São José dos Campos</span>
                     </div>
                     <div class="history-item">
-                        <span><strong class="text-warning me-2" style="color: var(--saturn-gold);">18/07</strong> Monsters Festival</span>
+                        <span><strong class="me-2" style="color: var(--saturn-gold);">18/07</strong> Monsters Festival</span>
                         <span class="text-secondary small">Taubaté</span>
                     </div>
                     <div class="history-item">
-                        <span><strong class="text-warning me-2" style="color: var(--saturn-gold);">12/07</strong> HDC Berggren TAP House - 16hs</span>
+                        <span><strong class="me-2" style="color: var(--saturn-gold);">12/07</strong> HDC Berggren TAP House - 16hs</span>
                         <span class="text-secondary small">São José dos Campos</span>
                     </div>
                     <div class="history-item">
-                        <span><strong class="text-warning me-2" style="color: var(--saturn-gold);">11/07</strong> Gilmour - 20hs</span>
+                        <span><strong class="me-2" style="color: var(--saturn-gold);">11/07</strong> Gilmour - 20hs</span>
                         <span class="text-secondary small">São José dos Campos</span>
                     </div>
                     <div class="history-item">
-                        <span><strong class="text-warning me-2" style="color: var(--saturn-gold);">05/07</strong> Cervejaria Sapucaí - 15hs</span>
+                        <span><strong class="me-2" style="color: var(--saturn-gold);">05/07</strong> Cervejaria Sapucaí - 15hs</span>
                         <span class="text-secondary small">São José dos Campos</span>
                     </div>
                     <div class="history-item">
-                        <span><strong class="text-warning me-2" style="color: var(--saturn-gold);">03/07</strong> Rustick Bar - 21hs</span>
+                        <span><strong class="me-2" style="color: var(--saturn-gold);">03/07</strong> Rustick Bar - 21hs</span>
                         <span class="text-secondary small">São José dos Campos</span>
                     </div>
                     <div class="history-item">
-                        <span><strong class="text-warning me-2" style="color: var(--saturn-gold);">29/06</strong> Gilmour - 16hs</span>
+                        <span><strong class="me-2" style="color: var(--saturn-gold);">29/06</strong> Gilmour - 16hs</span>
                         <span class="text-secondary small">São José dos Campos</span>
                     </div>
                     <div class="history-item">
-                        <span><strong class="text-warning me-2" style="color: var(--saturn-gold);">24/06</strong> HDC Berggren TAP House</span>
+                        <span><strong class="me-2" style="color: var(--saturn-gold);">24/06</strong> HDC Berggren TAP House</span>
                         <span class="text-secondary small">São José dos Campos</span>
                     </div>
                     <div class="history-item">
-                        <span><strong class="text-warning me-2" style="color: var(--saturn-gold);">20/06</strong> Hocus Pocus</span>
+                        <span><strong class="me-2" style="color: var(--saturn-gold);">20/06</strong> Hocus Pocus</span>
                         <span class="text-secondary small">São José dos Campos</span>
                     </div>
                     <div class="history-item">
-                        <span><strong class="text-warning me-2" style="color: var(--saturn-gold);">20/06</strong> Gilmour</span>
+                        <span><strong class="me-2" style="color: var(--saturn-gold);">20/06</strong> Gilmour</span>
                         <span class="text-secondary small">São José dos Campos</span>
                     </div>
                     <div class="history-item">
-                        <span><strong class="text-warning me-2" style="color: var(--saturn-gold);">05/06</strong> HUB</span>
+                        <span><strong class="me-2" style="color: var(--saturn-gold);">05/06</strong> HUB</span>
                         <span class="text-secondary small">São Bento do Sapucaí</span>
                     </div>
                     <div class="history-item">
-                        <span><strong class="text-warning me-2" style="color: var(--saturn-gold);">30/05</strong> Anexo 2.0</span>
+                        <span><strong class="me-2" style="color: var(--saturn-gold);">30/05</strong> Anexo 2.0</span>
                         <span class="text-secondary small">Jacareí</span>
                     </div>
                     <div class="history-item">
-                        <span><strong class="text-warning me-2" style="color: var(--saturn-gold);">24/05</strong> Parque pôr do sol</span>
+                        <span><strong class="me-2" style="color: var(--saturn-gold);">24/05</strong> Parque pôr do sol</span>
                         <span class="text-secondary small">Taubaté</span>
                     </div>
                     <div class="history-item">
-                        <span><strong class="text-warning me-2" style="color: var(--saturn-gold);">23/05</strong> Georges Seven (Acústico)</span>
+                        <span><strong class="me-2" style="color: var(--saturn-gold);">23/05</strong> Georges Seven (Acústico)</span>
                         <span class="text-secondary small">São José dos Campos</span>
                     </div>
                     <div class="history-item">
-                        <span><strong class="text-warning me-2" style="color: var(--saturn-gold);">08/05</strong> Gilmour</span>
+                        <span><strong class="me-2" style="color: var(--saturn-gold);">08/05</strong> Gilmour</span>
                         <span class="text-secondary small">São José dos Campos</span>
                     </div>
                     <div class="history-item">
-                        <span><strong class="text-warning me-2" style="color: var(--saturn-gold);">02/05</strong> Anexo 2.0</span>
+                        <span><strong class="me-2" style="color: var(--saturn-gold);">02/05</strong> Anexo 2.0</span>
                         <span class="text-secondary small">Jacareí</span>
                     </div>
                     <div class="history-item">
-                        <span><strong class="text-warning me-2" style="color: var(--saturn-gold);">01/05</strong> Quintal da Avenida</span>
+                        <span><strong class="me-2" style="color: var(--saturn-gold);">01/05</strong> Quintal da Avenida</span>
                         <span class="text-secondary small">Paraibuna</span>
                     </div>
                     <div class="history-item">
-                        <span><strong class="text-warning me-2" style="color: var(--saturn-gold);">26/03</strong> A hora do chopp</span>
+                        <span><strong class="me-2" style="color: var(--saturn-gold);">26/03</strong> A hora do chopp</span>
                         <span class="text-secondary small">São José dos Campos</span>
                     </div>
                     <div class="history-item">
-                        <span><strong class="text-warning me-2" style="color: var(--saturn-gold);">20/04</strong> Gilmour</span>
+                        <span><strong class="me-2" style="color: var(--saturn-gold);">20/04</strong> Gilmour</span>
                         <span class="text-secondary small">São José dos Campos</span>
                     </div>
                     <div class="history-item">
-                        <span><strong class="text-warning me-2" style="color: var(--saturn-gold);">19/04</strong> ST PAUL’s PUB</span>
+                        <span><strong class="me-2" style="color: var(--saturn-gold);">19/04</strong> ST PAUL’s PUB</span>
                         <span class="text-secondary small">São Paulo</span>
                     </div>
                     <div class="history-item">
-                        <span><strong class="text-warning me-2" style="color: var(--saturn-gold);">20/03</strong> Daruma Rock Bar</span>
+                        <span><strong class="me-2" style="color: var(--saturn-gold);">20/03</strong> Daruma Rock Bar</span>
                         <span class="text-secondary small">Jacareí</span>
                     </div>
                     <div class="history-item">
-                        <span><strong class="text-warning me-2" style="color: var(--saturn-gold);">13/03</strong> Gilmour</span>
+                        <span><strong class="me-2" style="color: var(--saturn-gold);">13/03</strong> Gilmour</span>
                         <span class="text-secondary small">São José dos Campos</span>
                     </div>
                     <div class="history-item">
-                        <span><strong class="text-warning me-2" style="color: var(--saturn-gold);">17/02</strong> Gilmour</span>
+                        <span><strong class="me-2" style="color: var(--saturn-gold);">17/02</strong> Gilmour</span>
                         <span class="text-secondary small">São José dos Campos</span>
                     </div>
                     <div class="history-item">
-                        <span><strong class="text-warning me-2" style="color: var(--saturn-gold);">31/01</strong> Gato Preto Pub</span>
+                        <span><strong class="me-2" style="color: var(--saturn-gold);">31/01</strong> Gato Preto Pub</span>
                         <span class="text-secondary small">Taubaté</span>
                     </div>
                     <div class="history-item">
-                        <span><strong class="text-warning me-2" style="color: var(--saturn-gold);">30/01</strong> Hocus Pocus</span>
+                        <span><strong class="me-2" style="color: var(--saturn-gold);">30/01</strong> Hocus Pocus</span>
                         <span class="text-secondary small">São José dos Campos</span>
                     </div>
                     <div class="history-item">
-                        <span><strong class="text-warning me-2" style="color: var(--saturn-gold);">02/01</strong> Gilmour</span>
+                        <span><strong class="me-2" style="color: var(--saturn-gold);">02/01</strong> Gilmour</span>
                         <span class="text-secondary small">São José dos Campos</span>
                     </div>
                 </div>
@@ -892,35 +900,35 @@
                 <div class="col-6 col-md-4 col-lg-2">
                     <div class="integrante-card">
                         <div class="integrante-img-container"><img src="{{ url_for('static', filename='img/vocal.jpg') }}" alt="Bruno - Vocal"></div>
-                        <div class="mt-3 text-warning fw-bold fs-5" style="color: var(--saturn-gold) !important;">BRUNO</div>
+                        <div class="mt-3 fw-bold fs-5" style="color: var(--saturn-gold) !important;">BRUNO</div>
                         <div class="small text-secondary fw-semibold">VOCAL</div>
                     </div>
                 </div>
                 <div class="col-6 col-md-4 col-lg-2">
                     <div class="integrante-card">
                         <div class="integrante-img-container"><img src="{{ url_for('static', filename='img/guitarra1.jpg') }}" alt="Evandro - Guitarra"></div>
-                        <div class="mt-3 text-warning fw-bold fs-5" style="color: var(--saturn-gold) !important;">EVANDRO</div>
+                        <div class="mt-3 fw-bold fs-5" style="color: var(--saturn-gold) !important;">EVANDRO</div>
                         <div class="small text-secondary fw-semibold">GUITARRA</div>
                     </div>
                 </div>
                 <div class="col-6 col-md-4 col-lg-2">
                     <div class="integrante-card">
                         <div class="integrante-img-container"><img src="{{ url_for('static', filename='img/guitarra2.jpg') }}" alt="Marcio - Guitarra"></div>
-                        <div class="mt-3 text-warning fw-bold fs-5" style="color: var(--saturn-gold) !important;">MARCIO</div>
+                        <div class="mt-3 fw-bold fs-5" style="color: var(--saturn-gold) !important;">MARCIO</div>
                         <div class="small text-secondary fw-semibold">GUITARRA</div>
                     </div>
                 </div>
                 <div class="col-6 col-md-4 col-lg-2">
                     <div class="integrante-card">
                         <div class="integrante-img-container"><img src="{{ url_for('static', filename='img/baixo.jpg') }}" alt="Matheus - Baixo"></div>
-                        <div class="mt-3 text-warning fw-bold fs-5" style="color: var(--saturn-gold) !important;">MATHEUS</div>
+                        <div class="mt-3 fw-bold fs-5" style="color: var(--saturn-gold) !important;">MATHEUS</div>
                         <div class="small text-secondary fw-semibold">BAIXO</div>
                     </div>
                 </div>
                 <div class="col-6 col-md-4 col-lg-2">
                     <div class="integrante-card">
                         <div class="integrante-img-container"><img src="{{ url_for('static', filename='img/bateria.jpg') }}" alt="Hildney - Bateria"></div>
-                        <div class="mt-3 text-warning fw-bold fs-5" style="color: var(--saturn-gold) !important;">HILDNEY</div>
+                        <div class="mt-3 fw-bold fs-5" style="color: var(--saturn-gold) !important;">HILDNEY</div>
                         <div class="small text-secondary fw-semibold">BATERIA</div>
                     </div>
                 </div>
@@ -943,7 +951,7 @@
                         </div>
                     </div>
                     <div class="col-lg-7 ps-lg-5 text-lg-start">
-                        <h3 class="text-warning fw-bold mb-3 display-6" style="color: var(--saturn-gold) !important;">SIDNEY LOPES</h3>
+                        <h3 class="fw-bold mb-3 display-6" style="color: var(--saturn-gold) !important;">SIDNEY LOPES</h3>
                         <p class="lead text-white-50">
                             Toda grande banda precisa de um olhar que capture a sua essência. <strong>Sidney Lopes</strong> não é apenas o fotógrafo oficial da SOULD; ele é o tradutor da nossa energia em frames. 
                         </p>
@@ -953,7 +961,7 @@
                         <div class="mt-4">
                             <div class="mb-3">
                                 <a href="https://www.instagram.com/Osidneylopes" target="_blank" rel="noopener" class="insta-sidney fw-semibold">
-                                    <i class="fab fa-instagram text-warning me-1" style="color: var(--saturn-gold);"></i> @Osidneylopes
+                                    <i class="fab fa-instagram me-1" style="color: var(--saturn-gold);"></i> @Osidneylopes
                                 </a>
                             </div>
                             <a href="https://wa.me/5512981606958?text=Olá Sidney! Vi seu trabalho no site da Banda SOULD e gostaria de fazer um orçamento." target="_blank" rel="noopener" class="btn-sidney">
@@ -978,7 +986,7 @@
                             <h5 class="fw-bold mb-3 text-white">CAMISETA BANDA SOULD</h5>
                             <div class="shop-img-desc">
                                 ➡️ Do P ao GG (Unissex/Babylook) – <strong>R$ 60,00</strong><br>
-                                ➡️️ G1 ao G2 – <strong>R$ 65,00</strong><br>
+                                ➡️ G1 ao G2 – <strong>R$ 65,00</strong><br>
                                 ➡️ G3 ao G4 – <strong>R$ 70,00</strong>
                             </div>
                             <a href="https://wa.me/5512982147326?text=Olá! Tenho interesse em comprar a Camiseta Banda SOULD." target="_blank" rel="noopener" class="btn-buy">COMPRAR</a>
@@ -993,7 +1001,7 @@
                             <div class="shop-img-desc">
                                 Boné oficial bordado com regulagem traseira snapback. Material premium de alta durabilidade.
                             </div>
-                            <p class="text-warning fs-3 fw-bold mb-3" style="color: var(--saturn-gold) !important;">R$ 80,00</p>
+                            <p class="fs-3 fw-bold mb-3" style="color: var(--saturn-gold) !important;">R$ 80,00</p>
                             <a href="https://wa.me/5512974106100?text=Olá! Tenho interesse em comprar o Boné SOULD." target="_blank" rel="noopener" class="btn-buy">COMPRAR</a>
                         </div>
                     </div>
