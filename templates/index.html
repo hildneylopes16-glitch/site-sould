@@ -18,6 +18,7 @@
         :root {
             --primary-red: #ff0000;
             --primary-red-hover: #cc0000;
+            --saturn-gold: #e5c158;
             --bg-dark: #121212;
             --bg-card: #1a1a1a;
             --font-heading: 'Oswald', sans-serif;
@@ -108,21 +109,59 @@
             .hero-content p { font-size: 0.9rem; letter-spacing: 2px !important; margin-top: 10px; }
         }
 
-        /* SEÇÃO LANÇAMENTO */
-        #lancamento { background: #070707; padding: 80px 0; border-bottom: 1px solid #222; }
+        /* SEÇÃO LANÇAMENTO - TEMA SATURNO (ÓRBITAS E BRILHO CÓSMICO) */
+        #lancamento { 
+            background: radial-gradient(circle at 30% 50%, #1a120b 0%, #070707 70%); 
+            padding: 90px 0; 
+            border-bottom: 1px solid #222;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Efeito de Anel Orbital Decorativo de Fundo */
+        #lancamento::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 20%;
+            width: 400px;
+            height: 400px;
+            border: 1px dashed rgba(229, 193, 88, 0.15);
+            border-radius: 50%;
+            transform: translateY(-50%) rotate(25deg);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        #lancamento .container { position: relative; z-index: 2; }
+
+        .saturn-badge {
+            background: linear-gradient(135deg, var(--saturn-gold), #b38f27);
+            color: #000;
+            font-weight: 800;
+            letter-spacing: 2px;
+        }
+
+        .saturn-title {
+            background: linear-gradient(to right, #ffffff, var(--saturn-gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 25px rgba(229, 193, 88, 0.3);
+        }
+
         .video-container { 
             position: relative; 
             padding-bottom: 56.25%; 
             height: 0; 
             overflow: hidden; 
             max-width: 100%; 
-            border: 2px solid #333; 
-            border-radius: 8px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-            transition: border-color 0.3s ease;
+            border: 2px solid rgba(229, 193, 88, 0.4); 
+            border-radius: 12px;
+            box-shadow: 0 0 30px rgba(229, 193, 88, 0.15), 0 5px 15px rgba(0,0,0,0.8);
+            transition: all 0.4s ease;
         }
         .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
-        .video-container:hover { border-color: var(--primary-red); }
+        .video-container:hover { border-color: var(--saturn-gold); box-shadow: 0 0 40px rgba(229, 193, 88, 0.3); }
 
         /* SEÇÃO MATÉRIAS (GRID DESIGN) */
         #materias { 
@@ -447,7 +486,7 @@
     </header>
 
     <main>
-        <!-- SEÇÃO LANÇAMENTO PRINCIPAL: SATURNO -->
+        <!-- SEÇÃO LANÇAMENTO PRINCIPAL: SATURNO ( COM EFEITO CÓSMICO ) -->
         <section id="lancamento">
             <div class="container">
                 <div class="row align-items-center g-5">
@@ -457,8 +496,8 @@
                         </div>
                     </div>
                     <div class="col-lg-5 text-center text-lg-start">
-                        <span class="badge bg-danger mb-3 px-3 py-2 fs-6">NOVO SINGLE &bull; LYRIC VIDEO</span>
-                        <h2 class="text-white fw-bold mb-3 display-6">SATURNO</h2>
+                        <span class="badge saturn-badge mb-3 px-3 py-2 fs-6">NOVO SINGLE &bull; LYRIC VIDEO</span>
+                        <h2 class="saturn-title fw-bold mb-3 display-5">SATURNO</h2>
                         <p class="bio-text text-lg-start mb-4">
                             Ouça agora o nosso novo single autoral <strong>"SATURNO"</strong>! Disponível em todas as plataformas digitais e com lyric video completo no YouTube. Sinta toda a energia e emoção dessa nova fase da banda.
                         </p>
@@ -879,7 +918,7 @@
                             <h5 class="fw-bold mb-3">CAMISETA BANDA SOULD</h5>
                             <div class="shop-img-desc">
                                 ➡️ Do P ao GG (Unissex/Babylook) – <strong>R$ 60,00</strong><br>
-                                ➡️ G1 ao G2 – <strong>R$ 65,00</strong><br>
+                                ➡️️ G1 ao G2 – <strong>R$ 65,00</strong><br>
                                 ➡️ G3 ao G4 – <strong>R$ 70,00</strong>
                             </div>
                             <a href="https://wa.me/5512982147326?text=Olá! Tenho interesse em comprar a Camiseta Banda SOULD." target="_blank" rel="noopener" class="btn-buy">COMPRAR</a>
@@ -951,7 +990,7 @@
             <div class="mb-4">
                 <a href="https://www.instagram.com/bandasould" target="_blank" rel="noopener" class="text-white social-link fs-2 mx-3" aria-label="Instagram da Banda Sould"><i class="fab fa-instagram"></i></a>
                 <a href="https://open.spotify.com" target="_blank" rel="noopener" class="text-white social-link fs-2 mx-3" aria-label="Spotify da Banda Sould"><i class="fab fa-spotify"></i></a>
-                <a href="https://www.tiktok.com/@bandasould?_r=1&_t=ZS-98H71oiWRM1" target="_blank" rel="noopener" class="text-white social-link fs-2 mx-3" aria-label="TikTok da Banda Sould"><i class="fab fa-tiktok"></i></a>
+                <a href="https://www.tiktok.com/@bandasould?_r=1&_t=ZS-98H71oiWRM1" target="_blank" rel="noopener" class="text-white social-link fs-2 mx-3" aria-label="TikTok daOrbital Banda Sould"><i class="fab fa-tiktok"></i></a>
             </div>
             <div class="row justify-content-center g-3">
                 <div class="col-md-5">
