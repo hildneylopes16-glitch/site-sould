@@ -27,7 +27,7 @@
 
         html { scroll-behavior: smooth; }
         
-        /* FUNDO CÓSMICO GERAL COM ESTRELAS E BRILHO ATIVO NO CELULAR E PC */
+        /* FUNDO CÓSMICO GERAL COM ESTRELAS E BRILHO */
         body { 
             background-color: #070709; 
             color: #ffffff; 
@@ -89,16 +89,16 @@
             .nav-link { font-size: 1.2rem; margin: 10px 0; border-bottom: 1px solid #111; color: #fff !important; }
         }
 
-        /* PLANETAS SATURNO VISÍVEIS EM TODAS AS TELAS (PC E CELULAR) */
+        /* PLANETAS SATURNO POSICIONADOS NAS MARGENS (SEM COBRIR TEXTOS) */
         .saturn-planet-graphic {
             position: absolute;
-            width: 90px;
-            height: 90px;
+            width: 80px;
+            height: 80px;
             background: radial-gradient(circle at 35% 35%, #f3d26b, #b3861d 70%, #4a350b);
             border-radius: 50%;
             box-shadow: inset -12px -12px 25px rgba(0,0,0,0.9), 0 0 20px rgba(243, 210, 107, 0.5);
             pointer-events: none;
-            z-index: 5;
+            z-index: 1;
             animation: floatPlanet 6s ease-in-out infinite;
         }
 
@@ -107,8 +107,8 @@
             position: absolute;
             top: 50%;
             left: 50%;
-            width: 150px;
-            height: 38px;
+            width: 130px;
+            height: 34px;
             border: 3px solid rgba(243, 210, 107, 0.8);
             border-radius: 50%;
             transform: translate(-50%, -50%) rotate(-25deg);
@@ -118,21 +118,12 @@
 
         @keyframes floatPlanet {
             0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-12px) rotate(5deg); }
+            50% { transform: translateY(-10px) rotate(5deg); }
         }
 
-        /* Ajustes de tamanho e visibilidade para celular */
-        @media (max-width: 768px) {
-            .saturn-planet-graphic {
-                width: 55px;
-                height: 55px;
-                opacity: 0.85; /* Mantém bem visível no mobile */
-            }
-            .saturn-planet-graphic::before {
-                width: 95px;
-                height: 24px;
-                border-width: 2px;
-            }
+        /* Oculta apenas em telas muito estreitas para garantir zero sobreposição nos textos */
+        @media (max-width: 992px) {
+            .saturn-planet-graphic { display: none; }
         }
 
         /* HERO SECTION */
@@ -269,7 +260,7 @@
             margin-bottom: 20px;
         }
 
-        /* AGENDA & SOULDINHO */
+        /* AGENDA & SOULDINHO (AJUSTADO PARA MOBILE NÃO CORTAR) */
         #agenda { padding: 80px 0; position: relative; z-index: 2; background: rgba(10,10,13,0.95); }
         .agenda-container-flex {
             display: flex; align-items: center; justify-content: center;
@@ -350,24 +341,36 @@
             font-size: 0.95rem;
         }
 
-        @media (max-width: 768px) {
+        /* RESPONSIVIDADE ESPECÍFICA PARA A AGENDA NO CELULAR */
+        @media (max-width: 991px) {
+            .agenda-container-flex { 
+                flex-direction: column-reverse; /* Coloca o mascote em cima ou embaixo sem espremer a lista */
+                gap: 20px;
+            }
+            .souldinho-box { 
+                width: 200px; 
+                margin: 0 auto 10px auto; 
+            }
+            .agenda-wrapper {
+                max-height: 450px;
+                padding-right: 0;
+            }
             .list-group-item {
-                flex-direction: column !important;
-                align-items: flex-start !important;
-                gap: 12px;
+                flex-direction: row !important; /* Mantém lado a lado no card para evitar corte */
+                align-items: center !important;
+                justify-content: space-between !important;
+                padding: 15px !important;
             }
             .show-badge {
-                width: 100%;
-                display: block;
-                padding: 8px 12px !important;
-                font-size: 0.9rem;
+                width: auto !important;
+                display: inline-block !important;
+                padding: 6px 10px !important;
+                font-size: 0.8rem;
             }
-            .article-card { padding: 25px 20px; }
-            .article-title { font-size: 1.3rem; }
             .history-item {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 4px;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
             }
         }
 
@@ -505,7 +508,7 @@
 </head>
 <body>
 
-    <!-- PLANETAS SATURNO ESPALHADOS PELO SITE (VISÍVEIS NO PC E NO CELULAR) -->
+    <!-- PLANETAS SATURNO (APENAS NAS LATERAIS DE TELAS MAIORES, ZERO INTERFERÊNCIA NO TEXTO MOBILE) -->
     <div class="saturn-planet-graphic" style="top: 8%; right: 4%;"></div>
     <div class="saturn-planet-graphic" style="top: 35%; left: 2%; animation-delay: 2s; transform: scale(0.7);"></div>
     <div class="saturn-planet-graphic" style="top: 62%; right: 3%; animation-delay: 4s; transform: scale(0.85);"></div>
