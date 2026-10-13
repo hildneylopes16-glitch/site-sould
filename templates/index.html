@@ -453,7 +453,19 @@
             flex-direction: column; 
         }
         .shop-card:hover { border-color: var(--saturn-gold); transform: translateY(-4px); }
-        .shop-img-container { width: 100%; aspect-ratio: 1/1; overflow: hidden; margin-bottom: 15px; background: #121212; border-radius: 4px; }
+        .shop-img-container { 
+            width: 100%; 
+            aspect-ratio: 1/1; 
+            overflow: hidden; 
+            margin-bottom: 15px; 
+            background: #16161c; 
+            border: 1px solid #332b14;
+            border-radius: 6px; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+        }
         .shop-img { width: 100%; height: 100%; object-fit: contain; }
         .shop-img-desc { font-size: 0.9rem; color: #bbb; margin-bottom: 15px; text-align: left; line-height: 1.5; }
         .btn-buy { 
@@ -484,20 +496,34 @@
 
         /* PARCEIROS */
         #parceiros { background-color: #0a0a0e; border-top: 1px solid #222; padding: 60px 0; position: relative; z-index: 2; }
-        .img-parceiro-efeito {
-            max-width: 220px;
-            width: 100%;
-            height: auto;
-            background: transparent !important;
-            border: none !important;
-            filter: grayscale(100%);
-            transform: scale(1);
-            transition: filter 0.4s ease, transform 0.4s ease;
-            margin-top: 10px;
+        .parceiro-card-box {
+            background: #14141a;
+            border: 1px solid #332b14;
+            border-radius: 8px;
+            padding: 20px;
+            height: 130px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
         }
-        .img-parceiro-efeito:hover {
+        .parceiro-card-box:hover {
+            border-color: var(--saturn-gold);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(243, 210, 107, 0.15);
+        }
+        .img-parceiro-efeito {
+            max-width: 100%;
+            max-height: 85px;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            filter: grayscale(100%);
+            transition: filter 0.4s ease, transform 0.4s ease;
+        }
+        .parceiro-card-box:hover .img-parceiro-efeito {
             filter: grayscale(0%);
-            transform: scale(1.1);
+            transform: scale(1.05);
         }
 
         footer { border-top: 2px solid #222; padding: 60px 0; background: #000; position: relative; z-index: 2; }
@@ -1037,21 +1063,21 @@
             <div class="container text-center">
                 <span class="text-warning fw-semibold text-uppercase tracking-wider small" style="color: var(--saturn-gold);">APOIADORES</span>
                 <h3 class="display-6 fw-bold text-white mt-1 mb-4">NOSSOS PARCEIROS</h3>
-                <div class="row justify-content-center align-items-center g-5">
-                    <div class="col-6 col-md-3">
-                        <a href="https://www.instagram.com/hdc_taphouse/" target="_blank" rel="noopener">
-                            <img src="{{ url_for('static', filename='img/parceiro1.png') }}" alt="HDC Tap House" class="img-parceiro-efeito">
-                        </a>
+                <div class="row justify-content-center align-items-center g-4">
+                    <div class="col-6 col-md-4">
+                        <div class="parceiro-card-box">
+                            <img src="{{ url_for('static', filename='img/servboy.png') }}" alt="Servboy Transportes" class="img-parceiro-efeito">
+                        </div>
                     </div>
-                    <div class="col-6 col-md-3">
-                        <a href="https://www.instagram.com/emporiumbeer/" target="_blank" rel="noopener">
-                            <img src="{{ url_for('static', filename='img/parceiro2.png') }}" alt="Emporium Beer" class="img-parceiro-efeito">
-                        </a>
+                    <div class="col-6 col-md-4">
+                        <div class="parceiro-card-box">
+                            <img src="{{ url_for('static', filename='img/casa90.png') }}" alt="Casa 90 Music Studio" class="img-parceiro-efeito">
+                        </div>
                     </div>
-                    <div class="col-6 col-md-3">
-                        <a href="https://www.instagram.com/gilmourpub/" target="_blank" rel="noopener">
-                            <img src="{{ url_for('static', filename='img/parceiro3.png') }}" alt="Gilmour Pub" class="img-parceiro-efeito">
-                        </a>
+                    <div class="col-6 col-md-4">
+                        <div class="parceiro-card-box">
+                            <img src="{{ url_for('static', filename='img/sigma.png') }}" alt="Sigma Música" class="img-parceiro-efeito">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1062,7 +1088,8 @@
     <footer id="contato" class="text-center text-white">
         <div class="container">
             <h2 class="fw-bold mb-4" style="letter-spacing: 2px;">SOULD</h2>
-            <p class="text-secondary mb-4">São José dos Campos / SP &bull; Cont contato@bandasould.com.br</p>
+            <p class="text-secondary mb-2">São José dos Campos / SP &bull; <a href="https://www.bandasould.com.br" class="text-warning text-decoration-none">www.bandasould.com.br</a></p>
+            <p class="text-secondary mb-4">Contato: contato@bandasould.com.br</p>
             
             <div class="d-flex justify-content-center gap-4 mb-5 fs-4">
                 <a href="https://www.instagram.com/bandasould" target="_blank" rel="noopener" class="text-white social-link"><i class="fab fa-instagram"></i></a>
