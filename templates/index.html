@@ -453,19 +453,7 @@
             flex-direction: column; 
         }
         .shop-card:hover { border-color: var(--saturn-gold); transform: translateY(-4px); }
-        .shop-img-container { 
-            width: 100%; 
-            aspect-ratio: 1/1; 
-            overflow: hidden; 
-            margin-bottom: 15px; 
-            background: #16161c; 
-            border: 1px solid #332b14;
-            border-radius: 6px; 
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 10px;
-        }
+        .shop-img-container { width: 100%; aspect-ratio: 1/1; overflow: hidden; margin-bottom: 15px; background: #121212; border-radius: 4px; }
         .shop-img { width: 100%; height: 100%; object-fit: contain; }
         .shop-img-desc { font-size: 0.9rem; color: #bbb; margin-bottom: 15px; text-align: left; line-height: 1.5; }
         .btn-buy { 
@@ -496,34 +484,20 @@
 
         /* PARCEIROS */
         #parceiros { background-color: #0a0a0e; border-top: 1px solid #222; padding: 60px 0; position: relative; z-index: 2; }
-        .parceiro-card-box {
-            background: #14141a;
-            border: 1px solid #332b14;
-            border-radius: 8px;
-            padding: 20px;
-            height: 130px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-        }
-        .parceiro-card-box:hover {
-            border-color: var(--saturn-gold);
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(243, 210, 107, 0.15);
-        }
         .img-parceiro-efeito {
-            max-width: 100%;
-            max-height: 85px;
-            width: auto;
+            max-width: 220px;
+            width: 100%;
             height: auto;
-            object-fit: contain;
+            background: transparent !important;
+            border: none !important;
             filter: grayscale(100%);
+            transform: scale(1);
             transition: filter 0.4s ease, transform 0.4s ease;
+            margin-top: 10px;
         }
-        .parceiro-card-box:hover .img-parceiro-efeito {
+        .img-parceiro-efeito:hover {
             filter: grayscale(0%);
-            transform: scale(1.05);
+            transform: scale(1.1);
         }
 
         footer { border-top: 2px solid #222; padding: 60px 0; background: #000; position: relative; z-index: 2; }
@@ -601,7 +575,7 @@
                             <a href="https://www.youtube.com/watch?v=IuA1GIQfYUQ" target="_blank" rel="noopener" class="btn btn-danger btn-lg rounded-1 px-4 py-3 fw-bold">
                                 <i class="fab fa-youtube me-2"></i> ASSISTIR NO YOUTUBE
                             </a>
-                            <a href="https://open.spotify.com/intl-pt/album/51jogS9xJF3h7MC6WPySpq?si=mozGUg3XTKuyyq31XeUD6Q" target="_blank" rel="noopener" class="btn btn-outline-light btn-lg rounded-1 px-4 py-3 fw-bold" style="border-color: var(--saturn-gold); color: var(--saturn-gold);">
+                            <a href="https://open.spotify.com" target="_blank" rel="noopener" class="btn btn-outline-light btn-lg rounded-1 px-4 py-3 fw-bold" style="border-color: var(--saturn-gold); color: var(--saturn-gold);">
                                 <i class="fab fa-spotify me-2 text-success"></i> OUVIR NO SPOTIFY
                             </a>
                         </div>
@@ -991,12 +965,17 @@
                         <p class="lead text-white-50">
                             Toda grande banda precisa de um olhar que capture a sua essência. <strong>Sidney Lopes</strong> não é apenas o fotógrafo oficial da SOULD; ele é o tradutor da nossa energia em frames. 
                         </p>
-                        <p class="text-secondary mb-4">
-                            Com um estilo dinâmico e atento a cada detalhe nos palcos, Sidney eterniza a sintonia entre a banda e o público. Acompanhe o trabalho dele e confira os registros dos nossos shows nas redes sociais.
+                        <p class="bio-text text-lg-start">
+                            Como Videomaker e Filmmaker de elite, Sidney realiza trabalhos fantásticos, transformando o suor do palco e o peso das guitavras em arte visual imersiva. Com uma técnica refinada, ele imortaliza a atitude Hardcore e a vibração do Pop Rock, garantindo que a alma da banda vai muito além do som.
                         </p>
-                        <div class="d-flex align-items-center gap-3 flex-wrap">
-                            <a href="https://www.instagram.com/sidneylopes.ph/" target="_blank" rel="noopener" class="btn-sidney">
-                                <i class="fab fa-instagram me-2"></i> VER PORTFÓLIO NO INSTAGRAM
+                        <div class="mt-4">
+                            <div class="mb-3">
+                                <a href="https://www.instagram.com/Osidneylopes" target="_blank" rel="noopener" class="insta-sidney fw-semibold">
+                                    <i class="fab fa-instagram me-1" style="color: var(--saturn-gold);"></i> @Osidneylopes
+                                </a>
+                            </div>
+                            <a href="https://wa.me/5512981606958?text=Olá Sidney! Vi seu trabalho no site da Banda SOULD e gostaria de fazer um orçamento." target="_blank" rel="noopener" class="btn-sidney">
+                                <i class="fab fa-whatsapp me-2"></i> ORÇAMENTO COM FOTÓGRAFO
                             </a>
                         </div>
                     </div>
@@ -1005,79 +984,72 @@
         </section>
 
         <!-- LOJA -->
-        <section id="loja" class="py-5">
-            <div class="container text-center">
-                <h2 class="mb-2 display-5 fw-bold">LOJA SOULD</h2>
-                <p class="text-secondary mb-5">Adquira os produtos oficiais da banda e vista a camisa do rock nacional</p>
-                
+        <section id="loja" class="py-5 text-center">
+            <div class="container">
+                <h2 class="mb-5 display-5 fw-bold">LOJA OFICIAL</h2>
                 <div class="row g-4 justify-content-center">
-                    <!-- Camiseta Clássica Sould -->
-                    <div class="col-md-6 col-lg-4">
+                    <div class="col-md-5 col-lg-4">
                         <div class="shop-card">
                             <div class="shop-img-container">
-                                <img src="{{ url_for('static', filename='img/camiseta.png') }}" alt="Camiseta Sould" class="shop-img">
+                                <img src="{{ url_for('static', filename='img/camisa.jpg') }}" class="shop-img" alt="Camiseta Banda SOULD">
                             </div>
-                            <h4 class="text-white fw-bold mb-2">CAMISETA OFICIAL SOULD</h4>
-                            <p class="shop-img-desc">Camiseta em malha 100% algodão, alta durabilidade, estampa frontal exclusiva com a identidade da banda. Conforto e atitude para o dia a dia e para os shows.</p>
-                            <a href="https://wa.me/5512997?text=Olá!%20Gostaria%20de%20saber%20mais%20sobre%20a%20Camiseta%20Oficial%20da%20SOULD." target="_blank" rel="noopener" class="btn-buy">
-                                <i class="fab fa-whatsapp me-2"></i> COMPRAR VIA WHATSAPP
-                            </a>
+                            <h5 class="fw-bold mb-3 text-white">CAMISETA BANDA SOULD</h5>
+                            <div class="shop-img-desc">
+                                ➡️ Do P ao GG (Unissex/Babylook) – <strong>R$ 60,00</strong><br>
+                                ➡️ G1 ao G2 – <strong>R$ 65,00</strong><br>
+                                ➡️ G3 ao G4 – <strong>R$ 70,00</strong>
+                            </div>
+                            <a href="https://wa.me/5512982147326?text=Olá! Tenho interesse em comprar a Camiseta Banda SOULD." target="_blank" rel="noopener" class="btn-buy">COMPRAR</a>
                         </div>
                     </div>
-
-                    <!-- Caneca / Copo Sould -->
-                    <div class="col-md-6 col-lg-4">
+                    <div class="col-md-5 col-lg-4">
                         <div class="shop-card">
                             <div class="shop-img-container">
-                                <img src="{{ url_for('static', filename='img/copo.png') }}" alt="Copo Sould" class="shop-img">
+                                <img src="{{ url_for('static', filename='img/bone.jpg') }}" class="shop-img" alt="Boné SOULD">
                             </div>
-                            <h4 class="text-white fw-bold mb-2">COPO / CANECA SOULD</h4>
-                            <p class="shop-img-desc">Copo térmico ou caneca personalizada com o logo da banda. Perfeito para acompanhar você nos rolês, churrascos e nos dias de show com muita personalidade.</p>
-                            <a href="https://wa.me/5512997?text=Olá!%20Gostaria%20de%20saber%20mais%20sobre%20o%20Copo/Caneca%20da%20SOULD." target="_blank" rel="noopener" class="btn-buy">
-                                <i class="fab fa-whatsapp me-2"></i> COMPRAR VIA WHATSAPP
-                            </a>
+                            <h5 class="fw-bold mb-2 text-white">BONÉ SOULD</h5>
+                            <div class="shop-img-desc">
+                                Boné oficial bordado com regulagem traseira snapback. Material premium de alta durabilidade.
+                            </div>
+                            <p class="fs-3 fw-bold mb-3" style="color: var(--saturn-gold) !important;">R$ 80,00</p>
+                            <a href="https://wa.me/5512974106100?text=Olá! Tenho interesse em comprar o Boné SOULD." target="_blank" rel="noopener" class="btn-buy">COMPRAR</a>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- SEÇÃO DNA -->
-        <section id="dna" class="py-5 text-center dna-section" style="background: rgba(10,10,13,0.95); border-top: 1px solid #222;">
-            <div class="container">
-                <span class="text-warning fw-semibold text-uppercase tracking-wider small" style="color: var(--saturn-gold);">NOSSAS INFLUÊNCIAS</span>
-                <h2 class="display-5 fw-bold text-white mt-1 mb-3">O DNA DA SOULD</h2>
-                <p class="text-secondary mx-auto mb-4" style="max-width: 700px;">
-                    Carregamos nas veias a energia do rock nacional dos anos 2000, unindo peso, melodia e atitude. Conheça as referências sonoras que moldam a nossa identidade nos palcos.
-                </p>
-                <div class="row justify-content-center">
-                    <div class="col-lg-8">
-                        <img src="{{ url_for('static', filename='img/bandas.jpg') }}" alt="Bandas de Influência - DNA Sould" class="img-fluid rounded-3">
-                    </div>
-                </div>
-            </div>
+        <!-- DNA -->
+        <section id="dna" class="py-5 dna-section text-center position-relative z-2">
+            <h2 class="mb-4 display-5 fw-bold">DNA SOULD</h2>
+            <img src="{{ url_for('static', filename='img/dna_sould.jpg') }}" class="img-fluid mx-auto d-block" alt="DNA Banda SOULD">
         </section>
 
         <!-- PARCEIROS -->
-        <section id="parceiros">
-            <div class="container text-center">
-                <span class="text-warning fw-semibold text-uppercase tracking-wider small" style="color: var(--saturn-gold);">APOIADORES</span>
-                <h3 class="display-6 fw-bold text-white mt-1 mb-4">NOSSOS PARCEIROS</h3>
+        <section id="parceiros" class="text-center">
+            <div class="container">
+                <h2 class="mb-2 display-5 fw-bold">NOSSOS PARCEIROS</h2>
+                <p class="mb-5 text-secondary">
+                    Apoie quem fortalece a cena! Clique nos logos para visitar o Instagram dos nossos parceiros oficiais.
+                </p>
                 <div class="row justify-content-center align-items-center g-4">
-                    <div class="col-6 col-md-4">
-                        <div class="parceiro-card-box">
-                            <img src="{{ url_for('static', filename='img/servboy.png') }}" alt="Servboy Transportes" class="img-parceiro-efeito">
-                        </div>
+                    <div class="col-6 col-md-4 d-flex flex-column align-items-center">
+                        <h5 class="text-secondary mb-2">SIGMA MÚSICA</h5>
+                        <a href="https://www.instagram.com/sigmamusica?igsh=bXB5MXdyOTY3NXho" target="_blank" rel="noopener">
+                            <img src="{{ url_for('static', filename='img/sigma.png') }}" class="img-parceiro-efeito" alt="Parceiro Sigma Música">
+                        </a>
                     </div>
-                    <div class="col-6 col-md-4">
-                        <div class="parceiro-card-box">
-                            <img src="{{ url_for('static', filename='img/casa90.png') }}" alt="Casa 90 Music Studio" class="img-parceiro-efeito">
-                        </div>
+                    <div class="col-6 col-md-4 d-flex flex-column align-items-center">
+                        <h5 class="text-secondary mb-2">CASA 90</h5>
+                        <a href="https://www.instagram.com/casa90.oficial" target="_blank" rel="noopener">
+                            <img src="{{ url_for('static', filename='img/casa 90.png') }}" class="img-parceiro-efeito" alt="Parceiro Casa 90">
+                        </a>
                     </div>
-                    <div class="col-6 col-md-4">
-                        <div class="parceiro-card-box">
-                            <img src="{{ url_for('static', filename='img/sigma.png') }}" alt="Sigma Música" class="img-parceiro-efeito">
-                        </div>
+                    <div class="col-6 col-md-4 d-flex flex-column align-items-center">
+                        <h5 class="text-secondary mb-2">SERVBOY</h5>
+                        <a href="https://www.instagram.com/servboytransportes?igsi=MXJjaWhxaGtpYWpweg==" target="_blank" rel="noopener">
+                            <img src="{{ url_for('static', filename='img/servboy.png') }}" class="img-parceiro-efeito" alt="Parceiro Servboy Transportes">
+                        </a>
                     </div>
                 </div>
             </div>
@@ -1085,23 +1057,37 @@
     </main>
 
     <!-- FOOTER -->
-    <footer id="contato" class="text-center text-white">
-        <div class="container">
-            <h2 class="fw-bold mb-4" style="letter-spacing: 2px;">SOULD</h2>
-            <p class="text-secondary mb-2">São José dos Campos / SP &bull; <a href="https://www.bandasould.com.br" class="text-warning text-decoration-none">www.bandasould.com.br</a></p>
-            <p class="text-secondary mb-4">Contato: contato@bandasould.com.br</p>
-            
-            <div class="d-flex justify-content-center gap-4 mb-5 fs-4">
-                <a href="https://www.instagram.com/bandasould" target="_blank" rel="noopener" class="text-white social-link"><i class="fab fa-instagram"></i></a>
-                <a href="https://www.youtube.com/@bandasould" target="_blank" rel="noopener" class="text-white social-link"><i class="fab fa-youtube"></i></a>
-                <a href="https://open.spotify.com/intl-pt/album/51jogS9xJF3h7MC6WPySpq?si=mozGUg3XTKuyyq31XeUD6Q" target="_blank" rel="noopener" class="text-white social-link"><i class="fab fa-spotify"></i></a>
+    <footer id="contato">
+        <div class="container text-center">
+            <div class="mb-4">
+                <a href="https://www.instagram.com/bandasould" target="_blank" rel="noopener" class="text-white social-link fs-2 mx-3" aria-label="Instagram da Banda Sould"><i class="fab fa-instagram"></i></a>
+                <a href="https://open.spotify.com" target="_blank" rel="noopener" class="text-white social-link fs-2 mx-3" aria-label="Spotify da Banda Sould"><i class="fab fa-spotify"></i></a>
+                <a href="https://www.tiktok.com/@bandasould?_r=1&_t=ZS-98H71oiWRM1" target="_blank" rel="noopener" class="text-white social-link fs-2 mx-3" aria-label="TikTok da Banda Sould"><i class="fab fa-tiktok"></i></a>
             </div>
-            
-            <p class="text-secondary small mb-0">&copy; 2026 SOULD. Todos os direitos reservados.</p>
+            <div class="row justify-content-center g-3">
+                <div class="col-md-5">
+                    <a href="https://wa.me/5512982147326?text=Ol%C3%A1%20Bruno!%20Gostaria%20de%20consultar%20a%20disponibilidade%20de%20agenda%20e%20solicitar%20um%20or%C3%A7amento%20de%20show%20da%20Banda%20SOULD." target="_blank" rel="noopener" class="btn btn-outline-warning w-100 py-3 rounded-1 fw-bold" style="color: var(--saturn-gold); border-color: var(--saturn-gold);">SHOWS: (12) 982147326 (BRUNO)</a>
+                </div>
+                <div class="col-md-5">
+                    <a href="https://wa.me/5512974106100?text=Ol%C3%A1%20Marcio!%20Gostaria%20de%20consultar%20a%20disponibilidade%20de%20agenda%20e%20solicitar%20um%20or%C3%A7amento%20de%20show%20da%20Banda%20SOULD." target="_blank" rel="noopener" class="btn btn-outline-warning w-100 py-3 rounded-1 fw-bold" style="color: var(--saturn-gold); border-color: var(--saturn-gold);">SHOWS: (12) 974106100 (MARCIO)</a>
+                </div>
+            </div>
+            <p class="mt-5 text-secondary small mb-0">&copy; 2026 SOULD - SÃO JOSÉ DOS CAMPOS/SP</p>
         </div>
     </footer>
 
-    <!-- Bootstrap JS -->
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.querySelectorAll('.navbar-nav .nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                const navbarCollapse = document.getElementById('menuSould');
+                if (navbarCollapse.classList.contains('show')) {
+                    const bsCollapse = bootstrap.Collapse.getInstance(navbarCollapse) || new bootstrap.Collapse(navbarCollapse);
+                    bsCollapse.hide();
+                }
+            });
+        });
+    </script>
 </body>
 </html>
