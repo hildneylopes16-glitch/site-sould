@@ -221,17 +221,18 @@
         }
         
         .link-maps { 
-            color: #ffffff; 
+            color: var(--primary-red) !important; 
             text-decoration: none; 
             font-weight: 600; 
             display: inline-block;
             margin-top: 6px;
             transition: all 0.2s ease-in-out;
             word-break: break-word;
+            font-family: var(--font-body);
         }
-        .link-maps i { margin-right: 6px; font-size: 0.95rem; color: var(--primary-red); }
+        .link-maps i { margin-right: 6px; font-size: 0.95rem; color: var(--primary-red) !important; }
         .link-maps:hover { 
-            color: var(--primary-red); 
+            color: #ffffff !important; 
             text-decoration: underline;
         }
 
@@ -242,7 +243,10 @@
             text-align: center;
             background: var(--primary-red) !important;
             color: #ffffff !important;
-            font-weight: 700;
+            font-weight: 800;
+            font-family: var(--font-heading);
+            border-radius: 6px;
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
         }
 
         /* HISTÓRICO DE SHOWS */
