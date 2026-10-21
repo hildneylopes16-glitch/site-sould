@@ -27,37 +27,12 @@
 
         html { scroll-behavior: smooth; }
         
-        /* FUNDO CÓSMICO GERAL COM ESTRELAS E BRILHO */
         body { 
             background-color: #070709; 
             color: #ffffff; 
             font-family: var(--font-body); 
             overflow-x: hidden; 
             position: relative;
-        }
-
-        /* CAMADA DE ESTRELAS CINTILANTES NO FUNDO */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-image: 
-                radial-gradient(2px 2px at 20px 30px, #ffffff, rgba(0,0,0,0)),
-                radial-gradient(2px 2px at 40px 70px, var(--saturn-gold), rgba(0,0,0,0)),
-                radial-gradient(1px 1px at 90px 40px, #ffffff, rgba(0,0,0,0)),
-                radial-gradient(2px 2px at 160px 120px, rgba(255,255,255,0.8), rgba(0,0,0,0)),
-                radial-gradient(1.5px 1.5px at 230px 180px, var(--saturn-gold), rgba(0,0,0,0));
-            background-repeat: repeat;
-            background-size: 200px 200px;
-            opacity: 0.7;
-            animation: twinkle 5s ease-in-out infinite alternate;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        @keyframes twinkle {
-            0% { opacity: 0.4; }
-            100% { opacity: 0.9; }
         }
         
         h1, h2, h3, h4, h5, .nav-link, .btn {
@@ -87,43 +62,6 @@
         @media (max-width: 991px) {
             .navbar-collapse { background-color: rgba(0,0,0,0.98); padding: 20px; text-align: center; border-bottom: 2px solid var(--saturn-gold); }
             .nav-link { font-size: 1.2rem; margin: 10px 0; border-bottom: 1px solid #111; color: #fff !important; }
-        }
-
-        /* PLANETAS SATURNO POSICIONADOS NAS MARGENS (SEM COBRIR TEXTOS) */
-        .saturn-planet-graphic {
-            position: absolute;
-            width: 80px;
-            height: 80px;
-            background: radial-gradient(circle at 35% 35%, #f3d26b, #b3861d 70%, #4a350b);
-            border-radius: 50%;
-            box-shadow: inset -12px -12px 25px rgba(0,0,0,0.9), 0 0 20px rgba(243, 210, 107, 0.5);
-            pointer-events: none;
-            z-index: 1;
-            animation: floatPlanet 6s ease-in-out infinite;
-        }
-
-        .saturn-planet-graphic::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 130px;
-            height: 34px;
-            border: 3px solid rgba(243, 210, 107, 0.8);
-            border-radius: 50%;
-            transform: translate(-50%, -50%) rotate(-25deg);
-            box-shadow: 0 0 12px rgba(243, 210, 107, 0.6);
-            pointer-events: none;
-        }
-
-        @keyframes floatPlanet {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-10px) rotate(5deg); }
-        }
-
-        /* Oculta em telas menores para garantir zero sobreposição nos textos */
-        @media (max-width: 992px) {
-            .saturn-planet-graphic { display: none; }
         }
 
         /* HERO SECTION */
@@ -471,10 +409,10 @@
         }
         .btn-buy:hover { background: #fff; color: #000; }
 
-        /* DNA SECTION (TAMANHO DA FOTO ADEQUADAMENTE AUMENTADO) */
+        /* DNA SECTION (TAMANHO DA FOTO ADEQUADAMENTE REDUZIDO) */
         .dna-section img { 
             width: 100%; 
-            max-width: 650px; 
+            max-width: 420px; 
             height: auto; 
             border: 1px solid #332b14; 
             border-radius: 8px;
@@ -506,12 +444,6 @@
     </style>
 </head>
 <body>
-
-    <!-- PLANETAS SATURNO (APENAS NAS LATERAIS DE TELAS MAIORES) -->
-    <div class="saturn-planet-graphic" style="top: 8%; right: 4%;"></div>
-    <div class="saturn-planet-graphic" style="top: 35%; left: 2%; animation-delay: 2s; transform: scale(0.7);"></div>
-    <div class="saturn-planet-graphic" style="top: 62%; right: 3%; animation-delay: 4s; transform: scale(0.85);"></div>
-    <div class="saturn-planet-graphic" style="top: 88%; left: 4%; animation-delay: 1.5s; transform: scale(0.65);"></div>
 
     <!-- NAVBAR -->
     <nav class="navbar navbar-expand-lg navbar-dark sticky-top bg-black">
