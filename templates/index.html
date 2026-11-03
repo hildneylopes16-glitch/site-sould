@@ -148,7 +148,7 @@
         .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
         .video-container:hover { box-shadow: 0 0 50px rgba(255, 0, 0, 0.6); }
 
-        /* SEÇÃO MATÉRIAS (GRID DESIGN) */
+        /* SEÇÃO MATÉRIAS */
         #materias { 
             background: var(--bg-dark); 
             padding: 80px 0; 
@@ -330,9 +330,7 @@
             border: 1px solid #222;
             transition: border-color 0.3s ease;
         }
-        .integrante-card:hover {
-            border-color: var(--primary-red);
-        }
+        .integrante-card:hover { border-color: var(--primary-red); }
         .integrante-img-container {  
             overflow: hidden; 
             border: 1px solid #333; 
@@ -410,7 +408,7 @@
         }
         .btn-buy:hover { background: var(--primary-red-hover); color: #fff; }
 
-        /* DNA SECTION (TAMANHO DA FOTO ADEQUADAMENTE AUMENTADO) */
+        /* DNA SECTION */
         .dna-section img { 
             width: 100%; 
             max-width: 650px; 
@@ -434,14 +432,236 @@
             transition: filter 0.4s ease, transform 0.4s ease;
             margin-top: 10px;
         }
-        .img-parceiro-efeito:hover {
-            filter: grayscale(0%);
-            transform: scale(1.1);
-        }
+        .img-parceiro-efeito:hover { filter: grayscale(0%); transform: scale(1.1); }
 
         footer { border-top: 2px solid #222; padding: 60px 0; background: #000; position: relative; z-index: 2; }
         .social-link { transition: color 0.3s ease; }
         .social-link:hover { color: var(--primary-red) !important; }
+
+        /* ==========================================================================
+           ESTILOS DO CHATBOT SOULDINHO (NATIVO EM JS/CSS)
+           ========================================================================== */
+        #sould-bot-launcher {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            z-index: 9999;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 65px;
+            height: 65px;
+            background: #111;
+            border: 2px solid var(--primary-red);
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        #sould-bot-launcher:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.8);
+        }
+        #sould-bot-launcher img {
+            width: 48px;
+            height: 48px;
+            object-fit: contain;
+        }
+        .sould-bot-badge {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            background: var(--primary-red);
+            color: #fff;
+            font-size: 0.7rem;
+            font-weight: 800;
+            padding: 3px 7px;
+            border-radius: 50%;
+            border: 2px solid #000;
+            animation: pulseBadge 2s infinite;
+        }
+        @keyframes pulseBadge {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        /* JANELA DO CHAT */
+        #sould-bot-window {
+            position: fixed;
+            bottom: 100px;
+            right: 25px;
+            width: 360px;
+            max-width: calc(100vw - 30px);
+            height: 520px;
+            max-height: calc(100vh - 130px);
+            background: #0f0f14;
+            border: 2px solid var(--primary-red);
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9);
+            z-index: 9999;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            font-family: var(--font-body);
+        }
+        #sould-bot-window.active {
+            display: flex;
+            animation: slideUpBot 0.3s ease-out forwards;
+        }
+        @keyframes slideUpBot {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .sould-bot-header {
+            background: #000;
+            padding: 14px 18px;
+            border-bottom: 1px solid #222;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .sould-bot-header-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .sould-bot-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 1px solid var(--primary-red);
+            background: #111;
+            padding: 2px;
+        }
+        .sould-bot-title {
+            font-family: var(--font-heading);
+            font-size: 1.1rem;
+            color: #fff;
+            margin: 0;
+            line-height: 1.1;
+        }
+        .sould-bot-subtitle {
+            font-size: 0.72rem;
+            color: #25d366;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .sould-bot-subtitle::before {
+            content: '';
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            background: #25d366;
+            border-radius: 50%;
+        }
+        .sould-bot-close {
+            background: transparent;
+            border: none;
+            color: #888;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .sould-bot-close:hover { color: #fff; }
+
+        .sould-bot-messages {
+            flex: 1;
+            padding: 16px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            background: radial-gradient(circle at 50% 50%, #15151d 0%, #0a0a0e 100%);
+        }
+        .sould-bot-messages::-webkit-scrollbar { width: 5px; }
+        .sould-bot-messages::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+
+        .sould-msg {
+            max-width: 85%;
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 0.88rem;
+            line-height: 1.4;
+            word-wrap: break-word;
+        }
+        .sould-msg.bot {
+            background: #1e1e28;
+            color: #eee;
+            border-left: 3px solid var(--primary-red);
+            align-self: flex-start;
+            border-bottom-left-radius: 2px;
+        }
+        .sould-msg.user {
+            background: var(--primary-red);
+            color: #fff;
+            align-self: flex-end;
+            border-bottom-right-radius: 2px;
+            font-weight: 600;
+        }
+
+        .sould-bot-options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 6px;
+            width: 100%;
+        }
+        .sould-bot-btn {
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid var(--primary-red);
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .sould-bot-btn:hover {
+            background: var(--primary-red);
+            color: #fff;
+            transform: translateX(3px);
+        }
+
+        .sould-bot-input-area {
+            padding: 12px;
+            background: #000;
+            border-top: 1px solid #222;
+            display: flex;
+            gap: 8px;
+        }
+        .sould-bot-input-area input {
+            flex: 1;
+            background: #1a1a22;
+            border: 1px solid #333;
+            border-radius: 6px;
+            color: #fff;
+            padding: 8px 12px;
+            font-size: 0.85rem;
+        }
+        .sould-bot-input-area input:focus {
+            outline: none;
+            border-color: var(--primary-red);
+        }
+        .sould-bot-input-area button {
+            background: var(--primary-red);
+            border: none;
+            color: #fff;
+            border-radius: 6px;
+            padding: 8px 14px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .sould-bot-input-area button:hover {
+            background: var(--primary-red-hover);
+        }
     </style>
 </head>
 <body>
@@ -1025,6 +1245,34 @@
         </div>
     </footer>
 
+    <!-- WIDGET CHATBOT SOULDINHO -->
+    <div id="sould-bot-launcher" onclick="toggleSouldBot()">
+        <img src="{{ url_for('static', filename='img/souldinho.png') }}" alt="Souldinho Bot">
+        <span class="sould-bot-badge">1</span>
+    </div>
+
+    <div id="sould-bot-window">
+        <div class="sould-bot-header">
+            <div class="sould-bot-header-info">
+                <img src="{{ url_for('static', filename='img/souldinho.png') }}" class="sould-bot-avatar" alt="Souldinho">
+                <div>
+                    <h5 class="sould-bot-title">SOULDINHO BOT</h5>
+                    <p class="sould-bot-subtitle">Online agora</p>
+                </div>
+            </div>
+            <button class="sould-bot-close" onclick="toggleSouldBot()"><i class="fas fa-times"></i></button>
+        </div>
+        
+        <div class="sould-bot-messages" id="bot-messages">
+            <!-- Mensagens são geradas dinamicamente via JS -->
+        </div>
+
+        <div class="sould-bot-input-area">
+            <input type="text" id="bot-user-input" placeholder="Digite sua dúvida ou responda..." onkeypress="handleBotKey(event)">
+            <button onclick="sendBotInput()"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
@@ -1037,6 +1285,141 @@
                 }
             });
         });
+
+        /* LÓGICA DO CHATBOT SOULDINHO */
+        let botState = 'MENU';
+        let leadData = { dataCidade: '' };
+
+        function toggleSouldBot() {
+            const win = document.getElementById('sould-bot-window');
+            win.classList.toggle('active');
+            if (win.classList.contains('active') && document.getElementById('bot-messages').children.length === 0) {
+                renderMainMenu();
+            }
+        }
+
+        function appendMessage(text, sender = 'bot') {
+            const msgBox = document.getElementById('bot-messages');
+            const div = document.createElement('div');
+            div.className = `sould-msg ${sender}`;
+            div.innerHTML = text;
+            msgBox.appendChild(div);
+            msgBox.scrollTop = msgBox.scrollHeight;
+        }
+
+        function renderMainMenu() {
+            botState = 'MENU';
+            appendMessage("Fala, mestre! 🤘 Sou o <strong>Souldinho Bot</strong>. Como posso te ajudar hoje?");
+            
+            const optionsHtml = `
+                <div class="sould-bot-options">
+                    <button class="sould-bot-btn" onclick="selectBotOption(1)">
+                        <span>1️⃣ Ver Conteúdo / Mídia Kit</span> <i class="fas fa-chevron-right"></i>
+                    </button>
+                    <button class="sould-bot-btn" onclick="selectBotOption(2)">
+                        <span>2️⃣ Contratação pra Show</span> <i class="fas fa-chevron-right"></i>
+                    </button>
+                    <button class="sould-bot-btn" onclick="selectBotOption(3)">
+                        <span>3️⃣ Falar com Assessoria</span> <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            `;
+            appendMessage(optionsHtml, 'bot');
+        }
+
+        function selectBotOption(option) {
+            if (option === 1) {
+                appendMessage("1️⃣ Ver Conteúdo / Mídia Kit", 'user');
+                appendMessage("Opa! Aqui você encontra todo o nosso material audiovisual e comercial:");
+                const kitHtml = `
+                    <div class="sould-bot-options">
+                        <a href="{{ url_for('static', filename='pdf/midia_kit_sould.pdf') }}" target="_blank" class="sould-bot-btn text-decoration-none" style="background: var(--primary-red);">
+                            <span>📄 Abrir Mídia Kit Completo (PDF)</span> <i class="fas fa-file-pdf"></i>
+                        </a>
+                        <button class="sould-bot-btn" onclick="scrollToSection('lancamento')">
+                            <span>🎬 Ver Clipes & Saturno</span> <i class="fas fa-play"></i>
+                        </button>
+                        <button class="sould-bot-btn" onclick="renderMainMenu()">
+                            <span>↩️ Voltar ao Menu</span>
+                        </button>
+                    </div>
+                `;
+                appendMessage(kitHtml, 'bot');
+            } 
+            else if (option === 2) {
+                appendMessage("2️⃣ Contratação pra Show", 'user');
+                botState = 'WAITING_SHOW_INFO';
+                appendMessage("Show de bola! 🎸 Para adiantar seu atendimento, qual a <strong>Data e a Cidade</strong> pretendida para o show?");
+            } 
+            else if (option === 3) {
+                appendMessage("3️⃣ Falar com Assessoria", 'user');
+                appendMessage("Para imprensa, entrevistas ou parcerias comerciais, fale direto com a nossa equipe:");
+                const contactHtml = `
+                    <div class="sould-bot-options">
+                        <a href="mailto:bandasould@gmail.com" class="sould-bot-btn text-decoration-none">
+                            <span>✉️ E-mail: bandasould@gmail.com</span>
+                        </a>
+                        <a href="https://wa.me/5512982147326?text=Olá!%20Gostaria%20de%20falar%20com%20a%20assessoria/imprensa%20da%20Banda%20SOULD." target="_blank" class="sould-bot-btn text-decoration-none">
+                            <span>💬 WhatsApp Comercial</span>
+                        </a>
+                        <button class="sould-bot-btn" onclick="renderMainMenu()">
+                            <span>↩️ Voltar ao Menu</span>
+                        </button>
+                    </div>
+                `;
+                appendMessage(contactHtml, 'bot');
+            }
+        }
+
+        function handleBotKey(e) {
+            if (e.key === 'Enter') sendBotInput();
+        }
+
+        function sendBotInput() {
+            const input = document.getElementById('bot-user-input');
+            const val = input.value.trim();
+            if (!val) return;
+
+            appendMessage(val, 'user');
+            input.value = '';
+
+            if (botState === 'WAITING_SHOW_INFO') {
+                leadData.dataCidade = val;
+                botState = 'MENU';
+                appendMessage("Perfeito! Registrei aqui.");
+                appendMessage("Clique no botão abaixo para nos chamar no WhatsApp com os dados já preenchidos:");
+                
+                const encodedMsg = encodeURIComponent(`Olá Bruno/Marcio! Gostaria de consultar orçamento de show para: ${leadData.dataCidade}`);
+                const waHtml = `
+                    <div class="sould-bot-options">
+                        <a href="https://wa.me/5512982147326?text=${encodedMsg}" target="_blank" class="sould-bot-btn text-decoration-none" style="background: #25d366; border-color: #25d366; color: #000;">
+                            <span>💬 Enviar para Bruno (12 98214-7326)</span>
+                        </a>
+                        <a href="https://wa.me/5512974106100?text=${encodedMsg}" target="_blank" class="sould-bot-btn text-decoration-none" style="background: #25d366; border-color: #25d366; color: #000;">
+                            <span>💬 Enviar para Marcio (12 97410-6100)</span>
+                        </a>
+                        <button class="sould-bot-btn" onclick="renderMainMenu()">
+                            <span>↩️ Voltar ao Menu</span>
+                        </button>
+                    </div>
+                `;
+                appendMessage(waHtml, 'bot');
+            } else {
+                if (val === '1') selectBotOption(1);
+                else if (val === '2') selectBotOption(2);
+                else if (val === '3') selectBotOption(3);
+                else {
+                    appendMessage("Não entendi muito bem 🤔 Por favor escolha uma das opções abaixo:");
+                    renderMainMenu();
+                }
+            }
+        }
+
+        function scrollToSection(id) {
+            toggleSouldBot();
+            const el = document.getElementById(id);
+            if (el) el.scrollIntoView({ behavior: 'smooth' });
+        }
     </script>
 </body>
 </html>
