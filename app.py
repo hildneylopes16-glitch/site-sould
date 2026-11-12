@@ -8,7 +8,8 @@ app = Flask(__name__)
 
 # Configurações usando variáveis de ambiente com fallbacks seguros
 app.secret_key = os.environ.get('SECRET_KEY', 'chave_secreta_para_sould_banda_2026')
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'postgresql://usuario:senha@localhost/sould_db')
+# Atualizado para o PostgreSQL local com usuário postgres e banco sould_db
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'postgresql://postgres:132793@localhost:5432/sould_db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
